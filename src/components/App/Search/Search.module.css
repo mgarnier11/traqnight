@@ -1,0 +1,58 @@
+
+.search {
+  display: grid;
+  grid-template-areas: 
+    "type town radius"
+    "price price price"
+    "opened opened research";
+  grid-template-rows: 33.33% 33.33% 33.33%;
+  grid-template-columns: 33.33% 33.33% 33.33%;
+  align-items: center;
+}
+
+@media all and (min-width: 992px) {/*md*/
+  .search {
+    display: grid;
+    grid-template-areas: 
+      "type town radius"
+      "price opened research";
+    grid-template-rows: 50% 50%;
+    grid-template-columns: 33.33% 33.33% 33.33%;
+    align-items: center;
+  } 
+}
+
+
+.gridCell {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.gridCell button {
+  width: 100%;
+}
+
+.type {
+  grid-area: type;
+}
+
+.town {
+  grid-area: town;
+}
+
+.radius {
+  grid-area: radius;
+}
+
+.price {
+  grid-area: price;
+  margin-bottom: 1rem;
+}
+
+.opened {
+  grid-area: opened;
+}
+
+.research {
+  grid-area: research;
+}
