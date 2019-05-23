@@ -7,7 +7,7 @@ class Search extends Component {
 
     this.state = {
       type: '0',
-      town: 'Savenay',
+      town: '',
       radius: '500',
       prices: [
         { range: 1, active: true },
