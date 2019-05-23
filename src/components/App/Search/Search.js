@@ -52,7 +52,7 @@ class Search extends Component {
 
   render() {
     return (
-      <div className={this.props.className + " " + styles.search}>
+      <div className={this.props.className + " " + styles.search} id="searchSection">
         <div className={styles.type + " form-group " + styles.gridCell}>
           <select className="form-control" id="type" value={this.state.type} onChange={this.handleChange}>
             <option value="0">Bars</option>

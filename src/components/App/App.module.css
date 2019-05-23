@@ -2,6 +2,8 @@
 .home {
   grid-area: home;
   height: 100%;
+  scroll-snap-align: start;
+
 }
 
 .map {
@@ -12,12 +14,19 @@
 
 .search {
   grid-area: search;
+  scroll-snap-align: start;
+
+}
+
+.results {
+  grid-area: results;
 }
 
 .app {
   height: 200vh;
   display: grid;
   align-items: center;
+  scroll-snap-type: y mandatory;
   
 
   grid-template-areas: 

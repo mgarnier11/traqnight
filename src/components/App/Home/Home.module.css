@@ -2,8 +2,9 @@
   display: grid;
   grid-template-areas: 
   "hero"
-  "search";
-  grid-template-rows: 40% 40%;
+  "search"
+  "brand";
+  grid-template-rows: 35% 40 15%;
   grid-template-columns: 100%;
   align-items: center;
 
@@ -23,6 +24,6 @@
   grid-area: search;
 }
 
-.search input, .search select, .search button {
+.search input, .search select, .search a {
   font-size: 2.5vh;
 }
