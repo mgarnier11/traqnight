@@ -27,7 +27,7 @@ class Home extends Component {
 
   render() {
     return (
-      <div className={this.props.className + " " + styles.home}>
+      <div className={this.props.className + " " + styles.home} ref={this.props.refere}>
         <div className={styles.hero + " text-center"}>
           <h1>
             Explorez votre ville

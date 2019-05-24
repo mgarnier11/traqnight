@@ -34,7 +34,7 @@
     "search"
     "map"
     "results";
-  grid-template-rows: 100vh 25vh 45vh 30vh;
+  grid-template-rows: 100vh 27vh 45vh 28vh;
   grid-template-columns: 100%;
 }
 
@@ -45,7 +45,7 @@
       "search"
       "map"
       "results";
-    grid-template-rows: 100vh 25vh 45vh 30vh;
+    grid-template-rows: 100vh 27vh 45vh 28vh;
     grid-template-columns: 100%; 
   }
 }
