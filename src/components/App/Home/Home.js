@@ -52,7 +52,7 @@ class Home extends Component {
             <input type="text" className="form-control" id="town" placeholder="Votre ville" onChange={this.handleChange} />
           </div>
           <div className="form-group text-center">
-            <a className="btn btn-primary" onClick={this.handleSearchClick} href="#searchSection">Trouvez !</a>
+            <a className="btn btn-primary" onClick={this.handleSearchClick}>Trouvez !</a>
           </div>
         </div>
       </div>
