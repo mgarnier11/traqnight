@@ -1,4 +1,4 @@
 {
-  "host": "traqnight-backend-app.feathersjs.com",
+  "host": "traqnight.herokuapp.com",
   "port": "PORT"
 }
