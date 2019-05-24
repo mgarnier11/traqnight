@@ -19,10 +19,12 @@ class Home extends Component {
   }
 
   handleSearchClick() {
-    console.log({
+    let datas = {
       type: parseInt(this.state.type),
       town: this.state.town
-    });
+    };
+
+    this.props.handleHomeSearchClick(datas);
   }
 
   render() {

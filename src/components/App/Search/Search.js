@@ -20,6 +20,8 @@ class Search extends Component {
 
     this.handlePriceChange = this.handlePriceChange.bind(this);
     this.handleSearchClick = this.handleSearchClick.bind(this);
+
+    this.updateFromHome = this.updateFromHome.bind(this);
   }
 
   handleChange = event => {
@@ -48,6 +50,10 @@ class Search extends Component {
       prices: this.state.prices,
       opened: this.state.opened
     });
+  }
+
+  updateFromHome(datas) {
+    this.setState({ town: datas.town, type: datas.type });
   }
 
   render() {
