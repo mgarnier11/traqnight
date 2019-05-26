@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
+import { toast } from 'react-toastify';
 import styles from './Search.module.css';
+
+import apiHandler from '../../../api/apiHandler';
 
 class Search extends Component {
   constructor(props) {
@@ -8,18 +11,13 @@ class Search extends Component {
     this.state = {
       type: '0',
       town: '',
-      radius: '500',
-      prices: [
-        { range: 1, active: true },
-        { range: 2, active: true },
-        { range: 3, active: true },
-        { range: 4, active: true }
-      ],
-      opened: true
+      radius: '1000',
+      coordinates: null,
+      error: null
     }
-
-    this.handlePriceChange = this.handlePriceChange.bind(this);
     this.handleSearchClick = this.handleSearchClick.bind(this);
+    this.handleGetLocationClick = this.handleGetLocationClick.bind(this);
+    this.handleTownInputClick = this.handleTownInputClick.bind(this);
 
     this.updateFromHome = this.updateFromHome.bind(this);
   }
@@ -30,30 +28,56 @@ class Search extends Component {
     });
   }
 
-  handleOpenedClick = event => {
-    this.setState({ opened: !this.state.opened });
-  }
-
-  handlePriceChange(range) {
-    let prices = [...this.state.prices];
-
-    prices[range - 1].active = !prices[range - 1].active;
-
-    this.setState({ prices: prices });
-  }
-
   handleSearchClick() {
-    console.log({
+    if (this.state.town.length === 0 & !this.state.coordinates) {
+      this.setState({ error: { msg: 'Vous devez activer la localisation ou renseigner une ville pour utiliser l\'application' } });
+    }
+
+    let datas = {
       type: parseInt(this.state.type),
-      town: this.state.town,
-      radius: parseInt(this.state.radius),
-      prices: this.state.prices,
-      opened: this.state.opened
+      location: (this.state.coordinates || this.state.town),
+    };
+
+    apiHandler.findInGoogle(datas);
+  }
+
+  handleTownInputClick() {
+    this.setState({ coordinates: null });
+  }
+
+  handleGetLocationClick() {
+    if (this.state.coordinates) {
+
+    }
+
+    navigator.geolocation.getCurrentPosition((res) => {
+      this.setState({ coordinates: { lat: res.coords.latitude, lng: res.coords.longitude } });
+    }, (err) => {
+      console.log(err);
+      if (err.code === 1) this.setState({ error: { msg: 'Vous devez accepter d\'activer la localisation pour etre géolocalisé' } });
+      else {
+        this.setState({ error: { msg: 'Erreur lors de la géolocalisation' } });
+
+        console.log(err);
+      }
     });
   }
 
   updateFromHome(datas) {
     this.setState({ town: datas.town, type: datas.type });
+  }
+
+  componentDidUpdate() {
+    if (this.state.error) {
+      toast.error(this.state.error.msg, {
+        onClose: () => {
+          this.setState({ error: null });
+        },
+        autoClose: 4000,
+        pauseOnHover: false,
+        pauseOnFocusLoss: false
+      });
+    }
   }
 
   render() {
@@ -67,28 +91,18 @@ class Search extends Component {
         </div>
 
         <div className={styles.town + " form-group " + styles.gridCell}>
-          <input type="text" className="form-control" id="town" placeholder="Votre ville" value={this.state.town} onChange={this.handleChange} />
+          <input type="text" onClick={this.handleTownInputClick} className={styles.townInput + " form-control"} id="town" placeholder="Votre ville" value={this.state.town} onChange={this.handleChange} disabled={this.state.coordinates} />
+          <i onClick={this.handleGetLocationClick} className={styles.locate + " fas fa-crosshairs"}></i>
+
         </div>
 
         <div className={styles.radius + " form-group " + styles.gridCell}>
           <select className="form-control" id="radius" value={this.state.radius} onChange={this.handleChange}>
-            <option value={500}>500m</option>
             <option value={1000}>1000m</option>
+            <option value={2500}>2500m</option>
             <option value={5000}>5000m</option>
+            <option value={10000}>10000m</option>
           </select>
-        </div>
-
-        <div className={styles.price + " btn-group " + styles.gridCell}>
-          {this.state.prices.map((price) => {
-            return (
-              <button className={'btn ' + (price.active ? 'btn-primary' : 'btn-outline-secondary')} onClick={() => this.handlePriceChange(price.range)} key={price.range}>
-                {"€".repeat(price.range)}
-              </button>)
-          })}
-        </div>
-
-        <div className={styles.opened + " form-group " + styles.gridCell}>
-          <button className={'btn ' + (this.state.opened ? 'btn-primary' : 'btn-outline-secondary')} onClick={this.handleOpenedClick}>Ouvert Actuellement</button>
         </div>
 
         <div className={styles.research + " form-group " + styles.gridCell}>

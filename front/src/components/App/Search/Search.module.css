@@ -2,22 +2,22 @@
 .search {
   display: grid;
   grid-template-areas: 
-    "type town radius"
-    "price price price"
-    "opened opened research";
+    "type type type"
+    "town town town"
+    "radius radius research";
   grid-template-rows: 33.33% 33.33% 33.33%;
-  grid-template-columns: 33.33% 33.33% 33.33%;
+  grid-template-columns: 30% 35% 35%;
   align-items: center;
+  height: 100%;
 }
 
-@media all and (min-width: 992px) {/*md*/
+@media all and (min-width: 768px) {/*md*/
   .search {
     display: grid;
     grid-template-areas: 
-      "type town radius"
-      "price opened research";
-    grid-template-rows: 50% 50%;
-    grid-template-columns: 33.33% 33.33% 33.33%;
+      "type town radius research";
+    grid-template-columns: 20% 50% 15% 15%;
+    grid-template-rows: 100%;
     align-items: center;
   } 
 }
@@ -26,6 +26,7 @@
 .gridCell {
   padding-left: 10px;
   padding-right: 10px;
+  margin: 0;
 }
 
 .gridCell button {
@@ -55,4 +56,17 @@
 
 .research {
   grid-area: research;
+}
+
+
+
+.townInput {
+  display: inline-block;
+  width: calc(100% - 30px);
+}
+
+.locate {
+  font-size: 20px;
+  margin-left: 10px;
+  cursor: pointer;
 }

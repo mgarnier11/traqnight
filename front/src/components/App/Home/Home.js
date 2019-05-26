@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import styles from './Home.module.css';
 
+import apiHandler from '../../../api/apiHandler';
+
+
 class Home extends Component {
   constructor(props) {
     super(props);
@@ -23,6 +26,8 @@ class Home extends Component {
       type: parseInt(this.state.type),
       town: this.state.town
     };
+
+    apiHandler.findInGoogle(datas);
 
     this.props.handleHomeSearchClick(datas);
   }

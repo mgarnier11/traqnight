@@ -11,7 +11,7 @@
             "runtimeExecutable": "nodemon",
             "program": "${workspaceFolder}\\back\\src\\index.js",
             "restart": true,
-            "console": "internalConsole",
+            "console": "integratedTerminal",
             "outputCapture": "std",
             "internalConsoleOptions": "neverOpen"
         }

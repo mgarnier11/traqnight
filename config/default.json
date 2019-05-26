@@ -5,5 +5,31 @@
   "paginate": {
     "default": 10,
     "max": 50
-  }
+  },
+  "googleApiKey": "",
+  "authentication": {
+    "secret": "1eda92c4c60eb0b09c3c89546f1dc3c0f897843562fb4a8a58bbe374f707681bff0a7fe4a7dbdc95480f56f56c8d88ae07653b1a65aa5b8759da4a6e8da7a6db35a742ba5e3d41e74af69e62f19364e13f9159c2bea0c0a801a9b8ed1183d50e71bf9afd1b8220f4453ee1ecffa6f7f009352204e2443f3c8e70aac44f9abbadd842c57bae28ff735900b6921d23891afa0eab74e4f5330cdeabff398580e41115048f866d8d616da2b6a8dcb8898bee8eb6259206c9e90bd9085c4cc347ff90be4e77df0a2ba59b6ad617fd1d9224ae73576ae85be39459b9699b22003b5de37f6a296a7a39196b3f561e0058b74f48b96b41bd76e65be3cd68a5ff45bac1c3",
+    "strategies": [
+      "jwt",
+      "local"
+    ],
+    "path": "/authentication",
+    "service": "users",
+    "jwt": {
+      "header": {
+        "typ": "access"
+      },
+      "audience": "https://yourdomain.com",
+      "subject": "anonymous",
+      "issuer": "feathers",
+      "algorithm": "HS256",
+      "expiresIn": "1d"
+    },
+    "local": {
+      "entity": "user",
+      "usernameField": "email",
+      "passwordField": "password"
+    }
+  },
+  "mongodb": "mongodb://localhost:27017/traqnight"
 }

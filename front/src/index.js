@@ -1,9 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './images/buildings1-min-compressor.jpg';
 import App from './components/App/App';
 import * as serviceWorker from './serviceWorker';
+
+toast.configure();
 
 ReactDOM.render(<App />, document.getElementById('root'));
 

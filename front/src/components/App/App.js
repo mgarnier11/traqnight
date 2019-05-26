@@ -22,7 +22,6 @@ class App extends Component {
   }
 
   componentDidMount() {
-
     window.onscroll = () => {
       // Clear our timeout throughout the scroll
       window.clearTimeout(this.isScrolling);
