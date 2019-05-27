@@ -1,8 +1,13 @@
-const { MethodNotAllowed, BadRequest } = require('@feathersjs/errors');
+const { MethodNotAllowed, BadRequest, GeneralError } = require('@feathersjs/errors');
 const googleMapsClient = require('@google/maps').createClient({
   key: 'AIzaSyDRSLqNh7shuCn-bFK930HdFGTAMjI3Q7E',
   Promise: Promise
 });
+
+const types = [
+  'bar',
+  'night_club'
+]
 
 function degreesToRadians(degrees) {
   return degrees * Math.PI / 180;
@@ -32,73 +37,112 @@ class Service {
   async find(params) {
     try {
 
-      let townName = 'savenay';
-      let type = 'bar';
-      let radius = 1000;
+      let location = null;
+      let type = types[params.query.type];
+      let radius = params.query.radius;
+
+      if (params.query.location.lat && params.query.location.lng) {
+        location = params.query.location;
+      } else {
+        let townName = params.query.location;
+
+        if (!townName) throw new BadRequest('Invalid town');
+
+        let placeIdResponse = await googleMapsClient.findPlace({
+          input: townName,
+          inputtype: 'textquery'
+        }).asPromise();
+
+        if (placeIdResponse.status !== 200) throw new BadRequest('Invalid town');
+        if (placeIdResponse.json.status !== 'OK') throw new BadRequest('Invalid town');
+        if (placeIdResponse.json.candidates.length === 0) throw new BadRequest('Invalid town');
+
+        let placeId = placeIdResponse.json.candidates[0].place_id;
+
+        let placeResponse = await googleMapsClient.place({
+          placeid: placeId
+        }).asPromise();
+
+        if (placeResponse.status !== 200) throw new BadRequest('Invalid town');
+        if (placeResponse.json.status !== 'OK') throw new BadRequest('Invalid town');
+
+        let place = placeResponse.json.result;
+
+        location = place.geometry.location;
+      }
 
 
-      //if (!townName) throw new BadRequest("Invalid town");
 
-      let placeIdResponse = await googleMapsClient.findPlace({
-        input: townName,
-        inputtype: 'textquery'
-      }).asPromise();
+      async function getResults(pageToken) {
+        let resultsResponse;
+        let goodResults = [];
 
-      if (placeIdResponse.status !== 200) throw new BadRequest('Invalid town');
-      if (placeIdResponse.json.status !== 'OK') throw new BadRequest('Invalid town');
-      if (placeIdResponse.json.candidates.length === 0) throw new BadRequest('Invalid town');
 
-      let placeId = placeIdResponse.json.candidates[0].place_id;
+        if (!pageToken) resultsResponse = await googleMapsClient.places({
+          query: type,
+          location: location,
+          radius: radius,
+          type: type
+        }).asPromise();
+        else resultsResponse = await googleMapsClient.places({
+          query: '',
+          pagetoken: pageToken
+        }).asPromise();
 
-      let placeResponse = await googleMapsClient.place({
-        placeid: placeId
-      }).asPromise();
+        if (resultsResponse.status !== 200) throw new BadRequest('Invalid town');
+        if (resultsResponse.json.status !== 'OK') throw new BadRequest('Invalid town');
 
-      if (placeResponse.status !== 200) throw new BadRequest('Invalid town');
-      if (placeResponse.json.status !== 'OK') throw new BadRequest('Invalid town');
+        let results = resultsResponse.json.results;
 
-      let place = placeResponse.json.result;
 
-      let resultsResponse = await googleMapsClient.places({
-        query: type,
-        location: place.geometry.location,
-        radius: radius,
-        type: type
-      }).asPromise();
+        for (let result of results) {
+          let distance = distanceInMBetweenEarthCoordinates(
+            result.geometry.location.lat,
+            result.geometry.location.lng,
+            location.lat,
+            location.lng
+          );
+          result.distance = distance;
 
-      if (resultsResponse.status !== 200) throw new BadRequest('Invalid town');
-      if (resultsResponse.json.status !== 'OK') throw new BadRequest('Invalid town');
 
-      let results = resultsResponse.json.results;
+          result.isOpened = (result.opening_hours ? result.opening_hours.open_now : null);
+          if (result.distance < radius) {
+            goodResults.push(result);
+          }
+        }
 
-      let goodResults = [];
 
-      for (let result of results) {
-        let distance = distanceInMBetweenEarthCoordinates(
-          result.geometry.location.lat,
-          result.geometry.location.lng,
-          place.geometry.location.lat,
-          place.geometry.location.lng
-        );
-        result.distance = distance;
-        result.isOpened = result.opening_hours.open_now;
-        if (result.distance < radius) {
-          goodResults.push(result);
+        if (goodResults.length == 20 && resultsResponse.json.next_page_token) {
+
+          var p = new Promise(async (res, rej) => {
+            setTimeout(async () => {
+              res(goodResults.concat(await getResults(resultsResponse.json.next_page_token)))
+            }, 2000);
+          });
+
+
+
+          return await p;
+        } else {
+          return goodResults;
         }
       }
 
 
 
 
-      console.log(goodResults);
+      let res = {
+        origin: location,
+        results: await getResults()
+      }
+      console.log('google request is ok');
+      return res;
     } catch (error) {
       console.log(error);
+
+      if (error instanceof BadRequest) throw error;
+      else throw new GeneralError('Google API error');
     }
-
-
-
-
-    return true;
   }
 
   async get(id, params) {

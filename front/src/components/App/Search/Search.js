@@ -29,16 +29,23 @@ class Search extends Component {
   }
 
   handleSearchClick() {
-    if (this.state.town.length === 0 & !this.state.coordinates) {
+    if (this.state.town.length === 0 && !this.state.coordinates) {
       this.setState({ error: { msg: 'Vous devez activer la localisation ou renseigner une ville pour utiliser l\'application' } });
+    } else if (!this.state.radius) {
+      this.setState({ error: { msg: 'Vous devez sélectionner un rayon de recherche pour utiliser l\'application' } });
+    } else if (!this.state.type) {
+      this.setState({ error: { msg: 'Vous devez sélectionner un type de recherche pour utiliser l\'application' } });
+    } else {
+      let datas = {
+        type: parseInt(this.state.type),
+        location: (this.state.coordinates || this.state.town),
+        radius: parseInt(this.state.radius)
+      };
+
+      apiHandler.findInGoogle(datas);
     }
 
-    let datas = {
-      type: parseInt(this.state.type),
-      location: (this.state.coordinates || this.state.town),
-    };
 
-    apiHandler.findInGoogle(datas);
   }
 
   handleTownInputClick() {
@@ -47,20 +54,20 @@ class Search extends Component {
 
   handleGetLocationClick() {
     if (this.state.coordinates) {
-
-    }
-
-    navigator.geolocation.getCurrentPosition((res) => {
-      this.setState({ coordinates: { lat: res.coords.latitude, lng: res.coords.longitude } });
-    }, (err) => {
-      console.log(err);
-      if (err.code === 1) this.setState({ error: { msg: 'Vous devez accepter d\'activer la localisation pour etre géolocalisé' } });
-      else {
-        this.setState({ error: { msg: 'Erreur lors de la géolocalisation' } });
-
+      this.setState({ coordinates: null });
+    } else {
+      navigator.geolocation.getCurrentPosition((res) => {
+        this.setState({ town: '', coordinates: { lat: res.coords.latitude, lng: res.coords.longitude } });
+      }, (err) => {
         console.log(err);
-      }
-    });
+        if (err.code === 1) this.setState({ error: { msg: 'Vous devez accepter d\'activer la localisation pour etre géolocalisé' } });
+        else {
+          this.setState({ error: { msg: 'Erreur lors de la géolocalisation' } });
+
+          console.log(err);
+        }
+      });
+    }
   }
 
   updateFromHome(datas) {
@@ -69,6 +76,7 @@ class Search extends Component {
 
   componentDidUpdate() {
     if (this.state.error) {
+
       toast.error(this.state.error.msg, {
         onClose: () => {
           this.setState({ error: null });
@@ -92,8 +100,7 @@ class Search extends Component {
 
         <div className={styles.town + " form-group " + styles.gridCell}>
           <input type="text" onClick={this.handleTownInputClick} className={styles.townInput + " form-control"} id="town" placeholder="Votre ville" value={this.state.town} onChange={this.handleChange} disabled={this.state.coordinates} />
-          <i onClick={this.handleGetLocationClick} className={styles.locate + " fas fa-crosshairs"}></i>
-
+          <span className={styles.locate + " " + (this.state.coordinates ? styles.unlocate : "")}><i onClick={this.handleGetLocationClick} className=" fas fa-crosshairs"></i></span>
         </div>
 
         <div className={styles.radius + " form-group " + styles.gridCell}>

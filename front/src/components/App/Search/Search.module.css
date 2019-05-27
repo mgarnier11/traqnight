@@ -11,6 +11,14 @@
   height: 100%;
 }
 
+
+
+.gridCell {
+  padding-left: 10px;
+  padding-right: 10px;
+  margin: 0;
+}
+
 @media all and (min-width: 768px) {/*md*/
   .search {
     display: grid;
@@ -20,14 +28,12 @@
     grid-template-rows: 100%;
     align-items: center;
   } 
+
+  .town {
+    padding-right: 0;
+  }
 }
 
-
-.gridCell {
-  padding-left: 10px;
-  padding-right: 10px;
-  margin: 0;
-}
 
 .gridCell button {
   width: 100%;
@@ -62,11 +68,30 @@
 
 .townInput {
   display: inline-block;
-  width: calc(100% - 30px);
+  width: calc(100% - 31px);
 }
 
 .locate {
-  font-size: 20px;
-  margin-left: 10px;
   cursor: pointer;
+  position: relative;
+  margin-left: 10px;
+  font-size: 21px;
+}
+
+.unlocate::after, .unlocate::before {
+  background: red;
+  content: "";
+  height: 2px;
+  position: absolute;
+  width: 142%;
+  top: calc(50% - 1px);
+  left: -5px;
+}
+
+.unlocate::before {
+  transform: rotate(-45deg);
+}
+
+.unlocate::after {
+  transform: rotate(45deg);
 }

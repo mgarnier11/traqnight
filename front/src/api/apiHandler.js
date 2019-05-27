@@ -25,15 +25,16 @@ class Handler {
         this.userService = this.feathers.service('users');
         this.googleService = this.feathers.service('google');
 
+        this.googleService.timeout = 10000;
+
         this.events = new EventEmitter();
     }
 
     async findInGoogle(params) {
         let query = { query: params };
 
-        let res = 'a'//await this.googleService.find(query);
+        let res = await this.googleService.find(query);
 
-        console.log(params);
         console.log(res);
 
         this.events.emit('googleFindResponse', res);
