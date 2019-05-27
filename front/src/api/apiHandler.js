@@ -1,6 +1,7 @@
 import io from 'socket.io-client';
 import feathers from "@feathersjs/client";
 import { EventEmitter } from 'events';
+import Error from '../components/App/Error/Error';
 
 class Handler {
     constructor() {
@@ -33,13 +34,20 @@ class Handler {
     async findInGoogle(params) {
         let query = { query: params };
 
-        let res = await this.googleService.find(query);
+        try {
+            let res = await this.googleService.find(query);
 
-        console.log(res);
+            console.log(res);
 
-        this.events.emit('googleFindResponse', res);
+            this.events.emit('googleFindResponse', res);
 
-        return res;
+            return res;
+        } catch (error) {
+            console.log(error);
+
+            Error.showError(error.message);
+        }
+
     }
 
     async isAuthenticated() {

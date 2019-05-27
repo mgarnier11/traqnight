@@ -31,8 +31,9 @@ class Map extends Component {
           center={this.state.center}
           defaultZoom={13}
         >
+          <PlaceOfInterest {...this.state.center} title="Origine" type="home" />
           {this.state.locations.map((location) => {
-            return (<PlaceOfInterest {...location.geometry.location} />)
+            return (<PlaceOfInterest {...location.geometry.location} title={location.name} type={location.type} />)
           })}
 
         </GoogleMapReact>

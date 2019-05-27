@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import styles from './Home.module.css';
 
 import apiHandler from '../../../api/apiHandler';
+import Error from '../Error/Error';
 
 
 class Home extends Component {
@@ -22,14 +23,17 @@ class Home extends Component {
   }
 
   handleSearchClick() {
-    let datas = {
-      type: parseInt(this.state.type),
-      town: this.state.town
-    };
+    if (this.state.town.length === 0) {
+      Error.showError('Vous devez renseigner une ville pour utiliser l\'application');
+    } else {
+      let datas = {
+        type: parseInt(this.state.type),
+        location: this.state.town
+      };
 
-    apiHandler.findInGoogle(datas);
-
-    this.props.handleHomeSearchClick(datas);
+      apiHandler.findInGoogle(datas);
+      this.props.handleHomeSearchClick(datas);
+    }
   }
 
   render() {
@@ -57,7 +61,7 @@ class Home extends Component {
             <input type="text" className="form-control" id="town" placeholder="Votre ville" onChange={this.handleChange} />
           </div>
           <div className="form-group text-center">
-            <a className="btn btn-primary" onClick={this.handleSearchClick}>Trouvez !</a>
+            <button className="btn btn-primary" onClick={this.handleSearchClick}>Trouvez !</button>
           </div>
         </div>
       </div>

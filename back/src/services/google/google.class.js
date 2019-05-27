@@ -39,23 +39,23 @@ class Service {
 
       let location = null;
       let type = types[params.query.type];
-      let radius = params.query.radius;
+      let radius = (params.query.radius === undefined ? 1000 : params.query.radius);
 
       if (params.query.location.lat && params.query.location.lng) {
         location = params.query.location;
       } else {
         let townName = params.query.location;
 
-        if (!townName) throw new BadRequest('Invalid town');
+        if (!townName) throw new BadRequest('Ville invalide');
 
         let placeIdResponse = await googleMapsClient.findPlace({
           input: townName,
           inputtype: 'textquery'
         }).asPromise();
 
-        if (placeIdResponse.status !== 200) throw new BadRequest('Invalid town');
-        if (placeIdResponse.json.status !== 'OK') throw new BadRequest('Invalid town');
-        if (placeIdResponse.json.candidates.length === 0) throw new BadRequest('Invalid town');
+        if (placeIdResponse.status !== 200) throw new BadRequest('Ville invalide');
+        if (placeIdResponse.json.status !== 'OK') throw new BadRequest('Ville invalide');
+        if (placeIdResponse.json.candidates.length === 0) throw new BadRequest('Ville invalide');
 
         let placeId = placeIdResponse.json.candidates[0].place_id;
 
@@ -63,8 +63,8 @@ class Service {
           placeid: placeId
         }).asPromise();
 
-        if (placeResponse.status !== 200) throw new BadRequest('Invalid town');
-        if (placeResponse.json.status !== 'OK') throw new BadRequest('Invalid town');
+        if (placeResponse.status !== 200) throw new BadRequest('Ville invalide');
+        if (placeResponse.json.status !== 'OK') throw new BadRequest('Ville invalide');
 
         let place = placeResponse.json.result;
 
@@ -89,8 +89,8 @@ class Service {
           pagetoken: pageToken
         }).asPromise();
 
-        if (resultsResponse.status !== 200) throw new BadRequest('Invalid town');
-        if (resultsResponse.json.status !== 'OK') throw new BadRequest('Invalid town');
+        if (resultsResponse.status !== 200) throw new BadRequest('Ville invalide');
+        if (resultsResponse.json.status !== 'OK') throw new BadRequest('Ville invalide');
 
         let results = resultsResponse.json.results;
 

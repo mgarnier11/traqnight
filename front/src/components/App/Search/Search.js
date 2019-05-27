@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { toast } from 'react-toastify';
 import styles from './Search.module.css';
 
 import apiHandler from '../../../api/apiHandler';
+import Error from '../Error/Error';
 
 class Search extends Component {
   constructor(props) {
@@ -12,8 +12,7 @@ class Search extends Component {
       type: '0',
       town: '',
       radius: '1000',
-      coordinates: null,
-      error: null
+      coordinates: null
     }
     this.handleSearchClick = this.handleSearchClick.bind(this);
     this.handleGetLocationClick = this.handleGetLocationClick.bind(this);
@@ -21,6 +20,8 @@ class Search extends Component {
 
     this.updateFromHome = this.updateFromHome.bind(this);
   }
+
+
 
   handleChange = event => {
     this.setState({
@@ -30,11 +31,7 @@ class Search extends Component {
 
   handleSearchClick() {
     if (this.state.town.length === 0 && !this.state.coordinates) {
-      this.setState({ error: { msg: 'Vous devez activer la localisation ou renseigner une ville pour utiliser l\'application' } });
-    } else if (!this.state.radius) {
-      this.setState({ error: { msg: 'Vous devez sélectionner un rayon de recherche pour utiliser l\'application' } });
-    } else if (!this.state.type) {
-      this.setState({ error: { msg: 'Vous devez sélectionner un type de recherche pour utiliser l\'application' } });
+      Error.showError('Vous devez activer la localisation ou renseigner une ville pour utiliser l\'application');
     } else {
       let datas = {
         type: parseInt(this.state.type),
@@ -60,11 +57,9 @@ class Search extends Component {
         this.setState({ town: '', coordinates: { lat: res.coords.latitude, lng: res.coords.longitude } });
       }, (err) => {
         console.log(err);
-        if (err.code === 1) this.setState({ error: { msg: 'Vous devez accepter d\'activer la localisation pour etre géolocalisé' } });
+        if (err.code === 1) Error.showError('Vous devez accepter d\'activer la localisation pour etre géolocalisé');
         else {
-          this.setState({ error: { msg: 'Erreur lors de la géolocalisation' } });
-
-          console.log(err);
+          Error.showError('Erreur lors de la géolocalisation');
         }
       });
     }
@@ -72,20 +67,6 @@ class Search extends Component {
 
   updateFromHome(datas) {
     this.setState({ town: datas.town, type: datas.type });
-  }
-
-  componentDidUpdate() {
-    if (this.state.error) {
-
-      toast.error(this.state.error.msg, {
-        onClose: () => {
-          this.setState({ error: null });
-        },
-        autoClose: 4000,
-        pauseOnHover: false,
-        pauseOnFocusLoss: false
-      });
-    }
   }
 
   render() {

@@ -3,8 +3,11 @@ import Home from './Home/Home';
 import Map from './Map/Map';
 import Results from './Results/Results';
 
+
 import styles from './App.module.css';
 import Search from './Search/Search';
+
+
 
 class App extends Component {
   constructor(props) {
@@ -22,6 +25,7 @@ class App extends Component {
   }
 
   componentDidMount() {
+
     window.onscroll = () => {
       // Clear our timeout throughout the scroll
       window.clearTimeout(this.isScrolling);
