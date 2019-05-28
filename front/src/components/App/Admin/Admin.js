@@ -33,6 +33,7 @@ class Admin extends Component {
                 }
             }
         });
+
         this.setState({ lstTypes: types });
     }
 

@@ -8,7 +8,9 @@ module.exports = function (app) {
   const options = { paginate };
 
   // Initialize our service with any options it requires
-  app.use('/types', createService(options));
+  app.use('/types', createService({
+    paginate: false
+  }));
 
   // Get our initialized service so that we can register hooks and filters
   const service = app.service('types');

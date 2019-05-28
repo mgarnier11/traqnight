@@ -19,6 +19,8 @@ class AdminRoute extends Component {
 
         if (allowed) allowed = (await apiHandler.feathers.get('user')).admin
 
+        console.log(await apiHandler.feathers.get('user'));
+
         this.setState({ allowed: allowed });
     }
 
