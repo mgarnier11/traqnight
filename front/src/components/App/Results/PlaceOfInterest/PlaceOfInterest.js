@@ -9,34 +9,29 @@ class PlaceOfInterest extends Component {
         super(props);
 
         this.state = {
-            type: props.type,
-            title: props.title
+            location: props.location
         }
     }
+
+    componentWillReceiveProps(newProps) {
+        if (newProps.location) {
+            this.setState({ location: newProps.location });
+        }
+    }
+
 
     render() {
         return (
             <div className={styles.placeOfInterest}>
                 <Tooltip
-                    title={this.state.title}
+                    title={this.state.location.name}
                     position="bottom"
                     trigger="mouseenter"
                 >
-                    {this.renderType(this.state.type)}
+                    <i className={"fas fa-" + this.state.location.type.icon}></i>
                 </Tooltip>
             </div>
         );
-    }
-
-    renderType(type) {
-        switch (type) {
-            case 'bar':
-                return <i class="fas fa-beer"></i>;
-            case 'home':
-                return <i class="fas fa-home"></i>;
-            default:
-                return <i class="fas fa-question"></i>;
-        }
     }
 }
 

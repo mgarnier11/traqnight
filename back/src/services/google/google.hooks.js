@@ -1,9 +1,10 @@
+const googleHooksLib = require('../../hooks/google.hooks.lib');
 
 
 module.exports = {
   before: {
     all: [],
-    find: [],
+    find: [googleHooksLib.beforeFindHook()],
     get: [],
     create: [],
     update: [],

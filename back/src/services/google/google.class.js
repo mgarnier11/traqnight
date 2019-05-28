@@ -4,11 +4,6 @@ const googleMapsClient = require('@google/maps').createClient({
   Promise: Promise
 });
 
-const types = [
-  'bar',
-  'night_club'
-]
-
 function degreesToRadians(degrees) {
   return degrees * Math.PI / 180;
 }
@@ -38,7 +33,7 @@ class Service {
     try {
 
       let location = null;
-      let type = types[params.query.type];
+      let type = params.query.type.type;
       let radius = (params.query.radius === undefined ? 1000 : params.query.radius);
 
       if (params.query.location.lat && params.query.location.lng) {
@@ -106,6 +101,7 @@ class Service {
 
 
           result.isOpened = (result.opening_hours ? result.opening_hours.open_now : null);
+          result.type = params.query.type;
           if (result.distance < radius) {
             goodResults.push(result);
           }

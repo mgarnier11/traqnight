@@ -37,7 +37,7 @@ class Results extends Component {
             defaultZoom={13}
           >
             {this.state.locations.map((location) => {
-              return (<PlaceOfInterest {...location.geometry.location} title={location.name} type={location.type} />)
+              return (<PlaceOfInterest {...location.geometry.location} location={location} key={location.id} />)
             })}
 
           </GoogleMapReact>

@@ -8,9 +8,11 @@ import Error from '../Error/Error';
 class Home extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
+      type: (props.types.length > 0 ? props.types[0]._id : ''),
+      types: props.types,
       town: '',
-      type: '0'
     }
 
     this.handleSearchClick = this.handleSearchClick.bind(this);
@@ -27,7 +29,7 @@ class Home extends Component {
       Error.showError('Vous devez renseigner une ville pour utiliser l\'application');
     } else {
       let datas = {
-        type: parseInt(this.state.type),
+        type: this.state.type,
         location: this.state.town
       };
 
@@ -52,8 +54,11 @@ class Home extends Component {
           <div className="form-group mx-md-5 px-md-5">
             <label htmlFor="type"><h3>Quoi ?</h3></label>
             <select className="form-control" id="type" value={this.state.type} onChange={this.handleChange}>
-              <option value="0">Bars</option>
-              <option value="1">Boites de nuit</option>
+              {this.state.types.map((type) => {
+                return (
+                  <option value={type._id} key={type._id} >{type.name}</option>
+                )
+              })}
             </select>
           </div>
           <div className="form-group mx-md-5 px-md-5">

@@ -2,7 +2,12 @@ import React, { Component } from "react";
 import { Link, withRouter } from 'react-router-dom';
 import { Button, Form, Col } from "react-bootstrap";
 
+import placesTypes from '../../../json/googleplaces.json';
+import fontAwesomeIcons from '../../../json/fontawesome.json';
+
 import apiHandler from '../../../api/apiHandler';
+import styles from './Type.module.css';
+import Error from "../Error/Error.js";
 
 class CreateType extends Component {
     constructor(props) {
@@ -10,8 +15,7 @@ class CreateType extends Component {
 
         this.state = {
             id: props.match.params.id,
-            type: undefined,
-            error: undefined
+            type: undefined
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -23,7 +27,7 @@ class CreateType extends Component {
         try {
             this.setState({ type: await apiHandler.typeService.get(this.state.id) });
         } catch (error) {
-            this.setState({ error: error.message });
+            Error.showError(error.message);
         }
     }
 
@@ -48,12 +52,16 @@ class CreateType extends Component {
 
         try {
 
-            await apiHandler.typeService.update(this.state.id, { name: this.state.type.name });
+            await apiHandler.typeService.patch(this.state.id, {
+                name: this.state.type.name,
+                type: this.state.type.type,
+                icon: this.state.type.icon
+            });
             this.props.history.push('/admin');
         } catch (error) {
             console.log(error);
 
-            this.setState({ error: error.message });
+            Error.showError(error.message);
         }
     }
 
@@ -62,7 +70,6 @@ class CreateType extends Component {
             <div className="col-md-6 offset-md-3">
                 <h1 className="text-center">Artwork Type</h1>
                 {this.state.type ? this.renderType(this.state.type) : <div className="loading"></div>}
-                <div className="error text-center">{this.state.error}</div>
             </div >
         );
     }
@@ -73,11 +80,39 @@ class CreateType extends Component {
                 <Form.Group controlId="name">
                     <Form.Label>Name</Form.Label>
                     <Form.Control
-                        autoFocus
                         type="text"
                         value={type.name}
                         onChange={this.handleChange}
                     />
+                </Form.Group>
+                <Form.Group controlId="type">
+                    <Form.Label>Google Places API Type</Form.Label>
+                    <Form.Control
+                        as="select"
+                        value={type.type}
+                        onChange={this.handleChange}
+                    >
+                        {placesTypes.map((placeType) => {
+                            return (
+                                <option key={placeType} value={placeType}>{placeType}</option>
+                            )
+                        })}
+                    </Form.Control>
+                </Form.Group>
+                <Form.Group controlId="icon">
+                    <Form.Label>Displayed Icon : <i className={"fas fa-" + type.icon + " " + styles.icon} />
+                    </Form.Label>
+                    <Form.Control
+                        as="select"
+                        value={type.icon}
+                        onChange={this.handleChange}
+                    >
+                        {fontAwesomeIcons.map((icon) => {
+                            return (
+                                <option key={icon} value={icon}>{icon}</option>
+                            )
+                        })}
+                    </Form.Control>
                 </Form.Group>
                 <Form.Row>
                     <Col>

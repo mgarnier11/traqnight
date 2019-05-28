@@ -14,6 +14,8 @@ import EditType from './Type/Edit';
 
 import Admin from './Admin/Admin';
 
+import apiHandler from '../../api/apiHandler';
+
 import styles from './App.module.css';
 
 
@@ -31,10 +33,28 @@ class App extends Component {
     this.prgmScrolling = true;
     this.lastScroll = 0;
 
+    this.state = {
+      types: undefined
+    };
+
     this.handleHomeSearchClick = this.handleHomeSearchClick.bind(this);
   }
 
-  componentDidMount() {
+  async componentWillMount() {
+
+    this.setState({
+      types: await apiHandler.typeService.find({
+        query: {
+          $sort: {
+            name: -1
+          }
+        }
+      })
+    });
+
+  }
+
+  async componentDidMount() {
 
     window.onscroll = () => {
       // Clear our timeout throughout the scroll
@@ -59,26 +79,32 @@ class App extends Component {
   }
 
   render() {
-    return (
-      <Switch>
-        <Redirect from='/logout' to='/login' />
-        <Route exact path='/login' component={Login} />
-        <Route exact path='/register' component={Register} />
-        <AdminRoute exact path='/admin' component={Admin} />
-        <AdminRoute exact path='/admin/type/new' component={CreateType} />
-        <AdminRoute exact path='/admin/type/edit/:id' component={EditType} />
-        <Route exact path='/' component={() => {
-          return (
-            <div className={styles.app}>
-              <Home className={styles.home} refere={this.homeDivRef} handleHomeSearchClick={this.handleHomeSearchClick} />
-              <Search className={styles.search} ref={this.searchRef} refere={this.searchDivRef} />
-              <Results className={styles.results} />
-            </div>
-          );
-        }} />
-      </Switch>
+    if (this.state.types === undefined) {
+      return (
+        <div className="loading">Loading</div>
+      )
 
-    );
+    } else {
+      return (
+        <Switch>
+          <Redirect from='/logout' to='/login' />
+          <Route exact path='/login' component={Login} />
+          <Route exact path='/register' component={Register} />
+          <AdminRoute exact path='/admin' component={Admin} />
+          <AdminRoute exact path='/admin/type/new' component={CreateType} />
+          <AdminRoute exact path='/admin/type/edit/:id' component={EditType} />
+          <Route exact path='/' component={() => {
+            return (
+              <div className={styles.app}>
+                <Home className={styles.home} refere={this.homeDivRef} handleHomeSearchClick={this.handleHomeSearchClick} types={this.state.types} />
+                <Search className={styles.search} ref={this.searchRef} refere={this.searchDivRef} types={this.state.types} />
+                <Results className={styles.results} />
+              </div>
+            );
+          }} />
+        </Switch>
+      );
+    }
   }
 
 }

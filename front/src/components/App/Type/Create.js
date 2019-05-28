@@ -8,6 +8,7 @@ import placesTypes from '../../../json/googleplaces.json';
 import fontAwesomeIcons from '../../../json/fontawesome.json';
 
 import styles from './Type.module.css';
+import Error from "../Error/Error";
 
 class CreateType extends Component {
     constructor(props) {
@@ -37,22 +38,24 @@ class CreateType extends Component {
     handleSubmit = async event => {
         event.preventDefault();
 
-        this.setState({ error: "" });
-
         try {
-            await apiHandler.typeService.create({ name: this.state.name });
+            await apiHandler.typeService.create({
+                name: this.state.name,
+                type: this.state.googleType,
+                icon: this.state.icon
+            });
             this.props.history.push('/admin');
         } catch (error) {
             console.log(error);
 
-            this.setState({ error: error.message });
+            Error.showError(error.message);
         }
     }
 
     render() {
         return (
             <div className="col-md-6 offset-md-3">
-                <h1 className="text-center">Create a new Artwork Type</h1>
+                <h1 className="text-center">Create a new Type</h1>
                 <Form onSubmit={this.handleSubmit}>
                     <Form.Group controlId="name">
                         <Form.Label>Name</Form.Label>
@@ -106,7 +109,6 @@ class CreateType extends Component {
                         </Link>
                     </Form.Row>
                 </Form>
-                <div className="error text-center">{this.state.error}</div>
             </div >
         );
     }

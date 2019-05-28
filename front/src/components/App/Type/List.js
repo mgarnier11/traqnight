@@ -2,7 +2,9 @@ import React, { Component } from "react";
 import { Table, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-import apiHandler from '../../../../api/apiHandler';
+import apiHandler from '../../../api/apiHandler';
+import styles from './Type.module.css';
+
 
 class ListTypes extends Component {
     constructor(props) {
@@ -12,11 +14,6 @@ class ListTypes extends Component {
             lst: this.props.lst,
             page: 1
         };
-
-        this.nbTypes = this.props.nbPerPage;
-
-        this.pageDown = this.pageDown.bind(this);
-        this.pageUp = this.pageUp.bind(this);
 
         this.onClickDelete = this.onClickDelete.bind(this);
 
@@ -39,19 +36,6 @@ class ListTypes extends Component {
         this.props.pageChanged(this.state.page);
     }
 
-    pageUp() {
-        if (this.state.lst.length === this.nbTypes) this.setState({ page: this.state.page + 1 }, () => {
-            this.props.pageChanged(this.state.page);
-        });
-
-    }
-
-    pageDown() {
-        if (this.state.page > 1) this.setState({ page: this.state.page - 1 }, () => {
-            this.props.pageChanged(this.state.page);
-        });
-    }
-
     componentWillReceiveProps(props) {
         if (props.lst) this.setState({ lst: props.lst });
     }
@@ -62,16 +46,17 @@ class ListTypes extends Component {
 
     render() {
         return (
-            <div className={this.props.className + ' row'}>
+            <div className={this.props.className}>
                 <h1 className="col-12 text-center">Type List</h1>
                 <Table striped bordered hover responsive>
                     <thead>
                         <tr>
                             <th>Id</th>
                             <th>Name</th>
+                            <th>Icon</th>
+                            <th>Google Type</th>
                             <th>Update</th>
                             <th>Delete</th>
-
                         </tr>
                     </thead>
                     <tbody>
@@ -86,9 +71,11 @@ class ListTypes extends Component {
 
     renderType(type) {
         return (
-            <tr>
+            <tr key={type._id}>
                 <td>{type._id}</td>
                 <td>{type.name}</td>
+                <td className="text-center"><i className={"fas fa-" + type.icon + " " + styles.icon} /></td>
+                <td>{type.type}</td>
                 <td>
                     <Link className="btn btn-warning col" to={'/admin/type/edit/' + type._id}>Update</Link>
                 </td>

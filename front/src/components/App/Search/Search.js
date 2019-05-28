@@ -9,7 +9,8 @@ class Search extends Component {
     super(props);
 
     this.state = {
-      type: '0',
+      type: (props.types.length > 0 ? props.types[0]._id : ''),
+      types: props.types,
       town: '',
       radius: '1000',
       coordinates: null
@@ -34,15 +35,13 @@ class Search extends Component {
       Error.showError('Vous devez activer la localisation ou renseigner une ville pour utiliser l\'application');
     } else {
       let datas = {
-        type: parseInt(this.state.type),
+        type: this.state.type,
         location: (this.state.coordinates || this.state.town),
         radius: parseInt(this.state.radius)
       };
 
       apiHandler.findInGoogle(datas);
     }
-
-
   }
 
   handleTownInputClick() {
@@ -66,7 +65,7 @@ class Search extends Component {
   }
 
   updateFromHome(datas) {
-    this.setState({ town: datas.town, type: datas.type });
+    this.setState({ town: datas.location, type: datas.type });
   }
 
   render() {
@@ -74,8 +73,11 @@ class Search extends Component {
       <div className={this.props.className + " " + styles.search} id="searchSection" ref={this.props.refere}>
         <div className={styles.type + " form-group " + styles.gridCell}>
           <select className="form-control" id="type" value={this.state.type} onChange={this.handleChange}>
-            <option value="0">Bars</option>
-            <option value="1">Boites de nuit</option>
+            {this.state.types.map((type) => {
+              return (
+                <option value={type._id} key={type._id}>{type.name}</option>
+              )
+            })}
           </select>
         </div>
 
