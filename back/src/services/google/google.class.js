@@ -101,7 +101,10 @@ class Service {
 
         if (resultsResponse.status !== 200)
           throw new BadRequest('Ville invalide');
-        if (resultsResponse.json.status !== 'OK')
+        if (
+          resultsResponse.json.status !== 'OK' &&
+          resultsResponse.json.status !== 'ZERO_RESULTS'
+        )
           throw new BadRequest('Ville invalide');
 
         let results = resultsResponse.json.results;
