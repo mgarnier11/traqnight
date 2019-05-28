@@ -4,12 +4,19 @@ import { Button, Form, Col } from "react-bootstrap";
 
 import apiHandler from '../../../api/apiHandler';
 
+import placesTypes from '../../../json/googleplaces.json';
+import fontAwesomeIcons from '../../../json/fontawesome.json';
+
+import styles from './Type.module.css';
+
 class CreateType extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            name: ''
+            name: '',
+            googleType: 'accounting',
+            icon: 'ad'
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -50,11 +57,39 @@ class CreateType extends Component {
                     <Form.Group controlId="name">
                         <Form.Label>Name</Form.Label>
                         <Form.Control
-                            autoFocus
                             type="text"
                             value={this.state.name}
                             onChange={this.handleChange}
                         />
+                    </Form.Group>
+                    <Form.Group controlId="googleType">
+                        <Form.Label>Google Places API Type</Form.Label>
+                        <Form.Control
+                            as="select"
+                            value={this.state.googleType}
+                            onChange={this.handleChange}
+                        >
+                            {placesTypes.map((placeType) => {
+                                return (
+                                    <option key={placeType} value={placeType}>{placeType}</option>
+                                )
+                            })}
+                        </Form.Control>
+                    </Form.Group>
+                    <Form.Group controlId="icon">
+                        <Form.Label>Displayed Icon : <i className={"fas fa-" + this.state.icon + " " + styles.icon} />
+                        </Form.Label>
+                        <Form.Control
+                            as="select"
+                            value={this.state.icon}
+                            onChange={this.handleChange}
+                        >
+                            {fontAwesomeIcons.map((icon) => {
+                                return (
+                                    <option key={icon} value={icon}>{icon}</option>
+                                )
+                            })}
+                        </Form.Control>
                     </Form.Group>
                     <Form.Row>
                         <Col>
