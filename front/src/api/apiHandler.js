@@ -25,6 +25,7 @@ class Handler {
 
         this.userService = this.feathers.service('users');
         this.googleService = this.feathers.service('google');
+        this.typeService = this.feathers.service('types');
 
         this.googleService.timeout = 10000;
 

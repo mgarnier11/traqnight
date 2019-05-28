@@ -9,6 +9,9 @@ import Register from './Auth/Register';
 import AdminRoute from '../SecuredRoute/AdminRoute';
 import SecuredRoute from '../SecuredRoute/SecuredRoute';
 
+import CreateType from './Type/Create';
+import EditType from './Type/Edit';
+
 import Admin from './Admin/Admin';
 
 import styles from './App.module.css';
@@ -62,6 +65,8 @@ class App extends Component {
         <Route exact path='/login' component={Login} />
         <Route exact path='/register' component={Register} />
         <AdminRoute exact path='/admin' component={Admin} />
+        <AdminRoute exact path='/admin/type/new' component={CreateType} />
+        <AdminRoute exact path='/admin/type/edit/:id' component={EditType} />
         <Route exact path='/' component={() => {
           return (
             <div className={styles.app}>
