@@ -1,0 +1,164 @@
+.loading {
+  width: 100%;
+  text-align: center;
+}
+
+@keyframes ldsSpinner {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@-webkit-keyframes ldsSpinner {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+.ldsSpinner {
+  position: relative;
+  margin: auto;
+}
+.ldsSpinner div {
+  left: 96px;
+  top: 48px;
+  position: absolute;
+  -webkit-animation: ldsSpinner linear 0.7s infinite;
+  animation: ldsSpinner linear 0.7s infinite;
+  background: #000000;
+  width: 8px;
+  height: 24px;
+  border-radius: 40%;
+  -webkit-transform-origin: 4px 52px;
+  transform-origin: 4px 52px;
+}
+.ldsSpinner div:nth-child(1) {
+  -webkit-transform: rotate(0deg);
+  transform: rotate(0deg);
+  -webkit-animation-delay: -0.665s;
+  animation-delay: -0.665s;
+}
+.ldsSpinner div:nth-child(2) {
+  -webkit-transform: rotate(18deg);
+  transform: rotate(18deg);
+  -webkit-animation-delay: -0.63s;
+  animation-delay: -0.63s;
+}
+.ldsSpinner div:nth-child(3) {
+  -webkit-transform: rotate(36deg);
+  transform: rotate(36deg);
+  -webkit-animation-delay: -0.595s;
+  animation-delay: -0.595s;
+}
+.ldsSpinner div:nth-child(4) {
+  -webkit-transform: rotate(54deg);
+  transform: rotate(54deg);
+  -webkit-animation-delay: -0.56s;
+  animation-delay: -0.56s;
+}
+.ldsSpinner div:nth-child(5) {
+  -webkit-transform: rotate(72deg);
+  transform: rotate(72deg);
+  -webkit-animation-delay: -0.525s;
+  animation-delay: -0.525s;
+}
+.ldsSpinner div:nth-child(6) {
+  -webkit-transform: rotate(90deg);
+  transform: rotate(90deg);
+  -webkit-animation-delay: -0.49s;
+  animation-delay: -0.49s;
+}
+.ldsSpinner div:nth-child(7) {
+  -webkit-transform: rotate(108deg);
+  transform: rotate(108deg);
+  -webkit-animation-delay: -0.455s;
+  animation-delay: -0.455s;
+}
+.ldsSpinner div:nth-child(8) {
+  -webkit-transform: rotate(126deg);
+  transform: rotate(126deg);
+  -webkit-animation-delay: -0.42s;
+  animation-delay: -0.42s;
+}
+.ldsSpinner div:nth-child(9) {
+  -webkit-transform: rotate(144deg);
+  transform: rotate(144deg);
+  -webkit-animation-delay: -0.385s;
+  animation-delay: -0.385s;
+}
+.ldsSpinner div:nth-child(10) {
+  -webkit-transform: rotate(162deg);
+  transform: rotate(162deg);
+  -webkit-animation-delay: -0.35s;
+  animation-delay: -0.35s;
+}
+.ldsSpinner div:nth-child(11) {
+  -webkit-transform: rotate(180deg);
+  transform: rotate(180deg);
+  -webkit-animation-delay: -0.315s;
+  animation-delay: -0.315s;
+}
+.ldsSpinner div:nth-child(12) {
+  -webkit-transform: rotate(198deg);
+  transform: rotate(198deg);
+  -webkit-animation-delay: -0.28s;
+  animation-delay: -0.28s;
+}
+.ldsSpinner div:nth-child(13) {
+  -webkit-transform: rotate(216deg);
+  transform: rotate(216deg);
+  -webkit-animation-delay: -0.245s;
+  animation-delay: -0.245s;
+}
+.ldsSpinner div:nth-child(14) {
+  -webkit-transform: rotate(234deg);
+  transform: rotate(234deg);
+  -webkit-animation-delay: -0.21s;
+  animation-delay: -0.21s;
+}
+.ldsSpinner div:nth-child(15) {
+  -webkit-transform: rotate(252deg);
+  transform: rotate(252deg);
+  -webkit-animation-delay: -0.175s;
+  animation-delay: -0.175s;
+}
+.ldsSpinner div:nth-child(16) {
+  -webkit-transform: rotate(270deg);
+  transform: rotate(270deg);
+  -webkit-animation-delay: -0.14s;
+  animation-delay: -0.14s;
+}
+.ldsSpinner div:nth-child(17) {
+  -webkit-transform: rotate(288deg);
+  transform: rotate(288deg);
+  -webkit-animation-delay: -0.105s;
+  animation-delay: -0.105s;
+}
+.ldsSpinner div:nth-child(18) {
+  -webkit-transform: rotate(306deg);
+  transform: rotate(306deg);
+  -webkit-animation-delay: -0.07s;
+  animation-delay: -0.07s;
+}
+.ldsSpinner div:nth-child(19) {
+  -webkit-transform: rotate(324deg);
+  transform: rotate(324deg);
+  -webkit-animation-delay: -0.035s;
+  animation-delay: -0.035s;
+}
+.ldsSpinner div:nth-child(20) {
+  -webkit-transform: rotate(342deg);
+  transform: rotate(342deg);
+  -webkit-animation-delay: 0s;
+  animation-delay: 0s;
+}
+.ldsSpinner {
+  width: 200px !important;
+  height: 200px !important;
+  -webkit-transform: translate(-100px, -100px) scale(1) translate(100px, 100px);
+  transform: translate(-100px, -100px) scale(1) translate(100px, 100px);
+}

@@ -1,20 +1,22 @@
-
 .results {
-    
 }
 
-
 .map {
-    height: 50%;
+  height: 50%;
 }
 
 .list {
-    width: 100%;
+  width: 100%;
 }
 
-@media all and (min-width: 768px) {/*md*/
-    .list {
-        width: 80%;
-        margin: auto;
-    }
+.loading {
+  height: 100%;
+}
+
+@media all and (min-width: 768px) {
+  /*md*/
+  .list {
+    width: 80%;
+    margin: auto;
+  }
 }

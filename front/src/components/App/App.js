@@ -13,13 +13,11 @@ import CreateType from './Type/Create';
 import EditType from './Type/Edit';
 
 import Admin from './Admin/Admin';
+import Loading from './Loading/Loading';
 
 import apiHandler from '../../api/apiHandler';
 
 import styles from './App.module.css';
-
-
-
 
 class App extends Component {
   constructor(props) {
@@ -41,7 +39,6 @@ class App extends Component {
   }
 
   async componentWillMount() {
-
     this.setState({
       types: await apiHandler.typeService.find({
         query: {
@@ -51,11 +48,9 @@ class App extends Component {
         }
       })
     });
-
   }
 
   async componentDidMount() {
-
     window.onscroll = () => {
       // Clear our timeout throughout the scroll
       window.clearTimeout(this.isScrolling);
@@ -70,8 +65,7 @@ class App extends Component {
     };
   }
 
-  scrollTo = (ref) => window.scrollTo(0, this[ref].current.offsetTop);
-
+  scrollTo = ref => window.scrollTo(0, this[ref].current.offsetTop);
 
   handleHomeSearchClick(datas) {
     this.searchRef.current.updateFromHome(datas);
@@ -80,10 +74,7 @@ class App extends Component {
 
   render() {
     if (this.state.types === undefined) {
-      return (
-        <div className="loading">Loading</div>
-      )
-
+      return <Loading />;
     } else {
       return (
         <Switch>
@@ -93,21 +84,33 @@ class App extends Component {
           <AdminRoute exact path='/admin' component={Admin} />
           <AdminRoute exact path='/admin/type/new' component={CreateType} />
           <AdminRoute exact path='/admin/type/edit/:id' component={EditType} />
-          <Route exact path='/' component={() => {
-            return (
-              <div className={styles.app}>
-                <Home className={styles.home} refere={this.homeDivRef} handleHomeSearchClick={this.handleHomeSearchClick} types={this.state.types} />
-                <Search className={styles.search} ref={this.searchRef} refere={this.searchDivRef} types={this.state.types} />
-                <Results className={styles.results} />
-              </div>
-            );
-          }} />
+          <Route
+            exact
+            path='/'
+            component={() => {
+              return (
+                <div className={styles.app}>
+                  <Home
+                    className={styles.home}
+                    refere={this.homeDivRef}
+                    handleHomeSearchClick={this.handleHomeSearchClick}
+                    types={this.state.types}
+                  />
+                  <Search
+                    className={styles.search}
+                    ref={this.searchRef}
+                    refere={this.searchDivRef}
+                    types={this.state.types}
+                  />
+                  <Results className={styles.results} />
+                </div>
+              );
+            }}
+          />
         </Switch>
       );
     }
   }
-
 }
 
 export default withRouter(App);
-
