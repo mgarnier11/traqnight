@@ -1,11 +1,18 @@
 import React, { Component } from 'react';
-import Home from './Home/Home';
-import Map from './Map/Map';
-import Results from './Results/Results';
+import { Route, withRouter, Switch, Redirect } from 'react-router-dom';
 
+import Home from './Home/Home';
+import Results from './Results/Results';
+import Search from './Search/Search';
+import Login from './Auth/Login';
+import Register from './Auth/Register';
+import AdminRoute from '../SecuredRoute/AdminRoute';
+import SecuredRoute from '../SecuredRoute/SecuredRoute';
+
+import Admin from './Admin/Admin';
 
 import styles from './App.module.css';
-import Search from './Search/Search';
+
 
 
 
@@ -50,16 +57,26 @@ class App extends Component {
 
   render() {
     return (
-      <div className={styles.app}>
-        <Home className={styles.home} refere={this.homeDivRef} handleHomeSearchClick={this.handleHomeSearchClick} />
-        <Search className={styles.search} ref={this.searchRef} refere={this.searchDivRef} />
-        <Map className={styles.map} />
-        <Results className={styles.results} />
-      </div>
+      <Switch>
+        <Redirect from='/logout' to='/login' />
+        <Route exact path='/login' component={Login} />
+        <Route exact path='/register' component={Register} />
+        <AdminRoute exact path='/admin' component={Admin} />
+        <Route exact path='/' component={() => {
+          return (
+            <div className={styles.app}>
+              <Home className={styles.home} refere={this.homeDivRef} handleHomeSearchClick={this.handleHomeSearchClick} />
+              <Search className={styles.search} ref={this.searchRef} refere={this.searchDivRef} />
+              <Results className={styles.results} />
+            </div>
+          );
+        }} />
+      </Switch>
+
     );
   }
 
 }
 
-export default App;
+export default withRouter(App);
 
