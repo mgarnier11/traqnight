@@ -58,7 +58,7 @@ class App extends Component {
       // Set a timeout to run after scrolling ends
       this.isScrolling = setTimeout(() => {
         if (this.lastScroll < window.scrollY) this.scrollTo('searchDivRef');
-        else if (this.lastScroll > window.scrollY) this.scrollTo('homeDivRef');
+        //else if (this.lastScroll > window.scrollY) this.scrollTo('homeDivRef');
 
         this.lastScroll = window.scrollY;
       }, 66);
