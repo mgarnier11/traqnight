@@ -55,7 +55,7 @@ class Results extends Component {
                 key: 'AIzaSyDRSLqNh7shuCn-bFK930HdFGTAMjI3Q7E'
               }}
               center={this.state.origin}
-              defaultZoom={13}
+              defaultZoom={18}
             >
               {this.state.locations.map(location => {
                 return (

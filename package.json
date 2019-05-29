@@ -97,7 +97,7 @@
     "front-test": "node front/scripts/test.js",
     "back-test": "npm run back-eslint && NODE_ENV= npm run back-mocha",
     "back-eslint": "eslint back/src/. back/test/. --config .eslintrc.json",
-    "back-dev": "nodemon back/src/",
+    "back-dev": "nodemon --watch back/src/",
     "back-mocha": "mocha back/test/ --recursive --exit",
     "start": "node back/src",
     "heroku-postbuild": "npm run front-build"

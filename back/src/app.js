@@ -32,14 +32,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 if (app.locals.settings.env !== 'development') {
-    app.use(favicon(path.join(app.get('public'), 'favicon.ico')));
-    // Host the public folder
-    app.use('/', express.static(app.get('public')));
-    app.use('/admin', express.static(app.get('public')));
-    app.use('/login', express.static(app.get('public')));
-    app.use('/logout', express.static(app.get('public')));
-    app.use('/register', express.static(app.get('public')));
-
+  app.use(favicon(path.join(app.get('public'), 'favicon.ico')));
+  // Host the public folder
+  app.use('/*', express.static(app.get('public')));
 }
 
 // Set up Plugins and providers

@@ -3,30 +3,23 @@ const {
   BadRequest,
   GeneralError
 } = require('@feathersjs/errors');
+const myutils = require('../utils');
 const googleMapsClient = require('@google/maps').createClient({
   key: 'AIzaSyCkiT6O5Me25yx4JV9ZT3iGYYCdsgzqv9w',
   Promise: Promise
 });
 
-function degreesToRadians(degrees) {
-  return (degrees * Math.PI) / 180;
-}
+let p1 = { lat: 47.2167, lng: -1.555 };
+let p2 = myutils.calcPoint(p1, 1414, 45);
+let p3 = myutils.calcPoint(p1, 1414, 135);
+let p4 = myutils.calcPoint(p1, 1414, 225);
+let p5 = myutils.calcPoint(p1, 1414, 315);
 
-function distanceInMBetweenEarthCoordinates(lat1, lon1, lat2, lon2) {
-  var earthRadiusKm = 6371;
-
-  var dLat = degreesToRadians(lat2 - lat1);
-  var dLon = degreesToRadians(lon2 - lon1);
-
-  lat1 = degreesToRadians(lat1);
-  lat2 = degreesToRadians(lat2);
-
-  var a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return earthRadiusKm * c * 1000;
-}
+console.log(p1);
+console.log(p2);
+console.log(p3);
+console.log(p4);
+console.log(p5);
 
 /* eslint-disable no-unused-vars */
 class Service {
@@ -38,6 +31,7 @@ class Service {
     try {
       let location = null;
       let type = params.query.type.type;
+      let keyword = params.query.type.name;
       let radius =
         params.query.radius === undefined ? 1000 : params.query.radius;
 
@@ -50,7 +44,7 @@ class Service {
 
         let placeIdResponse = await googleMapsClient
           .findPlace({
-            input: townName,
+            input: townName + ', France',
             inputtype: 'textquery'
           })
           .asPromise();
@@ -110,7 +104,7 @@ class Service {
         let results = resultsResponse.json.results;
 
         for (let result of results) {
-          let distance = distanceInMBetweenEarthCoordinates(
+          let distance = myutils.distanceInMBetweenEarthCoordinates(
             result.geometry.location.lat,
             result.geometry.location.lng,
             location.lat,
@@ -125,6 +119,7 @@ class Service {
           if (result.distance < radius) {
             goodResults.push(result);
           }
+          //goodResults.push(result);
         }
 
         if (goodResults.length == 20 && resultsResponse.json.next_page_token) {
