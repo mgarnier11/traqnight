@@ -1,4 +1,42 @@
 const earthRadiusKm = 6371;
+const axios = require('axios').default;
+
+const hereURL = 'https://places.api.here.com';
+const placeEndpoint = '/places/v1';
+const searchEndpoint = '/discover/search';
+
+const appId = 'oRM589ApFBNyrtBwfkgH';
+const appCode = '3nHtQC18lMGYn-6zTZXfXw';
+
+async function hereSearchRequest(params) {
+  let url = hereURL + placeEndpoint + searchEndpoint;
+
+  let paramStr = '?';
+
+  for (let param in params) {
+    paramStr += '&' + param + '=' + params[param];
+  }
+
+  let requestUrl = url + paramStr + '&app_id=' + appId + '&app_code=' + appCode;
+
+  try {
+    let res = await axios.get(requestUrl, {
+      headers: {
+        'Accept-Language': 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,de;q=0.6'
+      }
+    });
+
+    return res.data.results;
+  } catch (error) {
+    console.log(error.message);
+
+    if (error.response && error.response.data) {
+      console.log(error.response.data.message);
+    }
+
+    return error;
+  }
+}
 
 function degreesToRadians(degrees) {
   return (degrees * Math.PI) / 180;
@@ -47,5 +85,6 @@ module.exports = {
   calcPoint: calcPoint,
   distanceInMBetweenEarthCoordinates: distanceInMBetweenEarthCoordinates,
   degreesToRadians: degreesToRadians,
-  radiansToDegrees: radiansToDegrees
+  radiansToDegrees: radiansToDegrees,
+  hereSearchRequest: hereSearchRequest
 };

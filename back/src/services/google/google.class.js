@@ -9,18 +9,6 @@ const googleMapsClient = require('@google/maps').createClient({
   Promise: Promise
 });
 
-let p1 = { lat: 47.2167, lng: -1.555 };
-let p2 = myutils.calcPoint(p1, 1414, 45);
-let p3 = myutils.calcPoint(p1, 1414, 135);
-let p4 = myutils.calcPoint(p1, 1414, 225);
-let p5 = myutils.calcPoint(p1, 1414, 315);
-
-console.log(p1);
-console.log(p2);
-console.log(p3);
-console.log(p4);
-console.log(p5);
-
 /* eslint-disable no-unused-vars */
 class Service {
   constructor(options) {
@@ -139,10 +127,38 @@ class Service {
         }
       }
 
+      let inParam = location.lat + ',' + location.lng + ';r=' + radius;
+      let location2 = myutils.calcPoint(location, radius * Math.sqrt(2), 45);
+      inParam =
+        location.lng +
+        ',' +
+        location.lat +
+        ',' +
+        location2.lng +
+        ',' +
+        location2.lat;
+
       let res = {
         origin: location,
-        results: await getResults()
+        results: await myutils.hereSearchRequest({
+          q: keyword,
+          in: inParam,
+          size: 100
+        })
       };
+
+      res.results = res.results.items;
+
+      for (let result of res.results) {
+        result.geometry = {
+          location: {
+            lat: result.position[0],
+            lng: result.position[1]
+          }
+        };
+        result.name = result.title;
+        result.type = params.query.type;
+      }
       console.log('google request is ok');
       return res;
     } catch (error) {

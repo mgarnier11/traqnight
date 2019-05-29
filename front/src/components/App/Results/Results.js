@@ -37,6 +37,7 @@ class Results extends Component {
   }
 
   setResults(res) {
+    console.log(res);
     this.setState({ origin: res.origin, locations: res.results });
   }
 
@@ -55,7 +56,7 @@ class Results extends Component {
                 key: 'AIzaSyDRSLqNh7shuCn-bFK930HdFGTAMjI3Q7E'
               }}
               center={this.state.origin}
-              defaultZoom={18}
+              defaultZoom={13}
             >
               {this.state.locations.map(location => {
                 return (
