@@ -9,6 +9,44 @@ const googleMapsClient = require('@google/maps').createClient({
   Promise: Promise
 });
 
+async function searchLocations(origin, radius, keyword) {
+  //radius = radius / 2;
+  let corners = [];
+  corners.push(myutils.calcPoint(origin, radius * Math.sqrt(2), 45));
+  corners.push(myutils.calcPoint(origin, radius * Math.sqrt(2), 135));
+  corners.push(myutils.calcPoint(origin, radius * Math.sqrt(2), 225));
+  corners.push(myutils.calcPoint(origin, radius * Math.sqrt(2), 315));
+
+  let allResults = [];
+
+  for (let corner of corners) {
+    let wlng = (origin.lng < corner.lng ? origin.lng : corner.lng)
+    let slat = (origin.lat < corner.lat ? origin.lat : corner.lat)
+    let elng = (origin.lng > corner.lng ? origin.lng : corner.lng)
+    let nlat = (origin.lat > corner.lat ? origin.lat : corner.lat)
+
+    let inParam = wlng + ',' + slat + ',' + elng + ',' + nlat;
+    try {
+      let results = await myutils.hereSearchRequest({
+        q: keyword,
+        in: inParam,
+        size: 100
+      });
+
+      if (results.items.length === 100) {
+        allResults = allResults.concat(await searchLocations(myutils.middlePoint(origin, corner), radius / 2, keyword));
+      } else {
+        allResults = allResults.concat(results.items);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return [...new Set(allResults)];
+}
+
+
 /* eslint-disable no-unused-vars */
 class Service {
   constructor(options) {
@@ -127,27 +165,32 @@ class Service {
         }
       }
 
-      let inParam = location.lat + ',' + location.lng + ';r=' + radius;
-      let location2 = myutils.calcPoint(location, radius * Math.sqrt(2), 45);
-      inParam =
-        location.lng +
-        ',' +
-        location.lat +
-        ',' +
-        location2.lng +
-        ',' +
-        location2.lat;
+
+
+
+
+
 
       let res = {
         origin: location,
-        results: await myutils.hereSearchRequest({
-          q: keyword,
-          in: inParam,
-          size: 100
-        })
+        results: await searchLocations(location, radius, keyword)
       };
+      const lookupObj = {};
 
-      res.results = res.results.items;
+      res.results = res.results.filter(
+        x => {
+          let ret = !(lookupObj[x.id]);
+          lookupObj[x.id] = true;
+
+          if (ret) {
+            x.distance = myutils.distanceInMBetweenEarthCoordinates(x.position[0], x.position[1], location.lat, location.lng);
+            if (x.distance > radius) ret = false;
+            if (!x.openingHours) ret = false;
+          }
+
+          return ret;
+        }
+      )
 
       for (let result of res.results) {
         result.geometry = {
@@ -200,7 +243,7 @@ class Service {
   }
 }
 
-module.exports = function(options) {
+module.exports = function (options) {
   return new Service(options);
 };
 

@@ -141,7 +141,6 @@ class Search extends Component {
             <option value={1000}>1000m</option>
             <option value={2500}>2500m</option>
             <option value={5000}>5000m</option>
-            <option value={10000}>10000m</option>
           </select>
         </div>
 

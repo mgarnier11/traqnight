@@ -81,10 +81,31 @@ function calcPoint(origin, distance, bearing) {
   return { lat: radiansToDegrees(lat2), lng: radiansToDegrees(lon2) };
 }
 
+function middlePoint(point1, point2) {
+
+  //-- Longitude difference
+  var dLng = degreesToRadians(point2.lng - point1.lng);
+
+  //-- Convert to radians
+  let lat1 = degreesToRadians(point1.lat);
+  let lat2 = degreesToRadians(point2.lat);
+  let lng1 = degreesToRadians(point1.lng);
+
+  var bX = Math.cos(lat2) * Math.cos(dLng);
+  var bY = Math.cos(lat2) * Math.sin(dLng);
+  var lat3 = Math.atan2(Math.sin(lat1) + Math.sin(lat2), Math.sqrt((Math.cos(lat1) + bX) * (Math.cos(lat1) + bX) + bY * bY));
+  var lng3 = lng1 + Math.atan2(bY, Math.cos(lat1) + bX);
+
+  //-- Return result
+  return { lat: radiansToDegrees(lat3), lng: radiansToDegrees(lng3) };
+}
+
+
 module.exports = {
   calcPoint: calcPoint,
   distanceInMBetweenEarthCoordinates: distanceInMBetweenEarthCoordinates,
   degreesToRadians: degreesToRadians,
   radiansToDegrees: radiansToDegrees,
-  hereSearchRequest: hereSearchRequest
+  hereSearchRequest: hereSearchRequest,
+  middlePoint: middlePoint
 };

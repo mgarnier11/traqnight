@@ -29,7 +29,7 @@ class Handler {
     this.googleService = this.feathers.service('google');
     this.typeService = this.feathers.service('types');
 
-    this.googleService.timeout = 10000;
+    this.googleService.timeout = 200000;
 
     this.events = new EventEmitter();
   }
