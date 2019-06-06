@@ -1,4 +1,8 @@
-const earthRadiusKm = 6371;
+const {
+  MethodNotAllowed,
+  BadRequest,
+  GeneralError
+} = require('@feathersjs/errors');
 const axios = require('axios').default;
 
 const hereURL = 'https://places.api.here.com';
@@ -7,6 +11,8 @@ const searchEndpoint = '/discover/search';
 
 const appId = 'oRM589ApFBNyrtBwfkgH';
 const appCode = '3nHtQC18lMGYn-6zTZXfXw';
+
+const earthRadiusKm = 6371;
 
 async function hereSearchRequest(params) {
   let url = hereURL + placeEndpoint + searchEndpoint;
@@ -46,7 +52,10 @@ function radiansToDegrees(radians) {
   return radians * (180 / Math.PI);
 }
 
-function distanceInMBetweenEarthCoordinates(lat1, lon1, lat2, lon2) {
+function distanceInMBetweenEarthCoordinates(point1, point2) {
+  checkPoint(point1);
+  checkPoint(point2);
+
   var dLat = degreesToRadians(lat2 - lat1);
   var dLon = degreesToRadians(lon2 - lon1);
 
@@ -61,6 +70,8 @@ function distanceInMBetweenEarthCoordinates(lat1, lon1, lat2, lon2) {
 }
 
 function calcPoint(origin, distance, bearing) {
+  checkPoint(origin);
+
   bearing = degreesToRadians(bearing);
   distance = distance / 1000;
 
@@ -82,6 +93,8 @@ function calcPoint(origin, distance, bearing) {
 }
 
 function middlePoint(point1, point2) {
+  checkPoint(point1);
+  checkPoint(point2);
 
   //-- Longitude difference
   var dLng = degreesToRadians(point2.lng - point1.lng);
@@ -93,13 +106,25 @@ function middlePoint(point1, point2) {
 
   var bX = Math.cos(lat2) * Math.cos(dLng);
   var bY = Math.cos(lat2) * Math.sin(dLng);
-  var lat3 = Math.atan2(Math.sin(lat1) + Math.sin(lat2), Math.sqrt((Math.cos(lat1) + bX) * (Math.cos(lat1) + bX) + bY * bY));
+  var lat3 = Math.atan2(
+    Math.sin(lat1) + Math.sin(lat2),
+    Math.sqrt((Math.cos(lat1) + bX) * (Math.cos(lat1) + bX) + bY * bY)
+  );
   var lng3 = lng1 + Math.atan2(bY, Math.cos(lat1) + bX);
 
   //-- Return result
   return { lat: radiansToDegrees(lat3), lng: radiansToDegrees(lng3) };
 }
 
+function checkPoint(p) {
+  if (!p) throw new BadRequest('Point is not defined in middlePoint function');
+  else {
+    if (!p.lat || typeof p.lat != 'number')
+      throw new BadRequest('Point latitude is wrong in middlePoint function');
+    if (!p.lng || typeof p.lng != 'number')
+      throw new BadRequest('Point longitude is wrong in middlePoint function');
+  }
+}
 
 module.exports = {
   calcPoint: calcPoint,

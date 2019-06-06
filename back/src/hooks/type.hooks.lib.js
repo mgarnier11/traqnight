@@ -3,11 +3,10 @@ const validator = require('validator');
 const googlePlacesTypes = require('../../../front/src/json/googleplaces.json');
 const fontAwesomeIcons = require('../../../front/src/json/fontawesome.json');
 
-
 const typeErrors = {
   validName: 'Please enter a valid name',
   validPlaceType: 'Please enter a valid Google API type',
-  validIcon: 'Please enter a valid icon',
+  validIcon: 'Please enter a valid icon'
 };
 
 function beforeCreateOrUpdateHook(options = {}) {
@@ -15,15 +14,20 @@ function beforeCreateOrUpdateHook(options = {}) {
     let input = context.data;
     let newDatas = {};
 
-    if (validator.isEmpty(input.name)) throw new BadRequest(typeErrors.validName);
+    if (validator.isEmpty(input.name))
+      throw new BadRequest(typeErrors.validName);
     newDatas.name = input.name;
 
-    if (validator.isEmpty(input.type)) throw new BadRequest(typeErrors.validPlaceType);
-    if (!googlePlacesTypes.includes(input.type)) throw new BadRequest(typeErrors.validPlaceType);
+    if (validator.isEmpty(input.type))
+      throw new BadRequest(typeErrors.validPlaceType);
+    if (!googlePlacesTypes.includes(input.type))
+      throw new BadRequest(typeErrors.validPlaceType);
     newDatas.type = input.type;
 
-    if (validator.isEmpty(input.icon)) throw new BadRequest(typeErrors.validIcon);
-    if (!fontAwesomeIcons.includes(input.icon)) throw new BadRequest(typeErrors.validIcon);
+    if (validator.isEmpty(input.icon))
+      throw new BadRequest(typeErrors.validIcon);
+    if (!fontAwesomeIcons.includes(input.icon))
+      throw new BadRequest(typeErrors.validIcon);
     newDatas.icon = input.icon;
 
     if (context.method === 'create') {
@@ -45,22 +49,26 @@ function beforePatchHook(options = {}) {
     let newDatas = {};
 
     if (input.name !== undefined) {
-      if (validator.isEmpty(input.name)) throw new BadRequest(typeErrors.validName);
+      if (validator.isEmpty(input.name))
+        throw new BadRequest(typeErrors.validName);
       newDatas.name = input.name;
     }
 
     if (input.type !== undefined) {
-      if (validator.isEmpty(input.type)) throw new BadRequest(typeErrors.validPlaceType);
-      if (!googlePlacesTypes.includes(input.type)) throw new BadRequest(typeErrors.validPlaceType);
+      if (validator.isEmpty(input.type))
+        throw new BadRequest(typeErrors.validPlaceType);
+      if (!googlePlacesTypes.includes(input.type))
+        throw new BadRequest(typeErrors.validPlaceType);
       newDatas.type = input.type;
     }
 
     if (input.icon !== undefined) {
-      if (validator.isEmpty(input.icon)) throw new BadRequest(typeErrors.validIcon);
-      if (!fontAwesomeIcons.includes(input.icon)) throw new BadRequest(typeErrors.validIcon);
+      if (validator.isEmpty(input.icon))
+        throw new BadRequest(typeErrors.validIcon);
+      if (!fontAwesomeIcons.includes(input.icon))
+        throw new BadRequest(typeErrors.validIcon);
       newDatas.icon = input.icon;
     }
-
 
     newDatas.updateUserId = context.params.user._id;
     newDatas.updateDate = Date.now();
@@ -73,12 +81,15 @@ function beforePatchHook(options = {}) {
 
 function afterAllHook(options = {}) {
   return async context => {
-    let types = (context.method === 'find' ? context.result : [context.result]);
-
+    let types = context.method === 'find' ? context.result : [context.result];
 
     for (let type of types) {
-      type.creationUser = await context.app.service('users').get(type.creationUserId);
-      type.updateUser = await context.app.service('users').get(type.updateUserId);
+      type.creationUser = await context.app
+        .service('users')
+        .get(type.creationUserId);
+      type.updateUser = await context.app
+        .service('users')
+        .get(type.updateUserId);
     }
 
     return context;

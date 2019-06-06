@@ -1,6 +1,8 @@
 import io from 'socket.io-client';
 import feathers from '@feathersjs/client';
-import { EventEmitter } from 'events';
+import {
+  EventEmitter
+} from 'events';
 import Error from '../components/App/Error/Error';
 
 class Handler {
@@ -26,7 +28,7 @@ class Handler {
     this.isAuthenticated = this.isAuthenticated.bind(this);
 
     this.userService = this.feathers.service('users');
-    this.googleService = this.feathers.service('google');
+    this.googleService = this.feathers.service('external-api');
     this.typeService = this.feathers.service('types');
 
     this.googleService.timeout = 200000;
@@ -35,7 +37,9 @@ class Handler {
   }
 
   async findInGoogle(params) {
-    let query = { query: params };
+    let query = {
+      query: params
+    };
 
     try {
       this.events.emit('googleFindStarted');
@@ -80,7 +84,9 @@ class Handler {
       let response = undefined;
 
       if (credentials) {
-        let options = Object.assign({ strategy: 'local' }, credentials);
+        let options = Object.assign({
+          strategy: 'local'
+        }, credentials);
         response = await this.feathers.authenticate(options);
       } else {
         response = await this.feathers.authenticate();
