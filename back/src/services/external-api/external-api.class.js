@@ -13,44 +13,25 @@ class Service {
 
   async find(params) {
     try {
-      if (params.query.newRequest) {
-      }
-
       let location = params.query.location;
-      let type = params.query.type;
       let keyword = params.query.type.name;
       let radius =
         params.query.radius === undefined ? 1000 : params.query.radius;
+      let returnVal = { origin: location, results: [] };
 
-      const lookupObj = {};
+      if (params.query.newRequest) {
+        const lookupObj = {};
 
-      let res = {
-        origin: location,
-        results: (await apiUtils.getHereResults(
-          location,
-          radius,
-          keyword
-        )).filter(x => {
+        let results = await apiUtils.getHereResults(location, radius, keyword);
+
+        returnVal.results = results.filter(x => {
           let ret = !lookupObj[x.id];
           lookupObj[x.id] = true;
-          if (!ret) {
-          }
           return ret;
-        })
-      };
-
-      for (let result of res.results) {
-        //result.distance = ;
-        result.geometry = {
-          location: {
-            lat: result.position[0],
-            lng: result.position[1]
-          }
-        };
-        result.name = result.title;
-        result.type = params.query.type;
+        });
       }
-      return res;
+
+      return returnVal;
     } catch (error) {
       console.log(error);
 

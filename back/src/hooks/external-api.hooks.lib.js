@@ -1,24 +1,24 @@
-const apiUtils = require("../services/apiUtils");
-const { BadRequest } = require("@feathersjs/errors");
+const apiUtils = require('../services/apiUtils');
+const { BadRequest } = require('@feathersjs/errors');
 
 const apiErrors = {
-  validType: "Please enter a valid type",
-  validRadius: "Please enter a valid radius",
-  validLocation: "Please enter a valid location"
+  validType: 'Please enter a valid type',
+  validRadius: 'Please enter a valid radius',
+  validLocation: 'Please enter a valid location'
 };
 
 function beforeFindHook(options = {}) {
   return async context => {
-    const requestSrv = context.app.service("requests");
+    const requestSrv = context.app.service('requests');
     const query = context.params.query;
 
     let newQuery = {};
 
-    if (typeof query.type !== "string")
+    if (typeof query.type !== 'string')
       throw new BadRequest(apiErrors.validType);
-    newQuery.type = await context.app.service("types").get(query.type);
+    newQuery.type = await context.app.service('types').get(query.type);
 
-    if (typeof query.radius !== "number")
+    if (typeof query.radius !== 'number')
       throw new BadRequest(apiErrors.validRadius);
 
     if (query.radius <= 1750) {
@@ -29,7 +29,7 @@ function beforeFindHook(options = {}) {
       newQuery.radius = 5000;
     }
 
-    if (typeof query.location === "string") {
+    if (typeof query.location === 'string') {
       let town = await apiUtils.getTown(query.location);
 
       newQuery.location = {
@@ -47,14 +47,14 @@ function beforeFindHook(options = {}) {
 
       if (requests.length > 0) {
         newQuery.newRequest = false;
-        context.datas = "test";
+        newQuery.request = requests[0];
       } else {
         newQuery.newRequest = true;
       }
-    } else if (typeof query.location === "object") {
-      if (typeof query.location.lat !== "number")
+    } else if (typeof query.location === 'object') {
+      if (typeof query.location.lat !== 'number')
         throw new BadRequest(apiErrors.validLocation);
-      if (typeof query.location.lng !== "number")
+      if (typeof query.location.lng !== 'number')
         throw new BadRequest(apiErrors.validLocation);
 
       newQuery.location = {
@@ -74,6 +74,23 @@ function beforeFindHook(options = {}) {
 
 function afterFindHook(options = {}) {
   return async context => {
+    const requestSrv = context.app.service('requests');
+    const placeSrv = context.app.service('places');
+    const query = context.params.query;
+    const data = context.data;
+
+    if (query.newRequest) {
+      if (data.results.length > 0) {
+        for (let result of data.results) {
+          let googleRes = await apiUtils.getPlaceFromGoogle(
+            result.name,
+            result.vicinity
+          );
+        }
+      }
+    } else {
+    }
+
     return context;
   };
 }
