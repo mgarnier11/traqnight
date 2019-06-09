@@ -37,12 +37,14 @@ function beforeFindHook(options = {}) {
         lng: town.geometry.location.lng
       };
 
+      newQuery.query = {
+        town: town.name,
+        radius: newQuery.radius,
+        type: newQuery.type._id
+      };
+
       let requests = await requestSrv.find({
-        query: {
-          town: town.name,
-          radius: newQuery.radius,
-          type: newQuery.type._id
-        }
+        query: newQuery.query
       });
 
       if (requests.length > 0) {
@@ -77,19 +79,53 @@ function afterFindHook(options = {}) {
     const requestSrv = context.app.service('requests');
     const placeSrv = context.app.service('places');
     const query = context.params.query;
-    const data = context.data;
+    const data = context.result;
+
+    let newResults = [];
 
     if (query.newRequest) {
       if (data.results.length > 0) {
+        console.log(data.results.length + ' Places found');
         for (let result of data.results) {
+          let newResult = {};
+
           let googleRes = await apiUtils.getPlaceFromGoogle(
-            result.name,
+            result.title,
             result.vicinity
           );
+          if (googleRes && !googleRes.permanently_closed) {
+            newResult.rating = googleRes.rating;
+            newResult.priceLevel = googleRes.price_level;
+            newResult.location = {
+              lat: result.position[0],
+              lng: result.position[1]
+            };
+            newResult.name = result.title;
+            newResult.url = result.href;
+            newResult.address = result.vicinity;
+            newResult.type = query.type;
+            newResult.id = result.id;
+            newResult = await placeSrv.create(newResult);
+
+            newResults.push(newResult);
+          }
         }
+
+        let newRequest = query.query;
+
+        newRequest.results = newResults.map(r => r._id);
+
+        requestSrv.create(newRequest);
       }
     } else {
+      let request = query.request;
+
+      for (let resultId of request.results) {
+        newResults.push(await placeSrv.get(resultId));
+      }
     }
+
+    context.result = newResults;
 
     return context;
   };

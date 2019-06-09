@@ -37,8 +37,8 @@ class Results extends Component {
   }
 
   setResults(res) {
-    console.log(res.results.slice(0, 50));
-    this.setState({ origin: res.origin, locations: res.results.slice(0, 50) });
+    console.log(res);
+    this.setState({ origin: res.origin, locations: res });
   }
 
   render() {
@@ -47,7 +47,7 @@ class Results extends Component {
         <LoadingOverlay
           active={this.state.loading}
           spinner
-          text='Chargement...'
+          text="Chargement..."
           className={styles.loading}
         >
           <div className={styles.map}>
@@ -61,7 +61,7 @@ class Results extends Component {
               {this.state.locations.map(location => {
                 return (
                   <PlaceOfInterest
-                    {...location.geometry.location}
+                    {...location.location}
                     title={location.name}
                     icon={location.type.icon}
                     key={location.id}

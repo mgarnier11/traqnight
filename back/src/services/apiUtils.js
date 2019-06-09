@@ -1,13 +1,13 @@
-const { BadRequest } = require('@feathersjs/errors');
-const myutils = require('./utils');
-const googleMapsClient = require('@google/maps').createClient({
-  key: 'AIzaSyCkiT6O5Me25yx4JV9ZT3iGYYCdsgzqv9w',
+const { BadRequest } = require("@feathersjs/errors");
+const myutils = require("./utils");
+const googleMapsClient = require("@google/maps").createClient({
+  key: "AIzaSyCkiT6O5Me25yx4JV9ZT3iGYYCdsgzqv9w",
   Promise: Promise
 });
 
 const googleErrors = {
-  invalidTown: 'Ville invalide',
-  invalidRequest: 'Requete invalide'
+  invalidTown: "Ville invalide",
+  invalidRequest: "Requete invalide"
 };
 
 async function getGoogleResults(
@@ -24,7 +24,7 @@ async function getGoogleResults(
       .placesNearby({
         location: location,
         type: type,
-        rankby: 'distance'
+        rankby: "distance"
       })
       .asPromise();
   else if (pageToken)
@@ -33,14 +33,14 @@ async function getGoogleResults(
         pagetoken: pageToken
       })
       .asPromise();
-  else throw new BadRequest('Bad call to get google Result');
+  else throw new BadRequest("Bad call to get google Result");
 
-  if (resultsResponse.status !== 200) throw new BadRequest('Ville invalide');
+  if (resultsResponse.status !== 200) throw new BadRequest("Ville invalide");
   if (
-    resultsResponse.json.status !== 'OK' &&
-    resultsResponse.json.status !== 'ZERO_RESULTS'
+    resultsResponse.json.status !== "OK" &&
+    resultsResponse.json.status !== "ZERO_RESULTS"
   )
-    throw new BadRequest('Ville invalide');
+    throw new BadRequest("Ville invalide");
 
   let results = resultsResponse.json.results;
 
@@ -54,7 +54,7 @@ async function getGoogleResults(
     result.isOpened = result.opening_hours
       ? result.opening_hours.open_now
       : null;
-    result.type = params.query.type;
+    result.type = type;
     if (result.distance < radius) {
       goodResults.push(result);
     }
@@ -66,7 +66,7 @@ async function getGoogleResults(
       setTimeout(async () => {
         res(
           goodResults.concat(
-            await getResults(
+            await getGoogleResults(
               undefined,
               undefined,
               undefined,
@@ -84,29 +84,23 @@ async function getGoogleResults(
 }
 
 async function getPlaceFromGoogle(placeName, vicinity) {
-  let resultsResponse;
-
-  resultsResponse = await googleMapsClient
+  let resultsResponse = await googleMapsClient
     .findPlace({
-      input: placeName + ' ' + vicinity,
-      inputtype: 'textquery',
-      fields: [
-        'price_level',
-        'rating',
-        'user_ratings_total',
-        'permanently_closed'
-      ]
+      input: placeName + " " + vicinity,
+      inputtype: "textquery",
+      fields: ["price_level", "rating", "permanently_closed"]
     })
     .asPromise();
+
   if (resultsResponse.status !== 200)
     throw new BadRequest(googleErrors.invalidRequest);
   if (
-    resultsResponse.json.status !== 'OK' &&
-    resultsResponse.json.status !== 'ZERO_RESULTS'
+    resultsResponse.json.status !== "OK" &&
+    resultsResponse.json.status !== "ZERO_RESULTS"
   )
     throw new BadRequest(googleErrors.invalidRequest);
 
-  return resultsResponse.candidates[0];
+  return resultsResponse.json.candidates[0];
 }
 
 async function getHereResults(origin, radius, keyword) {
@@ -125,7 +119,7 @@ async function getHereResults(origin, radius, keyword) {
     let elng = origin.lng > corner.lng ? origin.lng : corner.lng;
     let nlat = origin.lat > corner.lat ? origin.lat : corner.lat;
 
-    let inParam = wlng + ',' + slat + ',' + elng + ',' + nlat;
+    let inParam = wlng + "," + slat + "," + elng + "," + nlat;
     try {
       let results = await myutils.hereSearchRequest({
         q: keyword,
@@ -157,14 +151,14 @@ async function getTown(townName) {
 
   let placeIdResponse = await googleMapsClient
     .findPlace({
-      input: townName + ', France',
-      inputtype: 'textquery'
+      input: townName + ", France",
+      inputtype: "textquery"
     })
     .asPromise();
 
   if (placeIdResponse.status !== 200)
     throw new BadRequest(googleErrors.invalidTown);
-  if (placeIdResponse.json.status !== 'OK')
+  if (placeIdResponse.json.status !== "OK")
     throw new BadRequest(googleErrors.invalidTown);
   if (placeIdResponse.json.candidates.length === 0)
     throw new BadRequest(googleErrors.invalidTown);
@@ -179,7 +173,7 @@ async function getTown(townName) {
 
   if (placeResponse.status !== 200)
     throw new BadRequest(googleErrors.invalidTown);
-  if (placeResponse.json.status !== 'OK')
+  if (placeResponse.json.status !== "OK")
     throw new BadRequest(googleErrors.invalidTown);
 
   let place = placeResponse.json.result;

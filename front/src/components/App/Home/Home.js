@@ -1,17 +1,17 @@
-import React, { Component } from 'react';
-import styles from './Home.module.css';
+import React, { Component } from "react";
+import styles from "./Home.module.css";
 
-import apiHandler from '../../../api/apiHandler';
-import Error from '../Error/Error';
+import apiHandler from "../../../api/apiHandler";
+import Error from "../Error/Error";
 
 class Home extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      type: props.types.length > 0 ? props.types[0]._id : '',
+      type: props.types.length > 0 ? props.types[0]._id : "",
       types: props.types,
-      town: ''
+      town: ""
     };
 
     this.handleSearchClick = this.handleSearchClick.bind(this);
@@ -31,7 +31,8 @@ class Home extends Component {
     } else {
       let datas = {
         type: this.state.type,
-        location: this.state.town
+        location: this.state.town,
+        radius: 1000
       };
 
       apiHandler.findInGoogle(datas);
@@ -40,28 +41,28 @@ class Home extends Component {
   }
 
   handleKeyPress = event => {
-    if (event.key === 'Enter') this.handleSearchClick();
+    if (event.key === "Enter") this.handleSearchClick();
   };
 
   render() {
     return (
       <div
-        className={this.props.className + ' ' + styles.home}
+        className={this.props.className + " " + styles.home}
         ref={this.props.refere}
       >
-        <div className={styles.hero + ' text-center'}>
+        <div className={styles.hero + " text-center"}>
           <h1>Explorez votre ville</h1>
           <h2>Ne cherchez plus où sortir! Trouvez!</h2>
         </div>
 
-        <div className={styles.search + ' container'}>
-          <div className='form-group mx-md-5 px-md-5'>
-            <label htmlFor='type'>
+        <div className={styles.search + " container"}>
+          <div className="form-group mx-md-5 px-md-5">
+            <label htmlFor="type">
               <h3>Quoi ?</h3>
             </label>
             <select
-              className='form-control'
-              id='type'
+              className="form-control"
+              id="type"
               value={this.state.type}
               onChange={this.handleChange}
             >
@@ -74,22 +75,22 @@ class Home extends Component {
               })}
             </select>
           </div>
-          <div className='form-group mx-md-5 px-md-5'>
-            <label htmlFor='town'>
+          <div className="form-group mx-md-5 px-md-5">
+            <label htmlFor="town">
               <h3>Ou ?</h3>
             </label>
             <input
-              type='text'
-              className='form-control'
-              id='town'
-              placeholder='Votre ville'
+              type="text"
+              className="form-control"
+              id="town"
+              placeholder="Votre ville"
               onChange={this.handleChange}
               onKeyPress={this.handleKeyPress}
             />
           </div>
-          <div className='form-group text-center'>
+          <div className="form-group text-center">
             <button
-              className='btn btn-primary'
+              className="btn btn-primary"
               onClick={this.handleSearchClick}
             >
               Trouvez !

@@ -1,18 +1,18 @@
-
+const placesHooksLib = require('../../hooks/places.hooks.lib');
 
 module.exports = {
   before: {
     all: [],
     find: [],
     get: [],
-    create: [],
-    update: [],
+    create: [placesHooksLib.beforeCreateOrUpdateHook()],
+    update: [placesHooksLib.beforeCreateOrUpdateHook()],
     patch: [],
     remove: []
   },
 
   after: {
-    all: [],
+    all: [placesHooksLib.afterAllHook()],
     find: [],
     get: [],
     create: [],
