@@ -38,7 +38,7 @@ class Results extends Component {
 
   setResults(res) {
     console.log(res);
-    this.setState({ origin: res.origin, locations: res });
+    this.setState({ origin: res.origin, locations: res.results });
   }
 
   render() {

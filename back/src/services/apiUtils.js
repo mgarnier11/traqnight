@@ -23,8 +23,9 @@ async function getGoogleResults(
     resultsResponse = await googleMapsClient
       .placesNearby({
         location: location,
-        type: type,
-        rankby: "distance"
+        type: type.type,
+        radius: radius,
+        rankby: "prominence"
       })
       .asPromise();
   else if (pageToken)
@@ -55,6 +56,7 @@ async function getGoogleResults(
       ? result.opening_hours.open_now
       : null;
     result.type = type;
+    result.location = result.geometry.location;
     if (result.distance < radius) {
       goodResults.push(result);
     }
@@ -67,9 +69,9 @@ async function getGoogleResults(
         res(
           goodResults.concat(
             await getGoogleResults(
-              undefined,
-              undefined,
-              undefined,
+              location,
+              type,
+              radius,
               resultsResponse.json.next_page_token
             )
           )

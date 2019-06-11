@@ -56,6 +56,12 @@ function distanceInMBetweenEarthCoordinates(point1, point2) {
   checkPoint(point1);
   checkPoint(point2);
 
+  let lat1 = point1.lat;
+  let lat2 = point2.lat;
+  let lon1 = point1.lng;
+  let lon2 = point2.lng;
+
+
   var dLat = degreesToRadians(lat2 - lat1);
   var dLon = degreesToRadians(lon2 - lon1);
 

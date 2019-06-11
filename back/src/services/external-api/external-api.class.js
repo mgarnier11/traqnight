@@ -15,21 +15,27 @@ class Service {
     try {
       let location = params.query.location;
       let keyword = params.query.type.name;
+      let type = params.query.type;
       let radius =
         params.query.radius === undefined ? 1000 : params.query.radius;
       let returnVal = { origin: location, results: [] };
+      let results;
 
-      if (params.query.newRequest) {
-        const lookupObj = {};
-
-        let results = await apiUtils.getHereResults(location, radius, keyword);
-
-        returnVal.results = results.filter(x => {
-          let ret = !lookupObj[x.id];
-          lookupObj[x.id] = true;
-          return ret;
-        });
+      if (params.query.api === 'google') {
+        results = await apiUtils.getGoogleResults(location, type, radius);
+      } else {
+        if (params.query.newRequest) {
+          results = await apiUtils.getHereResults(location, radius, keyword);
+        }
       }
+
+      const lookupObj = {};
+
+      returnVal.results = results.filter(x => {
+        let ret = !lookupObj[x.id];
+        lookupObj[x.id] = true;
+        return ret;
+      });
 
       return returnVal;
     } catch (error) {
@@ -71,7 +77,7 @@ class Service {
   }
 }
 
-module.exports = function(options) {
+module.exports = function (options) {
   return new Service(options);
 };
 

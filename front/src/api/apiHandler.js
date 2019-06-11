@@ -37,9 +37,11 @@ class Handler {
   }
 
   async findInGoogle(params) {
+    console.log(Object.assign(params, { api: 'google' }));
     let query = {
-      query: params
+      query: Object.assign(params, { api: 'google' })
     };
+    console.log(query);
 
     try {
       this.events.emit('googleFindStarted');
