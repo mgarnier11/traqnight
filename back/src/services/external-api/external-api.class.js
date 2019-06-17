@@ -4,6 +4,7 @@ const {
   GeneralError
 } = require('@feathersjs/errors');
 const apiUtils = require('../apiUtils');
+const Place = require('../../../../classes/place');
 
 /* eslint-disable no-unused-vars */
 class Service {
@@ -36,6 +37,16 @@ class Service {
         lookupObj[x.id] = true;
         return ret;
       });
+
+      if (params.query.api === 'google') {
+        returnVal.results = returnVal.results.map(result => {
+          return new Place().setValuesFromGoogle(result);
+        });
+      } else {
+        returnVal.results = returnVal.results.map(result => {
+          return new Place().setValuesFromDb(result);
+        });
+      }
 
       return returnVal;
     } catch (error) {
@@ -77,7 +88,7 @@ class Service {
   }
 }
 
-module.exports = function (options) {
+module.exports = function(options) {
   return new Service(options);
 };
 
