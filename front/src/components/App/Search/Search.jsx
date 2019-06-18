@@ -82,61 +82,68 @@ class Search extends Component {
 
   render() {
     return (
-      <div className="search" id="searchSection" ref={this.props.refere}>
-        <div className="form-group">
-          <select
-            className="form-control"
-            id="type"
-            value={this.state.type}
-            onChange={this.handleChange}
-          >
-            {this.state.types.map(type => {
-              return (
-                <option value={type._id} key={type._id}>
-                  {type.name}
-                </option>
-              );
-            })}
-          </select>
-        </div>
+      <div
+        className="search container"
+        id="searchSection"
+        ref={this.props.refere}
+      >
+        <div className="row">
+          <div className="col-md-2 col-5 px-1">
+            <select
+              className="form-control"
+              id="type"
+              value={this.state.type}
+              onChange={this.handleChange}
+            >
+              {this.state.types.map(type => {
+                return (
+                  <option value={type._id} key={type._id}>
+                    {type.name}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
 
-        <div className="form-group">
-          <input
-            type="text"
-            onClick={this.handleTownInputClick}
-            className="form-control"
-            id="town"
-            placeholder="Votre ville"
-            value={this.state.town}
-            onChange={this.handleChange}
-            disabled={this.state.coordinates}
-            onKeyPress={this.handleKeyPress}
-          />
-          <span className={this.state.coordinates ? 'unlocate' : 'locate'}>
-            <i
-              onClick={this.handleGetLocationClick}
-              className=" fas fa-crosshairs"
+          <div className="col-md-6 col-7 px-1 town">
+            <input
+              type="text"
+              onClick={this.handleTownInputClick}
+              className="form-control"
+              id="town"
+              placeholder="Votre ville"
+              value={this.state.town}
+              onChange={this.handleChange}
+              disabled={this.state.coordinates}
+              onKeyPress={this.handleKeyPress}
             />
-          </span>
-        </div>
-
-        <div className="form-group">
-          <select
-            className="form-control"
-            id="radius"
-            value={this.state.radius}
-            onChange={this.handleChange}
-          >
-            <option value={1000}>1000m</option>
-            <option value={2500}>2500m</option>
-            <option value={5000}>5000m</option>
-          </select>
-        </div>
-
-        <div className="form-group">
-          <button className="btn btn-primary" onClick={this.handleSearchClick}>
-            Trouvez !
-          </button>
+            <span className={this.state.coordinates ? 'unlocate' : 'locate'}>
+              <i
+                onClick={this.handleGetLocationClick}
+                className="fas fa-crosshairs"
+              />
+            </span>
+          </div>
+          <div className="col-md-2 col-5 px-1">
+            <select
+              className="form-control"
+              id="radius"
+              value={this.state.radius}
+              onChange={this.handleChange}
+            >
+              <option value={1000}>1000m</option>
+              <option value={2500}>2500m</option>
+              <option value={5000}>5000m</option>
+            </select>
+          </div>
+          <div className="col-md-2 col-7 px-1">
+            <button
+              className="btn btn-primary col-12"
+              onClick={this.handleSearchClick}
+            >
+              Trouvez !
+            </button>
+          </div>
         </div>
       </div>
     );

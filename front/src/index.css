@@ -35,9 +35,13 @@ p {
   font-size: 2.5vh;
 }
 
+.loading {
+  height: 100%;
+}
+
 .home {
   height: 100vh;
-  background: url('../../build/static/media/buildings1-min-compressor.646f9927.jpg');
+  background: url('./images/buildings1-min-compressor.jpg');
   background-position: center center;
   background-size: cover;
   color: white;
@@ -53,11 +57,24 @@ p {
   font-size: 2.5vh;
 }
 
-.search .locate {
+.search {
+  height: 100vh;
+}
+
+.search .form-control .search .btn {
+  font-size: 2.25vh;
+}
+
+.search .town input {
+  width: calc(100% - 37px);
+  float: left;
+}
+
+.search .town span {
   cursor: pointer;
   position: relative;
   margin-left: 10px;
-  font-size: 21px;
+  font-size: 27px;
 }
 
 .search .unlocate::after,
@@ -68,7 +85,7 @@ p {
   position: absolute;
   width: 142%;
   top: calc(50% - 1px);
-  left: -5px;
+  left: -6px;
 }
 
 .search .unlocate::before {
