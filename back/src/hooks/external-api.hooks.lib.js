@@ -85,10 +85,9 @@ function afterFindHook(options = {}) {
 
     let newResults = [];
 
-    if (query.api == 'google') {
+    if (query.api === 'google') {
       newResults = data;
-    }
-    else {
+    } else {
       if (query.newRequest) {
         if (data.results.length > 0) {
           console.log(data.results.length + ' Places found');
@@ -131,7 +130,6 @@ function afterFindHook(options = {}) {
         }
       }
     }
-
 
     context.result = newResults;
 

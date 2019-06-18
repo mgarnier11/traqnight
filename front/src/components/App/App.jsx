@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Route, withRouter, Switch, Redirect } from 'react-router-dom';
 
-import Home from './Home/Home';
+import Home from './Home/Home.jsx';
 import Results from './Results/Results';
-import Search from './Search/Search';
+import Search from './Search/Search.jsx';
 import Login from './Auth/Login';
 import Register from './Auth/Register';
 import AdminRoute from '../SecuredRoute/AdminRoute';
@@ -13,11 +13,9 @@ import CreateType from './Type/Create';
 import EditType from './Type/Edit';
 
 import Admin from './Admin/Admin';
-import Loading from './Loading/Loading';
+import Loading from './Loading/Loading.jsx';
 
 import apiHandler from '../../api/apiHandler';
-
-import styles from './App.module.css';
 
 class App extends Component {
   constructor(props) {
@@ -78,31 +76,24 @@ class App extends Component {
     } else {
       return (
         <Switch>
-          <Redirect from='/logout' to='/login' />
-          <Route exact path='/login' component={Login} />
-          <Route exact path='/register' component={Register} />
-          <AdminRoute exact path='/admin' component={Admin} />
-          <AdminRoute exact path='/admin/type/new' component={CreateType} />
-          <AdminRoute exact path='/admin/type/edit/:id' component={EditType} />
+          <Redirect from="/logout" to="/login" />
+          <Route exact path="/login" component={Login} />
+          <Route exact path="/register" component={Register} />
+          <AdminRoute exact path="/admin" component={Admin} />
+          <AdminRoute exact path="/admin/type/new" component={CreateType} />
+          <AdminRoute exact path="/admin/type/edit/:id" component={EditType} />
           <Route
             exact
-            path='/'
+            path="/"
             component={() => {
               return (
-                <div className={styles.app}>
+                <div className="app">
                   <Home
-                    className={styles.home}
                     refere={this.homeDivRef}
                     handleHomeSearchClick={this.handleHomeSearchClick}
                     types={this.state.types}
                   />
-                  <Search
-                    className={styles.search}
-                    ref={this.searchRef}
-                    refere={this.searchDivRef}
-                    types={this.state.types}
-                  />
-                  <Results className={styles.results} />
+                  <Search refere={this.searchDivRef} types={this.state.types} />
                 </div>
               );
             }}

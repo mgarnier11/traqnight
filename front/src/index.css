@@ -1,14 +1,14 @@
 html,
 body {
   margin: 0;
-  font-family: "Quicksand", "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
-    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  font-family: 'Quicksand', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   scroll-behavior: smooth;
 }
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
 h1 {
@@ -33,4 +33,48 @@ h6 {
 }
 p {
   font-size: 2.5vh;
+}
+
+.home {
+  height: 100vh;
+  background: url('../../build/static/media/buildings1-min-compressor.646f9927.jpg');
+  background-position: center center;
+  background-size: cover;
+  color: white;
+  padding-top: 10vh;
+}
+
+.home .form {
+  margin-top: 10vh;
+}
+
+.home .form-control,
+.home .btn {
+  font-size: 2.5vh;
+}
+
+.search .locate {
+  cursor: pointer;
+  position: relative;
+  margin-left: 10px;
+  font-size: 21px;
+}
+
+.search .unlocate::after,
+.search .unlocate::before {
+  background: red;
+  content: '';
+  height: 2px;
+  position: absolute;
+  width: 142%;
+  top: calc(50% - 1px);
+  left: -5px;
+}
+
+.search .unlocate::before {
+  transform: rotate(-45deg);
+}
+
+.search .unlocate::after {
+  transform: rotate(45deg);
 }

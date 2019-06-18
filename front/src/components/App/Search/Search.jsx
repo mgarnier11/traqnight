@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import styles from './Search.module.css';
 
 import apiHandler from '../../../api/apiHandler';
-import Error from '../Error/Error';
+import Error from '../Error/Error.jsx';
 
 class Search extends Component {
   constructor(props) {
@@ -83,15 +82,11 @@ class Search extends Component {
 
   render() {
     return (
-      <div
-        className={this.props.className + ' ' + styles.search}
-        id='searchSection'
-        ref={this.props.refere}
-      >
-        <div className={styles.type + ' form-group ' + styles.gridCell}>
+      <div className="search" id="searchSection" ref={this.props.refere}>
+        <div className="form-group">
           <select
-            className='form-control'
-            id='type'
+            className="form-control"
+            id="type"
             value={this.state.type}
             onChange={this.handleChange}
           >
@@ -105,36 +100,30 @@ class Search extends Component {
           </select>
         </div>
 
-        <div className={styles.town + ' form-group ' + styles.gridCell}>
+        <div className="form-group">
           <input
-            type='text'
+            type="text"
             onClick={this.handleTownInputClick}
-            className={styles.townInput + ' form-control'}
-            id='town'
-            placeholder='Votre ville'
+            className="form-control"
+            id="town"
+            placeholder="Votre ville"
             value={this.state.town}
             onChange={this.handleChange}
             disabled={this.state.coordinates}
             onKeyPress={this.handleKeyPress}
           />
-          <span
-            className={
-              styles.locate +
-              ' ' +
-              (this.state.coordinates ? styles.unlocate : '')
-            }
-          >
+          <span className={this.state.coordinates ? 'unlocate' : 'locate'}>
             <i
               onClick={this.handleGetLocationClick}
-              className=' fas fa-crosshairs'
+              className=" fas fa-crosshairs"
             />
           </span>
         </div>
 
-        <div className={styles.radius + ' form-group ' + styles.gridCell}>
+        <div className="form-group">
           <select
-            className='form-control'
-            id='radius'
+            className="form-control"
+            id="radius"
             value={this.state.radius}
             onChange={this.handleChange}
           >
@@ -144,8 +133,8 @@ class Search extends Component {
           </select>
         </div>
 
-        <div className={styles.research + ' form-group ' + styles.gridCell}>
-          <button className='btn btn-primary' onClick={this.handleSearchClick}>
+        <div className="form-group">
+          <button className="btn btn-primary" onClick={this.handleSearchClick}>
             Trouvez !
           </button>
         </div>

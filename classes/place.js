@@ -1,51 +1,61 @@
 class Place {
-  constructor() {
-    this.rating = 0;
-    this.priceLevel = undefined;
-    this.location = { lat: undefined, lng: undefined };
-    this.name = '';
-    this.url = '';
-    this.address = '';
-    this.typeId = '';
-    this.type = undefined;
-    this.id = '';
+  constructor(oldResult = undefined) {
+    if (oldResult !== undefined) {
+      this.rating = oldResult.rating;
+      this.priceLevel = oldResult.priceLevel;
+      this.location = {
+        lat: oldResult.location.lat,
+        lng: oldResult.location.lng
+      };
+      this.name = oldResult.name;
+      this.url = oldResult.url;
+      this.address = oldResult.address;
+      this.typeId = oldResult.typeId;
+      this.type = oldResult.type;
+      this.id = oldResult.id;
+    } else {
+      this.rating = 0;
+      this.priceLevel = undefined;
+      this.location = { lat: 0, lng: 0 };
+      this.name = '';
+      this.url = '';
+      this.address = '';
+      this.typeId = '';
+      this.type = undefined;
+      this.id = '';
+    }
   }
 
   setValuesFromGoogle(obj) {
-    this.rating = obj.rating | undefined;
-    this.priceLevel = obj.price_level | undefined;
-    console.log(obj.geometry.location);
+    this.rating = obj.rating;
+    this.priceLevel = obj.price_level;
     this.location = {
-      lat: obj.geometry.location.lat | undefined,
-      lng: obj.geometry.location.lng | undefined
+      lat: obj.geometry.location.lat,
+      lng: obj.geometry.location.lng
     };
-    console.log(this.location);
-    this.name = obj.name | '';
-    this.url = undefined;
-    this.address = obj.vicinity | '';
+    this.name = obj.name;
+    this.address = obj.vicinity;
     this.typeId = obj.type._id;
     this.type = obj.type;
-    this.id = obj.id;
+    this.id = obj.place_id;
     return this;
   }
 
   setValuesFromDb(obj) {
-    this.rating = obj.rating | undefined;
-    this.priceLevel = obj.priceLevel | undefined;
+    this.rating = obj.rating;
+    this.priceLevel = obj.priceLevel;
     this.location = {
-      lat: obj.location.lat | undefined,
-      lng: obj.location.lng | undefined
+      lat: obj.location.lat,
+      lng: obj.location.lng
     };
-    this.name = obj.name | '';
-    this.url = obj.url | '';
-    this.address = obj.address | '';
+    this.name = obj.name;
+    this.url = obj.url;
+    this.address = obj.address;
     this.typeId = obj.typeId;
     this.type = obj.type;
     this.id = obj.id;
     return this;
   }
 }
-
-let place = new Place();
 
 module.exports = Place;

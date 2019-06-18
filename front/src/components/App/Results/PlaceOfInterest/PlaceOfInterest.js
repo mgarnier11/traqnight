@@ -26,8 +26,8 @@ class PlaceOfInterest extends Component {
       <div className={styles.placeOfInterest}>
         <Tooltip
           title={this.state.title}
-          position='bottom'
-          trigger='mouseenter'
+          position="bottom"
+          trigger="mouseenter"
         >
           <i className={'fas fa-' + this.state.icon} />
         </Tooltip>

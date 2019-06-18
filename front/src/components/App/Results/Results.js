@@ -21,23 +21,22 @@ class Results extends Component {
   }
 
   componentDidMount() {
-    apiHandler.events.on('googleFindStarted', res => {
+    apiHandler.events.on('apiFindStarted', res => {
       this.setState({ loading: true });
     });
 
-    apiHandler.events.on('googleFindFinished', res => {
+    apiHandler.events.on('apiFindFinished', res => {
       this.setState({ loading: false });
     });
 
-    apiHandler.events.on('googleFindResponse', this.setResults);
+    apiHandler.events.on('apiFindResponse', this.setResults);
   }
 
   componentWillUnmount() {
-    apiHandler.events.off('googleFindResponse', this.setResults);
+    apiHandler.events.off('apiFindResponse', this.setResults);
   }
 
   setResults(res) {
-    console.log(res);
     this.setState({ origin: res.origin, locations: res.results });
   }
 

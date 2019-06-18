@@ -1,17 +1,16 @@
-import React, { Component } from "react";
-import styles from "./Home.module.css";
+import React, { Component } from 'react';
 
-import apiHandler from "../../../api/apiHandler";
-import Error from "../Error/Error";
+import apiHandler from '../../../api/apiHandler';
+import Error from '../Error/Error.jsx';
 
 class Home extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      type: props.types.length > 0 ? props.types[0]._id : "",
+      type: props.types.length > 0 ? props.types[0]._id : '',
       types: props.types,
-      town: ""
+      town: ''
     };
 
     this.handleSearchClick = this.handleSearchClick.bind(this);
@@ -41,21 +40,18 @@ class Home extends Component {
   }
 
   handleKeyPress = event => {
-    if (event.key === "Enter") this.handleSearchClick();
+    if (event.key === 'Enter') this.handleSearchClick();
   };
 
   render() {
     return (
-      <div
-        className={this.props.className + " " + styles.home}
-        ref={this.props.refere}
-      >
-        <div className={styles.hero + " text-center"}>
+      <div className="home container-fluid" ref={this.props.refere}>
+        <div className="title text-center">
           <h1>Explorez votre ville</h1>
           <h2>Ne cherchez plus où sortir! Trouvez!</h2>
         </div>
 
-        <div className={styles.search + " container"}>
+        <div className="form">
           <div className="form-group mx-md-5 px-md-5">
             <label htmlFor="type">
               <h3>Quoi ?</h3>
@@ -90,7 +86,7 @@ class Home extends Component {
           </div>
           <div className="form-group text-center">
             <button
-              className="btn btn-primary"
+              className="btn btn-lg btn-light"
               onClick={this.handleSearchClick}
             >
               Trouvez !

@@ -1,9 +1,8 @@
 import io from 'socket.io-client';
 import feathers from '@feathersjs/client';
-import {
-  EventEmitter
-} from 'events';
-import Error from '../components/App/Error/Error';
+import { EventEmitter } from 'events';
+import Error from '../components/App/Error/Error.jsx';
+import Place from '../../../classes/place';
 
 class Handler {
   constructor() {
@@ -37,26 +36,31 @@ class Handler {
   }
 
   async findInGoogle(params) {
-    console.log(Object.assign(params, { api: 'google' }));
     let query = {
       query: Object.assign(params, { api: 'google' })
     };
-    console.log(query);
 
     try {
-      this.events.emit('googleFindStarted');
+      this.events.emit('apiFindStarted');
 
       let res = await this.googleService.find(query);
 
+      let results = [...res.results];
+      res.results = [];
+
+      for (let result of results) {
+        res.results.push(new Place(result));
+      }
+
       console.log(res);
 
-      this.events.emit('googleFindResponse', res);
-      this.events.emit('googleFindFinished');
+      this.events.emit('apiFindResponse', res);
+      this.events.emit('apiFindFinished');
 
       return res;
     } catch (error) {
       console.log(error);
-      this.events.emit('googleFindFinished');
+      this.events.emit('apiFindFinished');
       Error.showError(error.message);
     }
   }
@@ -86,9 +90,12 @@ class Handler {
       let response = undefined;
 
       if (credentials) {
-        let options = Object.assign({
-          strategy: 'local'
-        }, credentials);
+        let options = Object.assign(
+          {
+            strategy: 'local'
+          },
+          credentials
+        );
         response = await this.feathers.authenticate(options);
       } else {
         response = await this.feathers.authenticate();
