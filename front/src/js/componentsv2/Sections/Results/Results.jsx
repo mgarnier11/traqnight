@@ -7,7 +7,11 @@ import PlaceCard from '../../PlaceCard/PlaceCard';
 import { setPriceFilter, setRatingFilter } from '../../../redux/actions';
 
 const mapStateToProps = state => {
-  return { maxPrice: state.maxPrice, minRate: state.minRate };
+  return {
+    places: state.places,
+    maxPrice: state.maxPrice,
+    minRate: state.minRate
+  };
 };
 
 function mapDispatchToProps(dispatch) {
@@ -62,11 +66,11 @@ class Results extends Component {
   }
 
   render() {
-    const { places, maxPrice } = this.state;
+    const { places, maxPrice, minRate } = this.state;
 
     return (
       <div className="results container">
-        <div className="card-deck">
+        <div className="card-columns">
           {places.map(place => {
             return (
               <PlaceCard
@@ -86,6 +90,17 @@ class Results extends Component {
                     'fas fa-euro-sign' + (maxPrice + 1 > i ? '' : ' out')
                   }
                   onClick={e => this.props.setPrice(i)}
+                />
+              );
+            })}
+          </div>
+          <div className="rating m-1 px-3">
+            <span>Note Minimale : </span>
+            {[...Array(5)].map((x, i) => {
+              return (
+                <i
+                  className={'fas fa-star' + (minRate + 1 > i ? '' : ' out')}
+                  onClick={e => this.props.setRate(i)}
                 />
               );
             })}

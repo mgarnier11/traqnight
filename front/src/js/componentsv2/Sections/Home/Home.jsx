@@ -1,10 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { getPlaces } from '../../../redux/actions';
 
 const mapStateToProps = state => {
   return { types: state.types };
 };
+
+function mapDispatchToProps(dispatch) {
+  return {
+    getPlaces: params => dispatch(getPlaces(params))
+  };
+}
 
 class Home extends Component {
   static propTypes = {
@@ -33,8 +40,11 @@ class Home extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    //const { type, location } = this.state;
-    //this.props.addArticle({ title, id });
+    const { type, location } = this.state;
+    this.props.getPlaces({
+      type: type === '' ? this.props.types[0]._id : type,
+      location
+    });
     //this.setState({ title: '' });
   }
 
@@ -94,4 +104,7 @@ class Home extends Component {
   }
 }
 
-export default connect(mapStateToProps)(Home);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Home);

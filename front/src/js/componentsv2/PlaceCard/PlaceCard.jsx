@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Place from '../../../../../classes/place';
 
 const PlaceCard = ({ isDisplayed, handleButtonClick, place }) => (
-  <div className={'card' + !isDisplayed ? ' d-none' : ''}>
+  <div className={'card' + (isDisplayed ? '' : ' d-none')}>
     <div className="card-header">
       <h3>{place.name}</h3>
     </div>
@@ -22,7 +22,7 @@ const PlaceCard = ({ isDisplayed, handleButtonClick, place }) => (
 
 PlaceCard.propTypes = {
   isDisplayed: PropTypes.bool.isRequired,
-  handleButtonClick: PropTypes.func.isRequired,
+  //handleButtonClick: PropTypes.func.isRequired,
   place: PropTypes.instanceOf(Place).isRequired
 };
 

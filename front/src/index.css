@@ -99,17 +99,20 @@ p {
   transform: rotate(45deg);
 }
 
-.results .filters .price {
+.results .filters .price,
+.results .filters .rating {
   font-size: 2.25vh;
   border: 1px solid #ced4da;
   border-radius: 0.25rem;
 }
 
-.results .filters .price span {
+.results .filters .price span,
+.results .filters .rating span {
   padding-right: 5px;
 }
 
-.results .filters .price i {
+.results .filters .price i,
+.results .filters .rating i {
   cursor: pointer;
   padding: 2px;
   line-height: 1.5;
@@ -117,4 +120,7 @@ p {
 
 .results .filters .out {
   color: #adb5bd;
+}
+
+.results .card {
 }

@@ -21,7 +21,6 @@ class Search extends Component {
     super(props);
 
     this.state = {
-      types: props.types,
       type: '',
       location: '',
       radius: '1000',
@@ -91,7 +90,7 @@ class Search extends Component {
               value={type}
               onChange={this.handleChange}
             >
-              {this.state.types.map(t => {
+              {this.props.types.map(t => {
                 return (
                   <option value={t.id} key={t.id}>
                     {t.name}

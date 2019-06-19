@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import { Provider } from 'react-redux';
 
 import App from './js/componentsv2/App/App';
+import { getTypes } from './js/redux/actions';
 import * as serviceWorker from './serviceWorker';
 
 import './index.css';
@@ -14,6 +15,8 @@ import './images/buildings1-min-compressor.jpg';
 import store from './js/redux/store';
 
 toast.configure();
+
+store.dispatch(getTypes());
 
 ReactDOM.render(
   <Provider store={store}>

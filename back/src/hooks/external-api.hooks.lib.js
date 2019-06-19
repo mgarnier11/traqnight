@@ -20,9 +20,6 @@ function beforeFindHook(options = {}) {
       throw new BadRequest(apiErrors.validType);
     newQuery.type = await context.app.service('types').get(query.type);
 
-    if (typeof query.radius !== 'number')
-      throw new BadRequest(apiErrors.validRadius);
-
     if (query.radius <= 1750) {
       newQuery.radius = 1000;
     } else if (query.radius > 1750 && query.radius <= 3750) {
