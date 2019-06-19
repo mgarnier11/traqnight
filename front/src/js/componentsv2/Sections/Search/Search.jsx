@@ -1,45 +1,51 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
-import apiHandler from '../../../api/apiHandler';
-import Error from '../Error/Error.jsx';
+import ErrorHandler from '../../ErrorHandler';
+
+const mapStateToProps = state => {
+  return { types: state.types };
+};
 
 class Search extends Component {
+  static propTypes = {
+    types: PropTypes.arrayOf(PropTypes.object).isRequired
+  };
+
+  static defaultProps = {
+    types: []
+  };
+
   constructor(props) {
     super(props);
 
     this.state = {
-      type: props.types.length > 0 ? props.types[0]._id : '',
       types: props.types,
-      town: '',
+      type: '',
+      location: '',
       radius: '1000',
       coordinates: null
     };
-    this.handleSearchClick = this.handleSearchClick.bind(this);
-    this.handleGetLocationClick = this.handleGetLocationClick.bind(this);
-    this.handleTownInputClick = this.handleTownInputClick.bind(this);
 
-    this.updateFromHome = this.updateFromHome.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleTownInputClick = this.handleTownInputClick.bind(this);
+    this.handleGetLocationClick = this.handleGetLocationClick.bind(this);
   }
 
-  handleChange = event => {
-    this.setState({
-      [event.target.id]: event.target.value
-    });
-  };
+  handleChange(event) {
+    this.setState({ [event.target.id]: event.target.value });
+  }
 
-  handleSearchClick() {
+  handleSubmit(event) {
+    event.preventDefault();
     if (this.state.town.length === 0 && !this.state.coordinates) {
-      Error.showError(
+      ErrorHandler.showError(
         "Vous devez activer la localisation ou renseigner une ville pour utiliser l'application"
       );
     } else {
-      let datas = {
-        type: this.state.type,
-        location: this.state.coordinates || this.state.town,
-        radius: parseInt(this.state.radius)
-      };
-
-      apiHandler.findInGoogle(datas);
+      //const { type, location, coordinates, radius } = this.state;
     }
   }
 
@@ -54,51 +60,41 @@ class Search extends Component {
       navigator.geolocation.getCurrentPosition(
         res => {
           this.setState({
-            town: '',
+            location: '',
             coordinates: { lat: res.coords.latitude, lng: res.coords.longitude }
           });
         },
         err => {
           console.log(err);
           if (err.code === 1)
-            Error.showError(
+            ErrorHandler.showError(
               "Vous devez accepter d'activer la localisation pour etre géolocalisé"
             );
           else {
-            Error.showError('Erreur lors de la géolocalisation');
+            ErrorHandler.showError('Erreur lors de la géolocalisation');
           }
         }
       );
     }
   }
 
-  updateFromHome(datas) {
-    this.setState({ town: datas.location, type: datas.type });
-  }
-
-  handleKeyPress = event => {
-    if (event.key === 'Enter') this.handleSearchClick();
-  };
-
   render() {
+    const { type, location, coordinates, radius } = this.state;
+
     return (
-      <div
-        className="search container"
-        id="searchSection"
-        ref={this.props.refere}
-      >
-        <div className="row">
+      <div className="search container">
+        <form className="row" onSubmit={this.handleSubmit}>
           <div className="col-md-2 col-5 px-1">
             <select
               className="form-control"
               id="type"
-              value={this.state.type}
+              value={type}
               onChange={this.handleChange}
             >
-              {this.state.types.map(type => {
+              {this.state.types.map(t => {
                 return (
-                  <option value={type._id} key={type._id}>
-                    {type.name}
+                  <option value={t.id} key={t.id}>
+                    {t.name}
                   </option>
                 );
               })}
@@ -110,14 +106,13 @@ class Search extends Component {
               type="text"
               onClick={this.handleTownInputClick}
               className="form-control"
-              id="town"
+              id="location"
               placeholder="Votre ville"
-              value={this.state.town}
+              value={location}
               onChange={this.handleChange}
-              disabled={this.state.coordinates}
-              onKeyPress={this.handleKeyPress}
+              disabled={coordinates}
             />
-            <span className={this.state.coordinates ? 'unlocate' : 'locate'}>
+            <span className={coordinates ? 'unlocate' : 'locate'}>
               <i
                 onClick={this.handleGetLocationClick}
                 className="fas fa-crosshairs"
@@ -128,7 +123,7 @@ class Search extends Component {
             <select
               className="form-control"
               id="radius"
-              value={this.state.radius}
+              value={radius}
               onChange={this.handleChange}
             >
               <option value={1000}>1000m</option>
@@ -137,17 +132,14 @@ class Search extends Component {
             </select>
           </div>
           <div className="col-md-2 col-7 px-1">
-            <button
-              className="btn btn-primary col-12"
-              onClick={this.handleSearchClick}
-            >
+            <button type="submit" className="btn btn-secondary col-12">
               Trouvez !
             </button>
           </div>
-        </div>
+        </form>
       </div>
     );
   }
 }
 
-export default Search;
+export default connect(mapStateToProps)(Search);

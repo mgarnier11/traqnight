@@ -58,10 +58,13 @@ p {
 }
 
 .search {
-  height: 100vh;
+  /*height: 100vh;*/
+  padding-top: 25px;
+  padding-bottom: 25px;
 }
 
-.search .form-control .search .btn {
+.search .form-control,
+.search .btn {
   font-size: 2.25vh;
 }
 
@@ -94,4 +97,24 @@ p {
 
 .search .unlocate::after {
   transform: rotate(45deg);
+}
+
+.results .filters .price {
+  font-size: 2.25vh;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+}
+
+.results .filters .price span {
+  padding-right: 5px;
+}
+
+.results .filters .price i {
+  cursor: pointer;
+  padding: 2px;
+  line-height: 1.5;
+}
+
+.results .filters .out {
+  color: #adb5bd;
 }

@@ -12,14 +12,6 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    this.homeDivRef = React.createRef();
-    this.searchDivRef = React.createRef();
-    this.searchRef = React.createRef();
-
-    this.isScrolling = -1;
-    this.prgmScrolling = true;
-    this.lastScroll = 0;
-
     this.state = {
       types: undefined
     };
@@ -39,26 +31,11 @@ class App extends Component {
     });
   }
 
-  async componentDidMount() {
-    window.onscroll = () => {
-      // Clear our timeout throughout the scroll
-      window.clearTimeout(this.isScrolling);
-
-      // Set a timeout to run after scrolling ends
-      this.isScrolling = setTimeout(() => {
-        if (this.lastScroll < window.scrollY) this.scrollTo('searchDivRef');
-        //else if (this.lastScroll > window.scrollY) this.scrollTo('homeDivRef');
-
-        this.lastScroll = window.scrollY;
-      }, 66);
-    };
-  }
-
-  scrollTo = ref => window.scrollTo(0, this[ref].current.offsetTop);
+  async componentDidMount() {}
 
   handleHomeSearchClick(datas) {
-    this.searchRef.current.updateFromHome(datas);
-    this.scrollTo('searchDivRef');
+    //this.searchRef.current.updateFromHome(datas);
+    //this.scrollTo('searchDivRef');
   }
 
   render() {
@@ -74,11 +51,10 @@ class App extends Component {
               return (
                 <div className="app">
                   <Home
-                    refere={this.homeDivRef}
                     handleHomeSearchClick={this.handleHomeSearchClick}
                     types={this.state.types}
                   />
-                  <Search refere={this.searchDivRef} types={this.state.types} />
+                  <Search types={this.state.types} />
                 </div>
               );
             }}

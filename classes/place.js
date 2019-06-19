@@ -15,7 +15,7 @@ class Place {
       this.id = oldResult.id;
     } else {
       this.rating = 0;
-      this.priceLevel = undefined;
+      this.priceLevel = 0;
       this.location = { lat: 0, lng: 0 };
       this.name = '';
       this.url = '';
