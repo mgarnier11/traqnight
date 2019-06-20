@@ -105,6 +105,23 @@ async function getPlaceFromGoogle(placeName, vicinity) {
   return resultsResponse.json.candidates[0];
 }
 
+async function getFirstResults(origin, radius, keyword) {
+  let inParam = origin.lat + ',' + origin.lng + ';r=' + radius;
+
+  try {
+    let results = await myutils.hereSearchRequest({
+      q: keyword,
+      in: inParam,
+      size: 100
+    });
+    return results.items;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function storeAllResults(app, requestQuery, origin, radius, keyword) {}
+
 async function getHereResults(origin, radius, keyword) {
   //radius = radius / 2;
   let corners = [];
@@ -186,6 +203,7 @@ async function getTown(townName) {
 module.exports = {
   getTown: getTown,
   getPlaceFromGoogle: getPlaceFromGoogle,
+  getFirstResults: getFirstResults,
   getHereResults: getHereResults,
   getGoogleResults: getGoogleResults
 };

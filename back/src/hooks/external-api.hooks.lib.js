@@ -42,13 +42,13 @@ function beforeFindHook(options = {}) {
         lng: town.geometry.location.lng
       };
 
-      let requestsQuery = {
+      newQuery.requestsQuery = {
         town: town.name,
         radius: newQuery.radius,
         typeId: newQuery.type._id
       };
 
-      let lstRequests = requestsSrv.find({ query: requestsQuery });
+      let lstRequests = requestsSrv.find({ query: newQuery.requestsQuery });
 
       if (lstRequests.length > 0) {
         newQuery.isNewRequest = false;
@@ -73,22 +73,25 @@ function beforeFindHook(options = {}) {
 
 function afterFindHook(options = {}) {
   return async context => {
-    const requestsSrv = context.app.service('requests');
-    const placesSrv = context.app.service('places');
-    const nextPlacesTokensSrv = context.app.service('next-places-tokens');
     const query = context.params.query;
+    const placesSrv = context.app.service('places');
 
-    let returnPlacesIds = [];
+    let returnValue = {
+      nextPlacesToken: query.nextPlacesToken,
+      origin: query.location
+    };
 
-    if (query.nextPlacesToken) {
-      let nextPlacesToken = nextPlacesTokensSrv.get(query.nextPlacesToken);
-      let request = requestsSrv.get(nextPlacesToken.requestId);
-
-      returnPlacesIds = request.placesIds.slice(
-        nextPlacesToken.startPosition,
-        nextPlacesToken.startPosition + 20
-      );
+    if (query.isNewRequest) {
+      let herePlaces = context.result;
+      //convert here palces to Place and return them
     } else {
+      let placesIds = context.result;
+
+      returnValue.places = placesIds.map(placeId => {
+        return placesSrv.get(placeId);
+      });
+
+      return returnValue;
     }
     /*
 

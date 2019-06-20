@@ -2,12 +2,9 @@
 const createService = require('./external-api.class.js');
 const hooks = require('./external-api.hooks');
 
-module.exports = function (app) {
-  
-  const paginate = app.get('paginate');
-
+module.exports = function(app) {
   const options = {
-    paginate
+    app
   };
 
   // Initialize our service with any options it requires

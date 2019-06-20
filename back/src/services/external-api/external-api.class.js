@@ -8,26 +8,55 @@ const Place = require('../../../../classes/place');
 
 /* eslint-disable no-unused-vars */
 class Service {
-  constructor(options) {
-    this.options = options || {};
+  constructor(app) {
+    this.app = app;
   }
 
   async find(params) {
     try {
+      let placesIds;
+
       if (params.query.nextPlacesToken) {
-        return {};
+        let nextPlacesToken = await this.app
+          .services('next-places-token')
+          .get(params.query.nextPlacesToken);
+
+        params.query.nextPlacesToken = nextPlacesToken.nextPlacesToken;
+
+        placesIds = await this.app
+          .services('requests')
+          .get(nextPlacesToken.requestId)
+          .placesIds.slice(
+            nextPlacesToken.startPosition,
+            nextPlacesToken.startPosition + 100
+          );
       } else {
         let location = params.query.location;
         let keyword = params.query.type.name;
         let radius = params.query.radius;
 
-        let results;
-
         if (params.query.isNewRequest) {
-          //get new resutls from apis,
-          //results = await apiUtils.getHereResults(location, radius, keyword);
+          let herePlaces = await apiUtils.getFirstResults(
+            location,
+            radius,
+            keyword
+          );
+
+          apiUtils.storeAllResults(
+            this.app,
+            params.query.requestsQuery,
+            location,
+            radius,
+            keyword
+          );
+
+          return herePlaces;
         } else {
+          placesIds = params.query.request.placesIds.slice(0, 100);
+
+          params.query.nextPlacesToken = params.query.request.nextPlacesToken;
         }
+        return placesIds;
       }
     } catch (error) {
       console.log(error);
@@ -36,7 +65,7 @@ class Service {
       else throw new GeneralError('API error');
     }
   }
-
+  /*
   async findOld(params) {
     try {
       let location = params.query.location;
@@ -79,7 +108,7 @@ class Service {
       if (error instanceof BadRequest) throw error;
       else throw new GeneralError('API error');
     }
-  }
+  }*/
 
   async get(id, params) {
     throw new MethodNotAllowed(

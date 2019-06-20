@@ -42,7 +42,7 @@ class Home extends Component {
     event.preventDefault();
     const { type, location } = this.state;
     this.props.getPlaces({
-      type: type === '' ? this.props.types[0]._id : type,
+      typeId: type === '' ? this.props.types[0]._id : type,
       location,
       radius: 1000
     });

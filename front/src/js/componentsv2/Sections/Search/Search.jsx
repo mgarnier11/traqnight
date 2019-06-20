@@ -54,7 +54,7 @@ class Search extends Component {
       const { type, location, coordinates, radius } = this.state;
 
       this.props.getPlaces({
-        type: type === '' ? this.props.types[0]._id : type,
+        typeId: type === '' ? this.props.types[0]._id : type,
         location,
         radius: radius
       });
