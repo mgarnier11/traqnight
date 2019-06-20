@@ -61,7 +61,6 @@ function distanceInMBetweenEarthCoordinates(point1, point2) {
   let lon1 = point1.lng;
   let lon2 = point2.lng;
 
-
   var dLat = degreesToRadians(lat2 - lat1);
   var dLon = degreesToRadians(lon2 - lon1);
 
@@ -123,12 +122,12 @@ function middlePoint(point1, point2) {
 }
 
 function checkPoint(p) {
-  if (!p) throw new BadRequest('Point is not defined in middlePoint function');
+  if (!p) throw new BadRequest('Point is not defined');
   else {
     if (!p.lat || typeof p.lat != 'number')
-      throw new BadRequest('Point latitude is wrong in middlePoint function');
+      throw new BadRequest('Point latitude is wrong');
     if (!p.lng || typeof p.lng != 'number')
-      throw new BadRequest('Point longitude is wrong in middlePoint function');
+      throw new BadRequest('Point longitude is wrong');
   }
 }
 

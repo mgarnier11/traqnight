@@ -9,26 +9,32 @@ const apiErrors = {
 
 function beforeFindHook(options = {}) {
   return async context => {
-    const requestSrv = context.app.service('requests');
+    const typesSrv = context.app.service('types');
+    const requestsSrv = context.app.service('requests');
+    //const nextPlacesTokensSrv = context.app.service('next-places-tokens');
     const query = context.params.query;
 
-    let newQuery = {};
+    if (!query.nextPlacesToken) {
+      let newQuery = {};
 
-    newQuery.api = query.api;
+      /**Fix Type */
+      if (typeof query.typeId !== 'string')
+        throw new BadRequest(apiErrors.validType);
+      newQuery.type = await typesSrv.get(query.typeId);
 
-    if (typeof query.type !== 'string')
-      throw new BadRequest(apiErrors.validType);
-    newQuery.type = await context.app.service('types').get(query.type);
+      /**Fix Radius */
+      if (query.radius <= 1750) {
+        newQuery.radius = 1000;
+      } else if (query.radius > 1750 && query.radius <= 3750) {
+        newQuery.radius = 2500;
+      } else {
+        newQuery.radius = 5000;
+      }
 
-    if (query.radius <= 1750) {
-      newQuery.radius = 1000;
-    } else if (query.radius > 1750 && query.radius <= 3750) {
-      newQuery.radius = 2500;
-    } else {
-      newQuery.radius = 5000;
-    }
+      /**Fix Location */
+      if (typeof query.location !== 'string')
+        throw new BadRequest(apiErrors.validLocation);
 
-    if (typeof query.location === 'string') {
       let town = await apiUtils.getTown(query.location);
 
       newQuery.location = {
@@ -36,38 +42,30 @@ function beforeFindHook(options = {}) {
         lng: town.geometry.location.lng
       };
 
-      newQuery.query = {
+      let requestsQuery = {
         town: town.name,
         radius: newQuery.radius,
-        type: newQuery.type._id
+        typeId: newQuery.type._id
       };
 
-      let requests = await requestSrv.find({
-        query: newQuery.query
-      });
+      let lstRequests = requestsSrv.find({ query: requestsQuery });
 
-      if (requests.length > 0) {
-        newQuery.newRequest = false;
-        newQuery.request = requests[0];
+      if (lstRequests.length > 0) {
+        newQuery.isNewRequest = false;
+
+        newQuery.request = lstRequests[0];
       } else {
-        newQuery.newRequest = true;
+        newQuery.isNewRequest = true;
       }
-    } else if (typeof query.location === 'object') {
-      if (typeof query.location.lat !== 'number')
-        throw new BadRequest(apiErrors.validLocation);
-      if (typeof query.location.lng !== 'number')
-        throw new BadRequest(apiErrors.validLocation);
 
-      newQuery.location = {
-        lat: query.location.lat,
-        lng: query.location.lng
-      };
-      newQuery.newRequest = true;
-    } else {
-      throw new BadRequest(apiErrors.validLocation);
-    }
+      context.params.query = newQuery;
+    } /* else {
+      let nextPlacesToken = nextPlacesTokensSrv.get(query.nextPlacesToken);
 
-    context.params.query = newQuery;
+      let request = requestsSrv.get(nextPlacesToken.requestId);
+
+
+    }*/
 
     return context;
   };
@@ -75,10 +73,24 @@ function beforeFindHook(options = {}) {
 
 function afterFindHook(options = {}) {
   return async context => {
-    const requestSrv = context.app.service('requests');
-    const placeSrv = context.app.service('places');
+    const requestsSrv = context.app.service('requests');
+    const placesSrv = context.app.service('places');
+    const nextPlacesTokensSrv = context.app.service('next-places-tokens');
     const query = context.params.query;
-    const data = context.result;
+
+    let returnPlacesIds = [];
+
+    if (query.nextPlacesToken) {
+      let nextPlacesToken = nextPlacesTokensSrv.get(query.nextPlacesToken);
+      let request = requestsSrv.get(nextPlacesToken.requestId);
+
+      returnPlacesIds = request.placesIds.slice(
+        nextPlacesToken.startPosition,
+        nextPlacesToken.startPosition + 20
+      );
+    } else {
+    }
+    /*
 
     let newResults = [];
 
@@ -130,7 +142,7 @@ function afterFindHook(options = {}) {
 
     context.result = newResults;
 
-    return context;
+    return context;*/
   };
 }
 

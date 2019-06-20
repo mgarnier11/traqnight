@@ -40,51 +40,28 @@ class Handler {
       query: Object.assign(params, { api: 'google' })
     };
     console.log(query);
-    try {
-      let res = await this.googleService.find(query);
-      console.log(res);
+    let res = await this.googleService.find(query);
+    let results = [...res.results];
+    res.results = [];
 
-      let results = [...res.results];
-      res.results = [];
-
-      for (let result of results) {
-        res.results.push(new Place(result));
-      }
-      console.log(res);
-      return res;
-    } catch (error) {
-      return error;
+    for (let result of results) {
+      res.results.push(new Place(result));
     }
+
+    return res;
   }
 
-  async findInGoogle(params) {
-    let query = {
-      query: Object.assign(params, { api: 'google' })
+  async performRequest(requestParams) {
+    let apiQuery = {
+      query: requestParams
     };
 
-    try {
-      this.events.emit('apiFindStarted');
+    let apiResponse = await this.googleService.find(apiQuery);
+    apiResponse.places = apiResponse.places.map(place => {
+      return new Place(place);
+    });
 
-      let res = await this.googleService.find(query);
-
-      let results = [...res.results];
-      res.results = [];
-
-      for (let result of results) {
-        res.results.push(new Place(result));
-      }
-
-      console.log(res);
-
-      this.events.emit('apiFindResponse', res);
-      this.events.emit('apiFindFinished');
-
-      return res;
-    } catch (error) {
-      console.log(error);
-      this.events.emit('apiFindFinished');
-      Error.showError(error.message);
-    }
+    return apiResponse;
   }
 
   async isAuthenticated() {

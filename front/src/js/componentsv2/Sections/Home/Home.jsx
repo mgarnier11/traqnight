@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { getPlaces } from '../../../redux/actions';
+import { getPlaces } from '../../../redux/actions/place-actions';
 
 const mapStateToProps = state => {
-  return { types: state.types };
+  return { typesRequest: state.typesRequest, types: state.typesRequest.types };
 };
 
 function mapDispatchToProps(dispatch) {
@@ -43,9 +43,9 @@ class Home extends Component {
     const { type, location } = this.state;
     this.props.getPlaces({
       type: type === '' ? this.props.types[0]._id : type,
-      location
+      location,
+      radius: 1000
     });
-    //this.setState({ title: '' });
   }
 
   render() {
@@ -72,7 +72,7 @@ class Home extends Component {
               >
                 {this.props.types.map(t => {
                   return (
-                    <option value={t.id} key={t.id}>
+                    <option value={t._id} key={t._id}>
                       {t.name}
                     </option>
                   );

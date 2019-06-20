@@ -61,6 +61,7 @@ p {
   /*height: 100vh;*/
   padding-top: 25px;
   padding-bottom: 25px;
+  background-color: rgba(0, 0, 0, 0.06);
 }
 
 .search .form-control,
@@ -97,6 +98,15 @@ p {
 
 .search .unlocate::after {
   transform: rotate(45deg);
+}
+
+.results {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.results .card-header,
+.results .card-footer {
+  background-color: rgba(0, 0, 0, 0.06);
 }
 
 .results .filters .price,

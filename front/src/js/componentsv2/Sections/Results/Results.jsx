@@ -2,14 +2,22 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
+import { getPlaces } from '../../../redux/actions/place-actions';
 import Place from '../../../../../../classes/place';
 import PlaceCard from '../../PlaceCard/PlaceCard';
 
 const mapStateToProps = state => {
   return {
-    places: state.places
+    placesRequest: state.placesRequest,
+    places: state.placesRequest.places
   };
 };
+
+function mapDispatchToProps(dispatch) {
+  return {
+    getPlaces: params => dispatch(getPlaces(params))
+  };
+}
 
 class Results extends Component {
   static propTypes = {
@@ -34,6 +42,8 @@ class Results extends Component {
 
     this.setMaxPrice = this.setMaxPrice.bind(this);
     this.setMinRating = this.setMinRating.bind(this);
+
+    this.loadMoreResults = this.loadMoreResults.bind(this);
   }
 
   componentWillReceiveProps(newProps) {
@@ -56,6 +66,12 @@ class Results extends Component {
     if (place.priceLevel > this.state.maxPrice) return false;
     if (place.rating < this.state.minRating) return false;
     return true;
+  }
+
+  loadMoreResults() {
+    this.props.getPlaces({
+      nextPlacesToken: this.props.placesRequest.nextPlacesToken
+    });
   }
 
   render() {
@@ -88,6 +104,12 @@ class Results extends Component {
               );
             })}
           </div>
+          <button
+            className="btn btn-secondary m-1"
+            onClick={this.loadMoreResults}
+          >
+            Plus de résultats
+          </button>
         </div>
         <div className="card-columns">
           {places.map(place => {
@@ -104,4 +126,7 @@ class Results extends Component {
   }
 }
 
-export default connect(mapStateToProps)(Results);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Results);

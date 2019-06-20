@@ -12,6 +12,7 @@ const userErrors = {
 function beforeCreateOrUpdateHook(options = {}) {
   return async context => {
     let input = context.data;
+
     let newDatas = {};
 
     if (validator.isEmpty(input.email))
@@ -22,14 +23,14 @@ function beforeCreateOrUpdateHook(options = {}) {
       query: { email: input.email }
     });
     if (userDatas.data.length)
-      if (userDatas.data[0]._id != context.id)
+      if (userDatas.data[0]._id !== context.id)
         throw new BadRequest(userErrors.inUseEmail);
     newDatas.email = input.email;
 
     if (validator.isEmpty(input.name)) throw new BadRequest(userErrors.name);
     userDatas = await context.service.find({ query: { name: input.name } });
     if (userDatas.data.length)
-      if (userDatas.data[0]._id != context.id)
+      if (userDatas.data[0]._id !== context.id)
         throw new BadRequest(userErrors.inUseName);
     newDatas.name = input.name;
 
@@ -59,7 +60,7 @@ function beforePatchHook(options = {}) {
         query: { email: input.email }
       });
       if (userDatas.data.length)
-        if (userDatas.data[0]._id != context.id)
+        if (userDatas.data[0]._id !== context.id)
           throw new BadRequest(userErrors.inUseEmail);
       newDatas.email = input.email;
     }
@@ -70,7 +71,7 @@ function beforePatchHook(options = {}) {
         query: { name: input.name }
       });
       if (userDatas.data.length)
-        if (userDatas.data[0]._id != context.id)
+        if (userDatas.data[0]._id !== context.id)
           throw new BadRequest(userErrors.inUseName);
       newDatas.name = input.name;
     }

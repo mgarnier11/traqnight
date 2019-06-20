@@ -4,8 +4,9 @@ import { toast } from 'react-toastify';
 import { Provider } from 'react-redux';
 
 import App from './js/componentsv2/App/App';
-import { getTypes } from './js/redux/actions';
+import { getTypes } from './js/redux/actions/type-actions';
 import * as serviceWorker from './serviceWorker';
+import ErrorComponent from './js/componentsv2/ErrorHandler';
 
 import './index.css';
 import 'react-toastify/dist/ReactToastify.css';
@@ -21,6 +22,7 @@ store.dispatch(getTypes());
 ReactDOM.render(
   <Provider store={store}>
     <App />
+    <ErrorComponent />
   </Provider>,
   document.getElementById('root')
 );

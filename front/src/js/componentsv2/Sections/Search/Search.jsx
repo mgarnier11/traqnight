@@ -2,11 +2,18 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import ErrorHandler from '../../ErrorHandler';
+import { ErrorHandler } from '../../ErrorHandler';
+import { getPlaces } from '../../../redux/actions/place-actions';
 
 const mapStateToProps = state => {
-  return { types: state.types };
+  return { typesRequest: state.typesRequest, types: state.typesRequest.types };
 };
+
+function mapDispatchToProps(dispatch) {
+  return {
+    getPlaces: params => dispatch(getPlaces(params))
+  };
+}
 
 class Search extends Component {
   static propTypes = {
@@ -39,12 +46,18 @@ class Search extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    if (this.state.town.length === 0 && !this.state.coordinates) {
+    if (this.state.location.length === 0 && !this.state.coordinates) {
       ErrorHandler.showError(
         "Vous devez activer la localisation ou renseigner une ville pour utiliser l'application"
       );
     } else {
-      //const { type, location, coordinates, radius } = this.state;
+      const { type, location, coordinates, radius } = this.state;
+
+      this.props.getPlaces({
+        type: type === '' ? this.props.types[0]._id : type,
+        location,
+        radius: radius
+      });
     }
   }
 
@@ -111,7 +124,7 @@ class Search extends Component {
               onChange={this.handleChange}
               disabled={coordinates}
             />
-            <span className={coordinates ? 'unlocate' : 'locate'}>
+            <span className={coordinates ? 'unlocate' : 'locate d-none'}>
               <i
                 onClick={this.handleGetLocationClick}
                 className="fas fa-crosshairs"
@@ -141,4 +154,7 @@ class Search extends Component {
   }
 }
 
-export default connect(mapStateToProps)(Search);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Search);

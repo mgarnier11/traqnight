@@ -35,9 +35,10 @@ function beforeCreateOrUpdateHook(options = {}) {
     newDatas.typeId = input.type._id;
 
     newDatas.id = input.id;
-
+    if (context.method === 'create') {
+      newDatas.creationDate = Date.now();
+    }
     newDatas.updateDate = Date.now();
-    newDatas.creationDate = Date.now();
 
     let oldDatas = await context.app
       .service('places')
@@ -46,9 +47,14 @@ function beforeCreateOrUpdateHook(options = {}) {
     if (oldDatas.length > 0) {
       let oldPlace = oldDatas[0];
 
-      //if (oldPlace.updateDate + Date.)
+      let d = new Date();
+      let d2 = new Date(d.getFullYear() - 1, d.getMonth(), d.getDay());
 
-      //context.result = oldDatas.
+      if (oldPlace.updateDate < d2) {
+        newDatas.creationDate = oldDatas.creationDate;
+      } else {
+        throw new BadRequest('Place already up to date');
+      }
     }
 
     context.data = newDatas;

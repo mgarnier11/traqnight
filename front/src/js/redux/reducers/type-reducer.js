@@ -5,7 +5,7 @@ import {
   INITIAL_STATE
 } from '../constants';
 
-function types(typesRequest = INITIAL_STATE.typesRequest, action) {
+export function types(typesRequest = INITIAL_STATE.typesRequest, action) {
   switch (action.type) {
     case GET_TYPES_STARTED:
       return Object.assign({}, typesRequest, { loading: true });
