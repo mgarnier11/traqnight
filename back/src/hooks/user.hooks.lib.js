@@ -1,5 +1,6 @@
 const { BadRequest } = require('@feathersjs/errors');
 const validator = require('validator');
+const User = require('../../../classes/user-class');
 
 const userErrors = {
   validEmail: 'Please enter a valid email',
@@ -92,7 +93,27 @@ function beforePatchHook(options = {}) {
   };
 }
 
+function afterAllHook(options = {}) {
+  return async context => {
+    /*
+    if (context.method === 'find') {
+      let newResults = [];
+
+      for (let user of context.result) {
+        newResults.push(new User(user));
+      }
+
+      context.result = newResults;
+    } else {
+      context.result = new User(context.result);
+    }
+    */
+    return context;
+  };
+}
+
 module.exports = {
   beforeCreateOrUpdateHook: beforeCreateOrUpdateHook,
-  beforePatchHook: beforePatchHook
+  beforePatchHook: beforePatchHook,
+  afterAllHook: afterAllHook
 };

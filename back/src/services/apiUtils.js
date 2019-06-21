@@ -114,13 +114,13 @@ async function getFirstResults(origin, radius, keyword) {
       in: inParam,
       size: 100
     });
+    if (results.items.length === 100)
+      return await getFirstResults(origin, radius / 2, keyword);
     return results.items;
   } catch (error) {
     console.log(error);
   }
 }
-
-async function storeAllResults(app, requestQuery, origin, radius, keyword) {}
 
 async function getHereResults(origin, radius, keyword) {
   //radius = radius / 2;

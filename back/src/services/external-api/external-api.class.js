@@ -4,7 +4,7 @@ const {
   GeneralError
 } = require('@feathersjs/errors');
 const apiUtils = require('../apiUtils');
-const Place = require('../../../../classes/place');
+const queueHandler = require('../../queue/queue');
 
 /* eslint-disable no-unused-vars */
 class Service {
@@ -42,13 +42,20 @@ class Service {
             keyword
           );
 
-          apiUtils.storeAllResults(
-            this.app,
-            params.query.requestsQuery,
-            location,
-            radius,
-            keyword
-          );
+          for (let herePlace of herePlaces) {
+            herePlace.googleDatas = await apiUtils.getPlaceFromGoogle(
+              herePlace.name,
+              herePlace.vicinity
+            );
+          }
+
+          let queueParams = {
+            app: this.app,
+            requestsQuery: params.query.requestsQuery,
+            apiParams: { location, radius, keyword }
+          };
+
+          queueHandler.processRequestsQuery(queueParams);
 
           return herePlaces;
         } else {

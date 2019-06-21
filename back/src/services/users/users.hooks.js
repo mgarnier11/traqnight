@@ -2,7 +2,8 @@ const { authenticate } = require('@feathersjs/authentication').hooks;
 const userHooksLib = require('../../hooks/user.hooks.lib');
 
 const {
-  hashPassword, protect
+  hashPassword,
+  protect
 } = require('@feathersjs/authentication-local').hooks;
 
 module.exports = {
@@ -11,8 +12,16 @@ module.exports = {
     find: [authenticate('jwt')],
     get: [authenticate('jwt')],
     create: [hashPassword(), userHooksLib.beforeCreateOrUpdateHook()],
-    update: [hashPassword(), userHooksLib.beforeCreateOrUpdateHook(), authenticate('jwt')],
-    patch: [hashPassword(), userHooksLib.beforePatchHook(), authenticate('jwt')],
+    update: [
+      hashPassword(),
+      userHooksLib.beforeCreateOrUpdateHook(),
+      authenticate('jwt')
+    ],
+    patch: [
+      hashPassword(),
+      userHooksLib.beforePatchHook(),
+      authenticate('jwt')
+    ],
     remove: [authenticate('jwt')]
   },
 
@@ -20,6 +29,7 @@ module.exports = {
     all: [
       // Make sure the password field is never sent to the client
       // Always must be the last hook
+      userHooksLib.afterAllHook(),
       protect('password')
     ],
     find: [],

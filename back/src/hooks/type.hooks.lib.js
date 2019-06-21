@@ -2,6 +2,7 @@ const { BadRequest } = require('@feathersjs/errors');
 const validator = require('validator');
 const googlePlacesTypes = require('../../../front/src/json/googleplaces.json');
 const fontAwesomeIcons = require('../../../front/src/json/fontawesome.json');
+const Type = require('../../../classes/type-class');
 
 const typeErrors = {
   validName: 'Please enter a valid name',
@@ -91,6 +92,19 @@ function afterAllHook(options = {}) {
         .service('users')
         .get(type.updateUserId);
     }
+    /*
+    if (context.method === 'find') {
+      let newResults = [];
+
+      for (let type of context.result) {
+        newResults.push(new Type(type));
+      }
+
+      context.result = newResults;
+    } else {
+      context.result = new Type(context.result);
+    }
+    */
 
     return context;
   };
