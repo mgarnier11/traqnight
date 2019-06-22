@@ -85,12 +85,19 @@ async function getGoogleResults(
   }
 }
 
-async function getPlaceFromGoogle(placeName, vicinity) {
+async function getPlaceFromGoogle(input) {
+  console.log('call to google api');
   let resultsResponse = await googleMapsClient
     .findPlace({
-      input: placeName + ' ' + vicinity,
+      input: input,
       inputtype: 'textquery',
-      fields: ['price_level', 'rating', 'permanently_closed']
+      fields: [
+        'name',
+        'place_id',
+        'price_level',
+        'rating',
+        'permanently_closed'
+      ]
     })
     .asPromise();
 
@@ -112,10 +119,10 @@ async function getFirstResults(origin, radius, keyword) {
     let results = await myutils.hereSearchRequest({
       q: keyword,
       in: inParam,
-      size: 100
+      size: 25
     });
-    if (results.items.length === 100)
-      return await getFirstResults(origin, radius / 2, keyword);
+    if (results.items.length === 25)
+      return await getFirstResults(origin, radius / 4, keyword);
     return results.items;
   } catch (error) {
     console.log(error);

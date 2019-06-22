@@ -8,8 +8,8 @@ const queueHandler = require('../../queue/queue');
 
 /* eslint-disable no-unused-vars */
 class Service {
-  constructor(app) {
-    this.app = app;
+  constructor(options) {
+    this.app = options.app;
   }
 
   async find(params) {
@@ -18,17 +18,17 @@ class Service {
 
       if (params.query.nextPlacesToken) {
         let nextPlacesToken = await this.app
-          .services('next-places-token')
+          .service('next-places-token')
           .get(params.query.nextPlacesToken);
 
         params.query.nextPlacesToken = nextPlacesToken.nextPlacesToken;
 
         placesIds = await this.app
-          .services('requests')
+          .service('requests')
           .get(nextPlacesToken.requestId)
           .placesIds.slice(
             nextPlacesToken.startPosition,
-            nextPlacesToken.startPosition + 100
+            nextPlacesToken.startPosition + 25
           );
       } else {
         let location = params.query.location;
@@ -41,13 +41,23 @@ class Service {
             radius,
             keyword
           );
+          let returnPlaces = [];
+          console.log('first results are ok');
 
           for (let herePlace of herePlaces) {
-            herePlace.googleDatas = await apiUtils.getPlaceFromGoogle(
-              herePlace.name,
-              herePlace.vicinity
-            );
+            herePlace.keyword = keyword;
+            herePlace.type = params.query.type;
+            let newPlace = await this.app.service('places').create(herePlace);
+
+            if (
+              returnPlaces.find(
+                p => p._id.toString() === newPlace._id.toString()
+              ) === undefined
+            )
+              returnPlaces.push(newPlace);
           }
+
+          console.log('all first results have google datas');
 
           let queueParams = {
             app: this.app,
@@ -57,9 +67,9 @@ class Service {
 
           queueHandler.processRequestsQuery(queueParams);
 
-          return herePlaces;
+          return returnPlaces;
         } else {
-          placesIds = params.query.request.placesIds.slice(0, 100);
+          placesIds = params.query.request.placesIds.slice(0, 25);
 
           params.query.nextPlacesToken = params.query.request.nextPlacesToken;
         }

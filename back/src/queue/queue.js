@@ -10,11 +10,18 @@ class Queue {
     const requestsQuery = params.requestsQuery;
     const apiParams = params.apiParams;
 
-    if (this.requestsQueryProcessing.includes(requestsQuery))
-      throw new Error('Request query is already in processing');
+    const findQ = q =>
+      q.town === requestsQuery.town &&
+      q.radius === requestsQuery.radius &&
+      q.typeId.toString() === requestsQuery.typeId.toString();
 
+    if (this.requestsQueryProcessing.find(findQ) !== undefined) {
+      console.log('request already processing');
+      return null;
+    }
     this.requestsQueryProcessing.push(requestsQuery);
 
+    /*
     let herePlaces = await apiUtils.getHereResults(
       apiParams.location,
       apiParams.radius,
@@ -44,11 +51,11 @@ class Queue {
         newResult.id = herePlace.id;
         newResult = await placeSrv.create(newResult);
 
-        newResults.push(newResult);*/
+        newResults.push(newResult);
 
         places.push(await app.services('places').create());
       }
-    }
+}
 
     let request = new Request();
 
@@ -58,7 +65,7 @@ class Queue {
 
     request.placesIds = places.map(place => place._id);
 
-    app.services('requests').create(request);
+    app.services('requests').create(request);*/
   }
 }
 

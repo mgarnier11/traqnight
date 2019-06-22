@@ -2,6 +2,7 @@ const { BadRequest } = require('@feathersjs/errors');
 const skip = require('@feathersjs/feathers').SKIP;
 const validator = require('validator');
 const Place = require('../../../classes/place-class');
+const apiUtils = require('../services/apiUtils');
 
 const placeErrors = {
   validType: 'Invalid type',
@@ -10,40 +11,76 @@ const placeErrors = {
   validUrl: 'Invalid url'
 };
 
-function beforeCreateOrUpdateHook(options = {}) {
+function beforeCreateHook(options = {}) {
   return async context => {
     let input = context.data;
     let newDatas = {};
+    let googleDatas = {};
 
-    newDatas.rating = input.rating;
-    newDatas.priceLevel = input.priceLevel;
-    newDatas.location = input.location;
+    let oldPlaces = await context.app
+      .service('places')
+      .find({ query: { hereId: input.id } });
 
-    if (validator.isEmpty(input.name))
-      throw new BadRequest(placeErrors.validName);
-    newDatas.name = input.name;
-
-    if (validator.isEmpty(input.url))
-      throw new BadRequest(placeErrors.validUrl);
-    newDatas.url = input.url;
-
-    if (validator.isEmpty(input.address))
-      throw new BadRequest(placeErrors.validAddress);
-    newDatas.address = input.address;
-
-    if (typeof input.type !== 'object')
-      throw new BadRequest(placeErrors.validType);
-    newDatas.typeId = input.type._id;
-
-    newDatas.id = input.id;
-
-    if (context.method === 'create') {
-      newDatas.creationDate = Date.now();
+    if (oldPlaces.length === 0) {
+      oldPlaces = await context.app
+        .service('places')
+        .find({ query: { address: input.vicinity } });
     }
-    newDatas.updateDate = Date.now();
 
-    context.data = newDatas;
+    if (oldPlaces.length === 0) {
+      googleDatas = await apiUtils.getPlaceFromGoogle(
+        input.keyword + ' ' + input.vicinity
+      );
 
+      oldPlaces = await context.app
+        .service('places')
+        .find({ query: { placeId: googleDatas.place_id } });
+    }
+
+    if (oldPlaces.length === 0) {
+      //create new
+      newDatas.creationDate = new Date();
+      setDatas();
+
+      context.data = newDatas;
+    } else {
+      await updateOldPlace(oldPlaces[0]);
+    }
+
+    async function updateOldPlace(oldPlace) {
+      let d = new Date();
+      let d2 = new Date(d.getFullYear() - 1, d.getMonth(), d.getDay());
+      if (oldPlace.updateDate < d2) {
+        if (!googleDatas)
+          googleDatas = await apiUtils.getPlaceFromGoogle(
+            input.keyword + ' ' + input.vicinity
+          );
+        setDatas();
+
+        //update old place with newdatas the skip
+
+        context.result = await context.app
+          .service('places')
+          .update(oldPlace._id, newDatas);
+      }
+
+      context.result = oldPlace;
+    }
+
+    function setDatas() {
+      newDatas.placeId = googleDatas.place_id;
+      newDatas.rating = googleDatas.rating;
+      newDatas.priceLevel = googleDatas.price_level;
+      newDatas.name = googleDatas.name || input.title;
+
+      newDatas.hereId = input.id;
+      newDatas.address = input.vicinity;
+      newDatas.location = { lat: input.position[0], lng: input.position[1] };
+
+      newDatas.updateDate = new Date();
+
+      newDatas.typeId = input.type._id;
+    }
     return context;
   };
 }
@@ -75,6 +112,6 @@ function afterAllHook(options = {}) {
 }
 
 module.exports = {
-  beforeCreateOrUpdateHook: beforeCreateOrUpdateHook,
+  beforeCreateHook: beforeCreateHook,
   afterAllHook: afterAllHook
 };

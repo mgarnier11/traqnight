@@ -5,8 +5,8 @@ module.exports = {
     all: [],
     find: [],
     get: [],
-    create: [placesHooksLib.beforeCreateOrUpdateHook()],
-    update: [placesHooksLib.beforeCreateOrUpdateHook()],
+    create: [placesHooksLib.beforeCreateHook()],
+    update: [],
     patch: [],
     remove: []
   },

@@ -13,9 +13,7 @@ module.exports = {
 
   after: {
     all: [],
-    find: [
-      /*externalApiHooksLib.afterFindHook()*/
-    ],
+    find: [externalApiHooksLib.afterFindHook()],
     get: [],
     create: [],
     update: [],

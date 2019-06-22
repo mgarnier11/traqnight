@@ -4,7 +4,10 @@ import { connect } from 'react-redux';
 import { getPlaces } from '../../../redux/actions/place-actions';
 
 const mapStateToProps = state => {
-  return { typesRequest: state.typesRequest, types: state.typesRequest.types };
+  return {
+    types: state.typesRequest.types,
+    placesLoading: state.placesRequest.loading
+  };
 };
 
 function mapDispatchToProps(dispatch) {
@@ -40,12 +43,15 @@ class Home extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    const { type, location } = this.state;
-    this.props.getPlaces({
-      typeId: type === '' ? this.props.types[0]._id : type,
-      location,
-      radius: 1000
-    });
+
+    if (!this.props.placesLoading) {
+      const { type, location } = this.state;
+      this.props.getPlaces({
+        typeId: type === '' ? this.props.types[0]._id : type,
+        location,
+        radius: 1000
+      });
+    }
   }
 
   render() {
@@ -93,7 +99,11 @@ class Home extends Component {
               />
             </div>
             <div className="form-group text-center">
-              <button type="submit" className="btn btn-lg btn-light">
+              <button
+                type="submit"
+                className="btn btn-lg btn-light"
+                disabled={this.props.placesLoading}
+              >
                 Trouvez !
               </button>
             </div>

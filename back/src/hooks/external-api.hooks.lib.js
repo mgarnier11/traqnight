@@ -59,13 +59,7 @@ function beforeFindHook(options = {}) {
       }
 
       context.params.query = newQuery;
-    } /* else {
-      let nextPlacesToken = nextPlacesTokensSrv.get(query.nextPlacesToken);
-
-      let request = requestsSrv.get(nextPlacesToken.requestId);
-
-
-    }*/
+    }
 
     return context;
   };
@@ -78,21 +72,24 @@ function afterFindHook(options = {}) {
 
     let returnValue = {
       nextPlacesToken: query.nextPlacesToken,
-      origin: query.location
+      origin: query.location,
+      places: []
     };
 
     if (query.isNewRequest) {
-      let herePlaces = context.result;
-      //convert here palces to Place and return them
+      returnValue.places = context.result;
     } else {
       let placesIds = context.result;
 
-      returnValue.places = placesIds.map(placeId => {
-        return placesSrv.get(placeId);
+      returnValue.places = placesIds.map(async placeId => {
+        return await placesSrv.get(placeId);
       });
-
-      return returnValue;
     }
+
+    context.result = returnValue;
+
+    return context;
+
     /*
 
     let newResults = [];

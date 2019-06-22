@@ -35,22 +35,6 @@ class Handler {
     this.events = new EventEmitter();
   }
 
-  async findPlaces(params) {
-    let query = {
-      query: Object.assign(params, { api: 'google' })
-    };
-    console.log(query);
-    let res = await this.googleService.find(query);
-    let results = [...res.results];
-    res.results = [];
-
-    for (let result of results) {
-      res.results.push(new Place(result));
-    }
-
-    return res;
-  }
-
   async performRequest(requestParams) {
     let apiQuery = {
       query: requestParams
