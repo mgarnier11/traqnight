@@ -31,6 +31,8 @@ function beforeFindHook(options = {}) {
         newQuery.radius = 5000;
       }
 
+      newQuery.radius = 500;
+
       /**Fix Location */
       if (typeof query.location !== 'string')
         throw new BadRequest(apiErrors.validLocation);
@@ -48,7 +50,9 @@ function beforeFindHook(options = {}) {
         typeId: newQuery.type._id
       };
 
-      let lstRequests = requestsSrv.find({ query: newQuery.requestsQuery });
+      let lstRequests = await requestsSrv.find({
+        query: newQuery.requestsQuery
+      });
 
       if (lstRequests.length > 0) {
         newQuery.isNewRequest = false;
@@ -81,68 +85,14 @@ function afterFindHook(options = {}) {
     } else {
       let placesIds = context.result;
 
-      returnValue.places = placesIds.map(async placeId => {
-        return await placesSrv.get(placeId);
-      });
+      for (let placeId of placesIds) {
+        returnValue.places.push(await placesSrv.get(placeId));
+      }
     }
 
     context.result = returnValue;
 
     return context;
-
-    /*
-
-    let newResults = [];
-
-    if (query.api === 'google') {
-      newResults = data;
-    } else {
-      if (query.newRequest) {
-        if (data.results.length > 0) {
-          console.log(data.results.length + ' Places found');
-          for (let result of data.results) {
-            let newResult = {};
-
-            let googleRes = await apiUtils.getPlaceFromGoogle(
-              result.title,
-              result.vicinity
-            );
-            if (googleRes && !googleRes.permanently_closed) {
-              newResult.rating = googleRes.rating;
-              newResult.priceLevel = googleRes.price_level;
-              newResult.location = {
-                lat: result.position[0],
-                lng: result.position[1]
-              };
-              newResult.name = result.title;
-              newResult.url = result.href;
-              newResult.address = result.vicinity;
-              newResult.type = query.type;
-              newResult.id = result.id;
-              newResult = await placeSrv.create(newResult);
-
-              newResults.push(newResult);
-            }
-          }
-
-          let newRequest = query.query;
-
-          newRequest.results = newResults.map(r => r._id);
-
-          requestSrv.create(newRequest);
-        }
-      } else {
-        let request = query.request;
-
-        for (let resultId of request.results) {
-          newResults.push(await placeSrv.get(resultId));
-        }
-      }
-    }
-
-    context.result = newResults;
-
-    return context;*/
   };
 }
 

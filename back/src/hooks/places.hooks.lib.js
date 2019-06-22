@@ -32,17 +32,24 @@ function beforeCreateHook(options = {}) {
         input.keyword + ' ' + input.vicinity
       );
 
-      oldPlaces = await context.app
-        .service('places')
-        .find({ query: { placeId: googleDatas.place_id } });
+      if (googleDatas && googleDatas.place_id) {
+        oldPlaces = await context.app
+          .service('places')
+          .find({ query: { placeId: googleDatas.place_id } });
+      }
     }
 
     if (oldPlaces.length === 0) {
       //create new
       newDatas.creationDate = new Date();
-      setDatas();
 
-      context.data = newDatas;
+      if (googleDatas && !googleDatas.permanently_closed) {
+        setDatas();
+
+        context.data = newDatas;
+      } else {
+        context.result = { state: 'permanently_closed' };
+      }
     } else {
       await updateOldPlace(oldPlaces[0]);
     }
@@ -56,12 +63,15 @@ function beforeCreateHook(options = {}) {
             input.keyword + ' ' + input.vicinity
           );
         setDatas();
-
-        //update old place with newdatas the skip
-
-        context.result = await context.app
-          .service('places')
-          .update(oldPlace._id, newDatas);
+        if (!googleDatas.permanently_closed) {
+          context.result = await context.app
+            .service('places')
+            .update(oldPlace._id, newDatas);
+        } else {
+          context.result = await context.app
+            .service('places')
+            .remove(oldPlace._id);
+        }
       }
 
       context.result = oldPlace;
@@ -90,7 +100,8 @@ function afterAllHook(options = {}) {
     let places = context.method === 'find' ? context.result : [context.result];
 
     for (let place of places) {
-      place.type = await context.app.service('types').get(place.typeId);
+      if (place.state !== 'permanently_closed')
+        place.type = await context.app.service('types').get(place.typeId);
     }
     /*
 

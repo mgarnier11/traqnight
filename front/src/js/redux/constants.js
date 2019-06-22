@@ -18,7 +18,7 @@ export const INITIAL_STATE = {
   placesRequest: {
     loading: false,
     originLocation: {},
-    morePlacesToken: '',
+    nextPlacesToken: '',
     places: []
   },
   errors: []

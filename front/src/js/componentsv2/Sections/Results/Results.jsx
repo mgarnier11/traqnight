@@ -9,6 +9,7 @@ import PlaceCard from '../../PlaceCard/PlaceCard';
 const mapStateToProps = state => {
   return {
     places: state.placesRequest.places,
+    placesRequest: state.placesRequest,
     placesLoading: state.placesRequest.loading
   };
 };
@@ -69,7 +70,7 @@ class Results extends Component {
   }
 
   loadMoreResults() {
-    if (!this.props.placesLoading) {
+    if (!this.props.placesLoading && this.props.placesRequest.nextPlacesToken) {
       this.props.getPlaces({
         nextPlacesToken: this.props.placesRequest.nextPlacesToken
       });
@@ -109,7 +110,10 @@ class Results extends Component {
           <button
             className="btn btn-secondary m-1"
             onClick={this.loadMoreResults}
-            disabled={this.props.placesLoading}
+            disabled={
+              this.props.placesLoading |
+              !this.props.placesRequest.nextPlacesToken
+            }
           >
             Plus de résultats
           </button>

@@ -1,4 +1,5 @@
 const apiUtils = require('../services/apiUtils');
+const ObjectID = require('mongodb').ObjectID;
 
 class Queue {
   constructor() {
@@ -21,51 +22,77 @@ class Queue {
     }
     this.requestsQueryProcessing.push(requestsQuery);
 
-    /*
     let herePlaces = await apiUtils.getHereResults(
       apiParams.location,
       apiParams.radius,
       apiParams.keyword
     );
 
+    console.log('processing ' + herePlaces.length + ' places');
+    let n = 0;
+
     let places = [];
 
     for (let herePlace of herePlaces) {
-      let googlePlace = await apiUtils.getPlaceFromGoogle(
-        herePlace.title,
-        herePlace.vicinity
-      );
+      herePlace.keyword = apiParams.keyword;
+      herePlace.type = { _id: requestsQuery.typeId };
 
-      if (googlePlace && !googlePlace.permanently_closed) {
-        /*
-        newResult.rating = googlePlace.rating;
-        newResult.priceLevel = googlePlace.price_level;
-        newResult.location = {
-          lat: herePlace.position[0],
-          lng: herePlace.position[1]
-        };
-        newResult.name = herePlace.title;
-        newResult.url = herePlace.href;
-        newResult.address = herePlace.vicinity;
-        newResult.type = query.type;
-        newResult.id = herePlace.id;
-        newResult = await placeSrv.create(newResult);
+      let place = await app.service('places').create(herePlace);
 
-        newResults.push(newResult);
-
-        places.push(await app.services('places').create());
+      if (place.state !== 'permanently_closed') {
+        if (
+          places.find(p => p._id.toString() === place._id.toString()) ===
+          undefined
+        )
+          places.push(place);
       }
-}
 
-    let request = new Request();
+      console.log('place ' + n++ + '/' + herePlaces.length + ' done');
+    }
 
-    request.town = requestsQuery.town;
-    request.radius = requestsQuery.radius;
-    request.typeId = requestsQuery.typeId;
+    let request = {
+      town: requestsQuery.town,
+      radius: requestsQuery.radius,
+      typeId: requestsQuery.typeId
+    };
 
     request.placesIds = places.map(place => place._id);
 
-    app.services('requests').create(request);*/
+    request = await app.service('requests').create(request);
+
+    if (request.placesIds.length > 25) {
+      let requestsQuerys = [];
+
+      for (let i = 25; i < request.placesIds.length; i += 25) {
+        try {
+          let requestsQuery = {
+            _id:
+              requestsQuerys[requestsQuerys.length - 1] !== undefined
+                ? requestsQuerys[requestsQuerys.length - 1].nextPlacesToken
+                : new ObjectID(),
+            requestId: request._id,
+            startPosition: i,
+            endPosition: i + 25,
+            nextPlacesToken:
+              i + 25 < request.placesIds.length ? new ObjectID() : undefined
+          };
+
+          requestsQuerys.push(
+            await app.service('next-places-tokens').create(requestsQuery)
+          );
+        } catch (error) {
+          console.log(error);
+        }
+      }
+
+      request.nextPlacesToken = requestsQuerys[0]._id;
+
+      request = await app.service('requests').update(request._id, request);
+    }
+
+    let i = this.requestsQueryProcessing.findIndex(findQ);
+
+    if (i > -1) this.requestsQueryProcessing.splice(i, 1);
   }
 }
 
