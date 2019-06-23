@@ -1,16 +1,6 @@
 const { ObjectId } = require('mongodb').ObjectId;
 
 class User {
-  static get errors() {
-    return {
-      invalidId: Error('Invalid Id'),
-      invalidName: Error('Invalid Name'),
-      invalidEmail: Error('Invalid Email'),
-      invalidPassword: Error('Invalid Password'),
-      invalidAdmin: Error('Invalid Admin')
-    };
-  }
-
   constructor(dbDatas) {
     this._id = new ObjectId();
     this.email = '';

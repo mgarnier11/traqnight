@@ -1,15 +1,5 @@
-const { BadRequest } = require('@feathersjs/errors');
-const skip = require('@feathersjs/feathers').SKIP;
-const validator = require('validator');
 const Place = require('../../../classes/place-class');
 const apiUtils = require('../services/apiUtils');
-
-const placeErrors = {
-  validType: 'Invalid type',
-  validAddress: 'Invalid address',
-  validName: 'Invalid name',
-  validUrl: 'Invalid url'
-};
 
 function beforeCreateHook(options = {}) {
   return async context => {
@@ -104,20 +94,20 @@ function afterAllHook(options = {}) {
         place.type = await context.app.service('types').get(place.typeId);
     }
     /*
-
     if (context.method === 'find') {
       let newResults = [];
 
       for (let place of context.result) {
-        newResults.push(new Place(place));
+        if (place.state !== 'permanently_closed')
+          newResults.push(new Place(place));
       }
 
       context.result = newResults;
     } else {
-      context.result = new Place(context.result);
+      if (context.result.state !== 'permanently_closed')
+        context.result = new Place(context.result);
     }
-    */
-
+*/
     return context;
   };
 }

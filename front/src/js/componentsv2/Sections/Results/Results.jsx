@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { getPlaces } from '../../../redux/actions/place-actions';
-import Place from '../../../../../../classes/place';
+import Place from '../../../../../../classes/place-class';
 import PlaceCard from '../../PlaceCard/PlaceCard';
 
 const mapStateToProps = state => {

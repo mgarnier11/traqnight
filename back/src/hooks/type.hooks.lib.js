@@ -92,7 +92,7 @@ function afterAllHook(options = {}) {
         .service('users')
         .get(type.updateUserId);
     }
-    /*
+
     if (context.method === 'find') {
       let newResults = [];
 
@@ -104,7 +104,6 @@ function afterAllHook(options = {}) {
     } else {
       context.result = new Type(context.result);
     }
-    */
 
     return context;
   };

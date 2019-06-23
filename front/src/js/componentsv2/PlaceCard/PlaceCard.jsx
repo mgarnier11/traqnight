@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Place from '../../../../../classes/place';
+import Place from '../../../../../classes/place-class';
 
 const PlaceCard = ({ isDisplayed, handleButtonClick, place }) => (
   <div className={'card' + (isDisplayed ? '' : ' d-none')}>

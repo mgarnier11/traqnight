@@ -4,7 +4,6 @@ const googleMapsClient = require('@google/maps').createClient({
   key: 'AIzaSyCkiT6O5Me25yx4JV9ZT3iGYYCdsgzqv9w',
   Promise: Promise
 });
-const Place = require('../../../classes/place');
 
 const googleErrors = {
   invalidTown: 'Ville invalide',

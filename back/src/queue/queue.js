@@ -33,33 +33,79 @@ class Queue {
 
     let places = [];
 
-    for (let herePlace of herePlaces) {
-      herePlace.keyword = apiParams.keyword;
-      herePlace.type = { _id: requestsQuery.typeId };
-
-      let place = await app.service('places').create(herePlace);
-
-      if (place.state !== 'permanently_closed') {
-        if (
-          places.find(p => p._id.toString() === place._id.toString()) ===
-          undefined
-        )
-          places.push(place);
-      }
-
-      console.log('place ' + n++ + '/' + herePlaces.length + ' done');
-    }
-
     let request = {
       town: requestsQuery.town,
       radius: requestsQuery.radius,
       typeId: requestsQuery.typeId
     };
 
-    request.placesIds = places.map(place => place._id);
+    let requestsQuerys = [];
 
-    request = await app.service('requests').create(request);
+    for (let herePlace of herePlaces) {
+      herePlace.keyword = apiParams.keyword;
+      herePlace.type = { _id: requestsQuery.typeId };
 
+      let place = await app.service('places').create(herePlace);
+
+      if (
+        place.state !== 'permanently_closed' &&
+        !places.find(p => p._id.toString() === place._id.toString())
+      ) {
+        places.push(place);
+        if (places.length % 25 === 0) {
+          request.placesIds = places.map(place => place._id);
+
+          if (!request._id) {
+            request = await app.service('requests').create(request);
+          } else {
+            request = await app
+              .service('requests')
+              .update(request._id, request);
+          }
+
+          let requestsQuery = {
+            _id:
+              requestsQuerys[requestsQuerys.length - 1] !== undefined
+                ? requestsQuerys[requestsQuerys.length - 1].nextPlacesToken
+                : new ObjectID(),
+            requestId: request._id,
+            startPosition: places.length,
+            endPosition: places.length + 25,
+            nextPlacesToken: new ObjectID()
+          };
+
+          requestsQuerys.push(
+            await app.service('next-places-tokens').create(requestsQuery)
+          );
+
+          if (requestsQuerys.length === 1) {
+            request.nextPlacesToken = requestsQuery._id;
+            request = await app
+              .service('requests')
+              .update(request._id, request);
+          }
+        }
+      }
+      console.log('place ' + n++ + '/' + herePlaces.length + ' done');
+    }
+
+    if (!request._id) {
+      request.placesIds = places.map(place => place._id);
+
+      request = await app.service('requests').create(request);
+    }
+
+    if (requestsQuerys.length > 0) {
+      let requestsQuery = requestsQuerys[requestsQuerys.length - 1];
+
+      requestsQuery.endPosition = undefined;
+      requestsQuery.nextPlacesToken = undefined;
+
+      await app
+        .service('next-places-tokens')
+        .update(requestsQuery._id, requestsQuery);
+    }
+    /*
     if (request.placesIds.length > 25) {
       let requestsQuerys = [];
 
@@ -89,7 +135,7 @@ class Queue {
 
       request = await app.service('requests').update(request._id, request);
     }
-
+    */
     let i = this.requestsQueryProcessing.findIndex(findQ);
 
     if (i > -1) this.requestsQueryProcessing.splice(i, 1);

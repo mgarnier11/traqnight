@@ -3,19 +3,6 @@ const { ObjectId } = require('mongodb').ObjectId;
 const User = require('./user-class');
 
 class Type {
-  static get errors() {
-    return {
-      invalidId: Error('Invalid Id'),
-      invalidName: Error('Invalid Name'),
-      invalidGoogleType: Error('Invalid Google Type'),
-      invalidFontAwesomeIcon: Error('Invalid FontAwesome Icon'),
-      invalidCreationUser: Error('Invalid Creation User'),
-      invalidCreationDate: Error('Invalid Creation Date'),
-      invalidUpdateUser: Error('Invalid Update User'),
-      invalidUpdateDate: Error('Invalid Update Date')
-    };
-  }
-
   constructor(dbDatas) {
     this._id = new ObjectId();
     this.name = '';

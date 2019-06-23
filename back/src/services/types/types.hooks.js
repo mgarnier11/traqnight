@@ -7,9 +7,21 @@ module.exports = {
     all: [],
     find: [],
     get: [],
-    create: [authenticate('jwt'), hookUtils.checkAdmin(), typeHooksLib.beforeCreateOrUpdateHook()],
-    update: [authenticate('jwt'), hookUtils.checkAdmin(), typeHooksLib.beforeCreateOrUpdateHook()],
-    patch: [authenticate('jwt'), hookUtils.checkAdmin(), typeHooksLib.beforePatchHook()],
+    create: [
+      authenticate('jwt'),
+      hookUtils.checkAdmin(),
+      typeHooksLib.beforeCreateOrUpdateHook()
+    ],
+    update: [
+      authenticate('jwt'),
+      hookUtils.checkAdmin(),
+      typeHooksLib.beforeCreateOrUpdateHook()
+    ],
+    patch: [
+      authenticate('jwt'),
+      hookUtils.checkAdmin(),
+      typeHooksLib.beforePatchHook()
+    ],
     remove: [authenticate('jwt'), hookUtils.checkAdmin()]
   },
 

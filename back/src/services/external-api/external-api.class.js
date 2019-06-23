@@ -23,10 +23,7 @@ class Service {
 
         params.query.nextPlacesToken = nextPlacesToken.nextPlacesToken;
 
-        let request = await this.app
-          .service('requests')
-          .get(nextPlacesToken.requestId);
-        placesIds = request.placesIds.slice(
+        placesIds = nextPlacesToken.request.placesIds.slice(
           nextPlacesToken.startPosition,
           nextPlacesToken.endPosition
         );

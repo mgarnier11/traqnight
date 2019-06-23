@@ -31,8 +31,6 @@ function beforeFindHook(options = {}) {
         newQuery.radius = 5000;
       }
 
-      newQuery.radius = 500;
-
       /**Fix Location */
       if (typeof query.location !== 'string')
         throw new BadRequest(apiErrors.validLocation);

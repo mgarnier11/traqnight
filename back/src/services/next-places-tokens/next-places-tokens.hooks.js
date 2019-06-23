@@ -1,4 +1,4 @@
-
+const nextPlacesTokenHooksLib = require('../../hooks/next-places-tokens.hooks.lib');
 
 module.exports = {
   before: {
@@ -12,7 +12,7 @@ module.exports = {
   },
 
   after: {
-    all: [],
+    all: [nextPlacesTokenHooksLib.afterAllHook()],
     find: [],
     get: [],
     create: [],

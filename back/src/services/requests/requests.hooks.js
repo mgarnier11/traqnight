@@ -1,4 +1,4 @@
-
+const requestHooksLib = require('../../hooks/requests.hooks.lib');
 
 module.exports = {
   before: {
@@ -12,7 +12,7 @@ module.exports = {
   },
 
   after: {
-    all: [],
+    all: [requestHooksLib.afterAllHook()],
     find: [],
     get: [],
     create: [],
