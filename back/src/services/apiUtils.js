@@ -113,7 +113,7 @@ async function getPlaceFromGoogle(input) {
 
 async function getFirstResults(origin, radius, keyword) {
   let inParam = origin.lat + ',' + origin.lng + ';r=' + radius;
-
+  //user here api to get the firsts result around a point
   try {
     let results = await myutils.hereSearchRequest({
       q: keyword,

@@ -9,6 +9,7 @@ import * as serviceWorker from './serviceWorker';
 import ErrorComponent from './js/componentsv2/ErrorHandler';
 
 import './index.css';
+import './index.scss';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-tippy/dist/tippy.css';
 import './images/buildings1-min-compressor.jpg';

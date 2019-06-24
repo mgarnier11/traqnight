@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Ref } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -32,10 +32,13 @@ class Results extends Component {
   constructor(props) {
     super(props);
 
+    this.navBar = React.createRef();
+
     this.state = {
       places: props.places,
       maxPrice: 4,
-      minRating: 1
+      minRating: 1,
+      paddingTop: 0
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -45,6 +48,23 @@ class Results extends Component {
     this.setMinRating = this.setMinRating.bind(this);
 
     this.loadMoreResults = this.loadMoreResults.bind(this);
+
+    this.handleScroll = this.handleScroll.bind(this);
+  }
+
+  handleScroll() {
+    if (window.scrollY >= this.top) {
+      this.setState({ paddingTop: this.navBar.current.offsetHeight });
+      this.navBar.current.classList.add('nav-fixed');
+    } else {
+      this.setState({ paddingTop: 0 });
+      this.navBar.current.classList.remove('nav-fixed');
+    }
+  }
+
+  componentDidMount() {
+    this.top = this.navBar.current.offsetTop;
+    window.addEventListener('scroll', this.handleScroll);
   }
 
   componentWillReceiveProps(newProps) {
@@ -64,8 +84,10 @@ class Results extends Component {
   }
 
   isPlaceDisplayed(place) {
-    if (place.priceLevel > this.state.maxPrice) return false;
-    if (place.rating < this.state.minRating) return false;
+    if (place.priceLevel !== null)
+      if (place.priceLevel > this.state.maxPrice) return false;
+    if (place.rating !== null)
+      if (place.rating < this.state.minRating) return false;
     return true;
   }
 
@@ -81,32 +103,15 @@ class Results extends Component {
     const { places, maxPrice, minRating } = this.state;
 
     return (
-      <div className="results container">
-        <div className="filters row">
-          <div className="price m-1 px-3">
-            <span>Prix Maximum : </span>
-            {[...Array(5)].map((x, i) => {
-              return (
-                <i
-                  className={
-                    'fas fa-euro-sign' + (maxPrice + 1 > i ? '' : ' out')
-                  }
-                  onClick={e => this.setMaxPrice(i)}
-                />
-              );
-            })}
-          </div>
-          <div className="rating m-1 px-3">
-            <span>Note Minimale : </span>
-            {[...Array(5)].map((x, i) => {
-              return (
-                <i
-                  className={'fas fa-star' + (minRating > i ? '' : ' out')}
-                  onClick={e => this.setMinRating(i + 1)}
-                />
-              );
-            })}
-          </div>
+      <div
+        className="results"
+        ref={this.props.reference}
+        style={{ paddingTop: this.state.paddingTop }}
+      >
+        <nav
+          className="navbar navbar-expand-lg navbar-light filters"
+          ref={this.navBar}
+        >
           <button
             className="btn btn-secondary m-1"
             onClick={this.loadMoreResults}
@@ -117,8 +122,45 @@ class Results extends Component {
           >
             Plus de résultats
           </button>
-        </div>
-        <div className="card-columns">
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#resultsNavbarToggler"
+            aria-controls="resultsNavbarToggler"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon" />
+          </button>
+          <div className="collapse navbar-collapse" id="resultsNavbarToggler">
+            <div className="price m-1">
+              <span>Prix Max. : </span>
+              {[...Array(5)].map((x, i) => {
+                return (
+                  <i
+                    className={
+                      'fas fa-euro-sign' + (maxPrice + 1 > i ? '' : ' out')
+                    }
+                    onClick={e => this.setMaxPrice(i)}
+                  />
+                );
+              })}
+            </div>
+            <div className="rating m-1">
+              <span>Note Min. : </span>
+              {[...Array(5)].map((x, i) => {
+                return (
+                  <i
+                    className={'fas fa-star' + (minRating > i ? '' : ' out')}
+                    onClick={e => this.setMinRating(i + 1)}
+                  />
+                );
+              })}
+            </div>
+          </div>
+        </nav>
+        <div className="container results-cards card-deck">
           {places.map(place => {
             return (
               <PlaceCard

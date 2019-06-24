@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Ref } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getPlaces } from '../../../redux/actions/place-actions';
@@ -18,11 +18,13 @@ function mapDispatchToProps(dispatch) {
 
 class Home extends Component {
   static propTypes = {
-    types: PropTypes.arrayOf(PropTypes.object).isRequired
+    types: PropTypes.arrayOf(PropTypes.object).isRequired,
+    scrollTo: PropTypes.func.isRequired
   };
 
   static defaultProps = {
-    types: []
+    types: [],
+    scrollTo: p => console.log(p)
   };
 
   constructor(props) {
@@ -30,7 +32,7 @@ class Home extends Component {
 
     this.state = {
       type: '',
-      location: ''
+      location: 'Nantes'
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -51,6 +53,7 @@ class Home extends Component {
         location,
         radius: 1000
       });
+      this.props.scrollTo('results');
     }
   }
 
@@ -58,7 +61,7 @@ class Home extends Component {
     const { type, location } = this.state;
 
     return (
-      <div className="home container-fluid" ref={this.props.refere}>
+      <div className="home container-fluid" ref={this.props.reference}>
         <div className="container">
           <div className="title text-center">
             <h1>Explorez votre ville</h1>

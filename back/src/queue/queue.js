@@ -15,13 +15,13 @@ class Queue {
       q.town === requestsQuery.town &&
       q.radius === requestsQuery.radius &&
       q.typeId.toString() === requestsQuery.typeId.toString();
-
+    //check if the request is already in processing
     if (this.requestsQueryProcessing.find(findQ) !== undefined) {
       console.log('request already processing');
       return null;
     }
     this.requestsQueryProcessing.push(requestsQuery);
-
+    //get all herePlaces
     let herePlaces = await apiUtils.getHereResults(
       apiParams.location,
       apiParams.radius,
@@ -44,7 +44,7 @@ class Queue {
     for (let herePlace of herePlaces) {
       herePlace.keyword = apiParams.keyword;
       herePlace.type = { _id: requestsQuery.typeId };
-
+      //try to create the new place
       let place = await app.service('places').create(herePlace);
 
       if (
@@ -53,6 +53,7 @@ class Queue {
       ) {
         places.push(place);
         if (places.length % 25 === 0) {
+          //every 25 places we update the request in db to add all placesids we have
           request.placesIds = places.map(place => place._id);
 
           if (!request._id) {
@@ -62,7 +63,7 @@ class Queue {
               .service('requests')
               .update(request._id, request);
           }
-
+          //and we create a requestquery objetc that will contain a nextplacetoken
           let requestsQuery = {
             _id:
               requestsQuerys[requestsQuerys.length - 1] !== undefined
@@ -73,12 +74,13 @@ class Queue {
             endPosition: places.length + 25,
             nextPlacesToken: new ObjectID()
           };
-
+          //create it
           requestsQuerys.push(
             await app.service('next-places-tokens').create(requestsQuery)
           );
 
           if (requestsQuerys.length === 1) {
+            //update the request with the first nextplacestoken
             request.nextPlacesToken = requestsQuery._id;
             request = await app
               .service('requests')
@@ -88,13 +90,14 @@ class Queue {
       }
       console.log('place ' + n++ + '/' + herePlaces.length + ' done');
     }
-
+    //if there is less than 25 places just create a request with no nextplacestoken
     if (!request._id) {
       request.placesIds = places.map(place => place._id);
 
       request = await app.service('requests').create(request);
     }
 
+    //update the last requestquery to disable it nextplacestoken
     if (requestsQuerys.length > 0) {
       let requestsQuery = requestsQuerys[requestsQuerys.length - 1];
 
@@ -105,39 +108,8 @@ class Queue {
         .service('next-places-tokens')
         .update(requestsQuery._id, requestsQuery);
     }
-    /*
-    if (request.placesIds.length > 25) {
-      let requestsQuerys = [];
-
-      for (let i = 25; i < request.placesIds.length; i += 25) {
-        try {
-          let requestsQuery = {
-            _id:
-              requestsQuerys[requestsQuerys.length - 1] !== undefined
-                ? requestsQuerys[requestsQuerys.length - 1].nextPlacesToken
-                : new ObjectID(),
-            requestId: request._id,
-            startPosition: i,
-            endPosition: i + 25,
-            nextPlacesToken:
-              i + 25 < request.placesIds.length ? new ObjectID() : undefined
-          };
-
-          requestsQuerys.push(
-            await app.service('next-places-tokens').create(requestsQuery)
-          );
-        } catch (error) {
-          console.log(error);
-        }
-      }
-
-      request.nextPlacesToken = requestsQuerys[0]._id;
-
-      request = await app.service('requests').update(request._id, request);
-    }
-    */
     let i = this.requestsQueryProcessing.findIndex(findQ);
-
+    //remove the request from processing so we can it again if we want !
     if (i > -1) this.requestsQueryProcessing.splice(i, 1);
   }
 }

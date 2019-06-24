@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Place from '../../../../../classes/place-class';
 
-const PlaceCard = ({ isDisplayed, handleButtonClick, place }) => (
+const PlaceCard = ({ isDisplayed, handleGoClick, handleZoomClick, place }) => (
   <div className={'card' + (isDisplayed ? '' : ' d-none')}>
     <div className="card-header">
       <h3>{place.name}</h3>
@@ -13,8 +13,14 @@ const PlaceCard = ({ isDisplayed, handleButtonClick, place }) => (
       <p>{place.address}</p>
     </div>
     <div className="card-footer">
-      <button className="btn btn-secondary" onClick={handleButtonClick}>
+      <button className="btn btn-secondary col-5 " onClick={handleGoClick}>
         Y aller
+      </button>
+      <button
+        className="btn btn-secondary col-5 offset-2"
+        onClick={handleZoomClick}
+      >
+        Zoom
       </button>
     </div>
   </div>

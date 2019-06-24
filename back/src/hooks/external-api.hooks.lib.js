@@ -15,6 +15,7 @@ function beforeFindHook(options = {}) {
     const query = context.params.query;
 
     if (!query.nextPlacesToken) {
+      //nextPlacesToken will be defined if th user clicked on "more results"
       let newQuery = {};
 
       /**Fix Type */
@@ -42,21 +43,26 @@ function beforeFindHook(options = {}) {
         lng: town.geometry.location.lng
       };
 
+      //create requetsQuery
       newQuery.requestsQuery = {
         town: town.name,
         radius: newQuery.radius,
         typeId: newQuery.type._id
       };
 
+      //search an already saved requestsQuery with the one we just created
       let lstRequests = await requestsSrv.find({
         query: newQuery.requestsQuery
       });
 
       if (lstRequests.length > 0) {
+        //an already saved query has been found
         newQuery.isNewRequest = false;
 
+        //the user research has been already done and saved before
         newQuery.request = lstRequests[0];
       } else {
+        //the user research has never been done and saved before
         newQuery.isNewRequest = true;
       }
 
@@ -72,22 +78,28 @@ function afterFindHook(options = {}) {
     const query = context.params.query;
     const placesSrv = context.app.service('places');
 
+    //the datas we want to return to the user
     let returnValue = {
       nextPlacesToken: query.nextPlacesToken,
       origin: query.location,
       places: []
     };
 
+    //if he user research has never been done before
     if (query.isNewRequest) {
+      //get the return places from external-api.class
       returnValue.places = context.result;
     } else {
+      //else get all placesIds
       let placesIds = context.result;
+      //and map them into places
 
       for (let placeId of placesIds) {
         returnValue.places.push(await placesSrv.get(placeId));
       }
     }
 
+    //the datas the user will get
     context.result = returnValue;
 
     return context;

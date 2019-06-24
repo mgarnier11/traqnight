@@ -13,26 +13,33 @@ class Service {
   }
 
   async find(params) {
+    const query = params.query;
+
     try {
       let placesIds = [];
-
-      if (params.query.nextPlacesToken) {
+      //we check if the user clicked on "more resutls"
+      if (query.nextPlacesToken) {
+        //get the token from db
         let nextPlacesToken = await this.app
           .service('next-places-tokens')
-          .get(params.query.nextPlacesToken);
+          .get(query.nextPlacesToken);
 
-        params.query.nextPlacesToken = nextPlacesToken.nextPlacesToken;
+        //set the next toekn that will be sent to us if the user clicks on "more results" again
+        query.nextPlacesToken = nextPlacesToken.nextPlacesToken;
 
+        //get only the placesIds we want for this request
         placesIds = nextPlacesToken.request.placesIds.slice(
           nextPlacesToken.startPosition,
           nextPlacesToken.endPosition
         );
       } else {
-        let location = params.query.location;
-        let keyword = params.query.type.name;
-        let radius = params.query.radius;
+        let location = query.location;
+        let keyword = query.type.name;
+        let radius = query.radius;
 
-        if (params.query.isNewRequest) {
+        //check if the request has been done before
+        if (query.isNewRequest) {
+          //if not get the first and fastest results we can find
           let herePlaces = await apiUtils.getFirstResults(
             location,
             radius,
@@ -41,9 +48,10 @@ class Service {
           let returnPlaces = [];
           console.log('first results are ok');
 
+          //give them good datas, save them and check if they are nt permanently closed
           for (let herePlace of herePlaces) {
             herePlace.keyword = keyword;
-            herePlace.type = params.query.type;
+            herePlace.type = query.type;
             let newPlace = await this.app.service('places').create(herePlace);
             if (newPlace.state !== 'permanently_closed')
               if (
@@ -53,29 +61,34 @@ class Service {
               )
                 returnPlaces.push(newPlace);
           }
+          //here all first results should be in return palces
 
           console.log('all first results have google datas');
 
           let queueParams = {
             app: this.app,
-            requestsQuery: params.query.requestsQuery,
+            requestsQuery: query.requestsQuery,
             apiParams: { location, radius, keyword }
           };
-
+          //get more results for this request
+          //and save the requests for ultra fast resutls next time an user does it
           queueHandler.processRequestsQuery(queueParams);
 
           return returnPlaces;
         } else {
-          placesIds = params.query.request.placesIds.slice(0, 25);
-
-          params.query.nextPlacesToken = params.query.request.nextPlacesToken;
+          //the request has been done beofre just set the plces ids we want to return
+          placesIds = query.request.placesIds.slice(0, 25);
+          // and set the nextplacestoekn for when the user will click on "more result"
+          params.query.nextPlacesToken = query.request.nextPlacesToken;
         }
       }
+      //the placesids will be mappped into places in the afterFindHook
       return placesIds;
     } catch (error) {
       console.log(error);
-
+      //error throwed by me
       if (error instanceof BadRequest) throw error;
+      //every other error
       else throw new GeneralError('API error');
     }
   }

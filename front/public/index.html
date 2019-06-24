@@ -6,10 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
     <script>
-      const env = "%NODE_ENV%";
-      let apiUrl = "";
-      if (env == "development") apiUrl = "http://localhost:3030";
-      else if (env == "production") apiUrl = "https://traqnight.herokuapp.com/";
+      const env = '%NODE_ENV%';
+      let apiUrl = '';
+      if (env == 'development') apiUrl = 'http://localhost:3030';
+      else if (env == 'production') apiUrl = 'https://traqnight.herokuapp.com/';
       console.log(apiUrl);
     </script>
     <!--
@@ -43,6 +43,9 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <title>React App</title>
   </head>
 

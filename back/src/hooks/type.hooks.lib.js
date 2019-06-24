@@ -15,6 +15,8 @@ function beforeCreateOrUpdateHook(options = {}) {
     let input = context.data;
     let newDatas = {};
 
+    //check and validtae all datas befoe we create or update the type
+
     if (validator.isEmpty(input.name))
       throw new BadRequest(typeErrors.validName);
     newDatas.name = input.name;
@@ -48,6 +50,7 @@ function beforePatchHook(options = {}) {
   return async context => {
     let input = context.data;
     let newDatas = {};
+    //check and validtae all datas befoe we patch the type
 
     if (input.name !== undefined) {
       if (validator.isEmpty(input.name))
