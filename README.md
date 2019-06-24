@@ -1,3 +1,9 @@
+#Traqnight Project
+
+Work in Progress
+
+available [Here](http://traqnight.herokuapp.com)
+
 ## Available Scripts
 
 In the project directory, you can run:
@@ -20,8 +26,6 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 The page will reload if you makes edits.
 You will also see any lints errors in the console.
 
-
-
 ### `npm back-test`
 
 Launches the backend tests.<br>
@@ -30,8 +34,6 @@ Launches the backend tests.<br>
 
 Launches the frontend tests.<br>
 
-
-
 ### `npm run front-build`
 
 Builds the frontend for production to the `build` folder.<br>
@@ -39,4 +41,3 @@ It correctly bundles React in production mode and optimizes the build for the be
 
 The build is minified and the filenames include the hashes.<br>
 Your app is ready to be deployed!
-
