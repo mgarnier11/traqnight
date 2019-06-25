@@ -4,6 +4,19 @@ Work in Progress
 
 available [Here](http://traqnight.herokuapp.com)
 
+##Setup
+
+You will need a `.env` file at the root of the project such as this one :
+
+```
+REACT_APP_GOOGLE_MAP_API_KEY=Your_Google_Api_Key
+HERE_APP_ID=Your_Here_App_Id
+HERE_APP_CODE=Your_Here_App_Code
+```
+
+You can get Here credentials [here](https://developer.here.com/)
+And Google Api key [here](https://console.developers.google.com/apis/)
+
 ## Available Scripts
 
 In the project directory, you can run:
