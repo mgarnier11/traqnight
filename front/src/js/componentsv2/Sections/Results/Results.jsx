@@ -109,7 +109,7 @@ class Results extends Component {
         style={{ paddingTop: this.state.paddingTop }}
       >
         <nav
-          className="navbar navbar-expand-lg navbar-light filters"
+          className="navbar navbar-expand-lg navbar-light justify-content-between filters"
           ref={this.navBar}
         >
           <button
@@ -133,7 +133,10 @@ class Results extends Component {
           >
             <span class="navbar-toggler-icon" />
           </button>
-          <div className="collapse navbar-collapse" id="resultsNavbarToggler">
+          <div
+            className="collapse navbar-collapse inline"
+            id="resultsNavbarToggler"
+          >
             <div className="price m-1">
               <span>Prix Max. : </span>
               {[...Array(5)].map((x, i) => {
@@ -160,15 +163,17 @@ class Results extends Component {
             </div>
           </div>
         </nav>
-        <div className="container results-cards card-deck">
-          {places.map(place => {
-            return (
-              <PlaceCard
-                isDisplayed={this.isPlaceDisplayed(place)}
-                place={place}
-              />
-            );
-          })}
+        <div className="container">
+          <div className=" results-cards card-deck">
+            {places.map(place => {
+              return (
+                <PlaceCard
+                  isDisplayed={this.isPlaceDisplayed(place)}
+                  place={place}
+                />
+              );
+            })}
+          </div>
         </div>
       </div>
     );

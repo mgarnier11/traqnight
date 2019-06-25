@@ -1,7 +1,7 @@
 const { BadRequest } = require('@feathersjs/errors');
 const myutils = require('./utils');
 const googleMapsClient = require('@google/maps').createClient({
-  key: 'AIzaSyCkiT6O5Me25yx4JV9ZT3iGYYCdsgzqv9w',
+  key: process.env.REACT_APP_GOOGLE_MAP_API_KEY,
   Promise: Promise
 });
 

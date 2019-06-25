@@ -9,8 +9,8 @@ const hereURL = 'https://places.api.here.com';
 const placeEndpoint = '/places/v1';
 const searchEndpoint = '/discover/search';
 
-const appId = 'oRM589ApFBNyrtBwfkgH';
-const appCode = '3nHtQC18lMGYn-6zTZXfXw';
+const appId = process.env.HERE_APP_ID;
+const appCode = process.env.HERE_APP_CODE;
 
 const earthRadiusKm = 6371;
 

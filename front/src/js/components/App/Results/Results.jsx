@@ -52,7 +52,7 @@ class Results extends Component {
           <div className={styles.map}>
             <GoogleMapReact
               bootstrapURLKeys={{
-                key: 'AIzaSyCkiT6O5Me25yx4JV9ZT3iGYYCdsgzqv9w'
+                key: process.env.REACT_APP_GOOGLE_MAP_API_KEY
               }}
               center={this.state.origin}
               defaultZoom={13}

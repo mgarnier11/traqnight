@@ -101,11 +101,14 @@ p {
 }
 
 .results {
-  height: 100vh;
 }
 
 .results .navbar {
   background-color: #ededed;
+}
+
+.results .navbar-collapse {
+  flex-grow: unset;
 }
 
 .results .nav-fixed {
@@ -118,8 +121,6 @@ p {
 
 .results .results-cards {
   padding-top: 10px;
-  overflow: auto;
-  height: 280px;
 }
 
 .results .card {
