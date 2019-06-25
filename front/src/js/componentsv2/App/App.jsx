@@ -8,7 +8,6 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    console.log(process.env.REACT_APP_GOOGLE_MAP_API_KEY);
     this.homeRef = React.createRef();
     this.resultsRef = React.createRef();
 
