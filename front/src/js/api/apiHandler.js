@@ -1,7 +1,6 @@
 import io from 'socket.io-client';
 import feathers from '@feathersjs/client';
 import { EventEmitter } from 'events';
-import Error from '../components/App/Error/Error.jsx';
 import Place from '../../../../classes/place-class';
 
 class Handler {

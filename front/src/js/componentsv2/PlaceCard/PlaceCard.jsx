@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Place from '../../../../../classes/place-class';
 
-const PlaceCard = ({ isDisplayed, handleGoClick, handleZoomClick, place }) => (
-  <div className={'card' + (isDisplayed ? '' : ' d-none')}>
+const PlaceCard = ({ handleGoClick, handleZoomClick, place }) => (
+  <div className="card">
     <div className="card-header">
       <h3>{place.name}</h3>
     </div>
@@ -27,7 +27,6 @@ const PlaceCard = ({ isDisplayed, handleGoClick, handleZoomClick, place }) => (
 );
 
 PlaceCard.propTypes = {
-  isDisplayed: PropTypes.bool.isRequired,
   //handleButtonClick: PropTypes.func.isRequired,
   place: PropTypes.instanceOf(Place).isRequired
 };

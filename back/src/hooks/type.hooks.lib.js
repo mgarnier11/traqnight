@@ -25,13 +25,13 @@ function beforeCreateOrUpdateHook(options = {}) {
       throw new BadRequest(typeErrors.validPlaceType);
     if (!googlePlacesTypes.includes(input.type))
       throw new BadRequest(typeErrors.validPlaceType);
-    newDatas.type = input.type;
+    newDatas.googleType = input.type;
 
     if (validator.isEmpty(input.icon))
       throw new BadRequest(typeErrors.validIcon);
     if (!fontAwesomeIcons.includes(input.icon))
       throw new BadRequest(typeErrors.validIcon);
-    newDatas.icon = input.icon;
+    newDatas.fontAwesomeIcon = input.icon;
 
     if (context.method === 'create') {
       newDatas.creationUserId = context.params.user._id;
@@ -63,7 +63,7 @@ function beforePatchHook(options = {}) {
         throw new BadRequest(typeErrors.validPlaceType);
       if (!googlePlacesTypes.includes(input.type))
         throw new BadRequest(typeErrors.validPlaceType);
-      newDatas.type = input.type;
+      newDatas.googleType = input.type;
     }
 
     if (input.icon !== undefined) {
@@ -71,7 +71,7 @@ function beforePatchHook(options = {}) {
         throw new BadRequest(typeErrors.validIcon);
       if (!fontAwesomeIcons.includes(input.icon))
         throw new BadRequest(typeErrors.validIcon);
-      newDatas.icon = input.icon;
+      newDatas.fontAwesomeIcon = input.icon;
     }
 
     newDatas.updateUserId = context.params.user._id;

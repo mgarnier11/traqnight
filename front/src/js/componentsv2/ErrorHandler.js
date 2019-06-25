@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { toast, ToastContainer } from 'react-toastify';
+import { Component } from 'react';
+import { toast } from 'react-toastify';
 import { connect } from 'react-redux';
 import { handleError } from '../redux/actions/error-actions';
 

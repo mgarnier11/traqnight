@@ -125,10 +125,11 @@ function afterAllHook(options = {}) {
     for (let place of places) {
       if (place.state !== 'permanently_closed') {
         //place.state will not be defined if the db beforecreate hook went fine
-        place.types = place.typeIds.map(
-          //get all types for all typesids in the place
-          async typeId => await context.app.service('types').get(typeId)
-        );
+
+        place.types = [];
+        for (let typeId of place.typeIds) {
+          place.types.push(await context.app.service('types').get(typeId));
+        }
       }
     }
     /*

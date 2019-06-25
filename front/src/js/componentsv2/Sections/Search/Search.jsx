@@ -51,13 +51,14 @@ class Search extends Component {
         "Vous devez activer la localisation ou renseigner une ville pour utiliser l'application"
       );
     } else {
+      /*
       const { type, location, coordinates, radius } = this.state;
 
       this.props.getPlaces({
         typeId: type === '' ? this.props.types[0]._id : type,
         location,
         radius: radius
-      });
+      });*/
     }
   }
 

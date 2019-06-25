@@ -1,4 +1,4 @@
-import React, { Component, Ref } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getPlaces } from '../../../redux/actions/place-actions';
@@ -32,7 +32,7 @@ class Home extends Component {
 
     this.state = {
       type: '',
-      location: 'Nantes'
+      location: ''
     };
 
     this.handleChange = this.handleChange.bind(this);

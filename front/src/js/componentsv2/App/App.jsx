@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import Home from '../Sections/Home/Home';
-import Search from '../Sections/Search/Search';
+//import Search from '../Sections/Search/Search';
 import Results from '../Sections/Results/Results';
 
 class App extends Component {
@@ -15,7 +15,6 @@ class App extends Component {
       home: this.homeRef,
       results: this.resultsRef
     };
-    console.log(this.refs);
     this.scrollTo = this.scrollTo.bind(this);
   }
 
@@ -28,7 +27,7 @@ class App extends Component {
       <div className="app">
         <Home reference={this.homeRef} scrollTo={this.scrollTo} />
         {/*<Search />*/}
-        <Results reference={this.resultsRef} />
+        <Results reference={this.resultsRef} scrollTo={this.scrollTo} />
       </div>
     );
   }
