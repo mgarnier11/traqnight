@@ -24,11 +24,13 @@ function mapDispatchToProps(dispatch) {
 
 class Results extends Component {
   static propTypes = {
-    places: PropTypes.arrayOf(PropTypes.instanceOf(Place)).isRequired
+    places: PropTypes.arrayOf(PropTypes.instanceOf(Place)).isRequired,
+    scrollTo: PropTypes.func.isRequired
   };
 
   static defaultProps = {
-    places: []
+    places: [],
+    scrollTo: p => console.log(p)
   };
 
   constructor(props) {
@@ -111,10 +113,9 @@ class Results extends Component {
   render() {
     const { maxPrice, minRating } = this.state;
     const loading = this.props.placesLoading;
-    const places = this.state.places.map(place => {
-      if (this.isPlaceDisplayed(place)) return place;
-      return null;
-    });
+    const places = this.state.places.filter(place =>
+      this.isPlaceDisplayed(place)
+    );
 
     return (
       <div
@@ -123,7 +124,7 @@ class Results extends Component {
         style={{ paddingTop: this.state.paddingTop }}
       >
         <i
-          onClick={e => this.props.scrollTo('home')}
+          onClick={e => this.props.scrollTo('search')}
           className="to-top fas fa-arrow-alt-circle-up"
         />
         <nav
@@ -131,7 +132,7 @@ class Results extends Component {
           ref={this.navBar}
         >
           <button
-            className="btn btn-secondary m-1"
+            className="btn btn-secondary"
             onClick={this.loadMoreResults}
             disabled={
               this.props.placesLoading |
@@ -155,7 +156,7 @@ class Results extends Component {
             className="collapse navbar-collapse inline"
             id="resultsNavbarToggler"
           >
-            <div className="price m-1">
+            <div className="price mr-1">
               <span>Prix Max. : </span>
               {[...Array(5)].map((x, i) => {
                 return (
@@ -169,7 +170,7 @@ class Results extends Component {
                 );
               })}
             </div>
-            <div className="rating m-1">
+            <div className="rating ml-1">
               <span>Note Min. : </span>
               {[...Array(5)].map((x, i) => {
                 return (
@@ -198,7 +199,7 @@ class Results extends Component {
               </div>
             ) : (
               places.map(place => {
-                return <PlaceCard place={place} ky={place._id} />;
+                return <PlaceCard place={place} key={place._id} />;
               })
             )}
             {loading ? <Loading /> : ''}

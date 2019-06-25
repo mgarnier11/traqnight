@@ -68,13 +68,12 @@ p {
 
 .search {
   /*height: 100vh;*/
-  padding-top: 25px;
-  padding-bottom: 25px;
-  background-color: rgba(0, 0, 0, 0.06);
+  padding-top: 8px;
+  padding-bottom: 8px;
+  background-color: #ededed;
 }
 
-.search .form-control,
-.search .btn {
+.search * {
   font-size: 2.25vh;
 }
 
@@ -83,11 +82,25 @@ p {
   float: left;
 }
 
-.search .town span {
+.search span {
   cursor: pointer;
   position: relative;
-  margin-left: 10px;
-  font-size: 27px;
+}
+.search .form-inline {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+.search .form-inline > * {
+  padding: 0.25rem;
+}
+
+.search .form-check {
+  padding: 0;
+}
+
+.search .form-check label {
+  margin: 0;
 }
 
 .search .unlocate::after,
@@ -98,7 +111,7 @@ p {
   position: absolute;
   width: 142%;
   top: calc(50% - 1px);
-  left: -6px;
+  left: -4px;
 }
 
 .search .unlocate::before {
@@ -115,6 +128,7 @@ p {
 
 .results .map {
   height: 45vh;
+  border-top: 1px solid #dddddd;
   background-color: black;
 }
 

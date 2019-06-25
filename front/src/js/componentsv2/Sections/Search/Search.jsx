@@ -17,11 +17,13 @@ function mapDispatchToProps(dispatch) {
 
 class Search extends Component {
   static propTypes = {
-    types: PropTypes.arrayOf(PropTypes.object).isRequired
+    types: PropTypes.arrayOf(PropTypes.object).isRequired,
+    scrollTo: PropTypes.func.isRequired
   };
 
   static defaultProps = {
-    types: []
+    types: [],
+    scrollTo: p => console.log(p)
   };
 
   constructor(props) {
@@ -51,14 +53,14 @@ class Search extends Component {
         "Vous devez activer la localisation ou renseigner une ville pour utiliser l'application"
       );
     } else {
-      /*
       const { type, location, coordinates, radius } = this.state;
 
       this.props.getPlaces({
         typeId: type === '' ? this.props.types[0]._id : type,
         location,
         radius: radius
-      });*/
+      });
+      this.props.scrollTo('results');
     }
   }
 
@@ -95,11 +97,11 @@ class Search extends Component {
     const { type, location, coordinates, radius } = this.state;
 
     return (
-      <div className="search container">
-        <form className="row" onSubmit={this.handleSubmit}>
-          <div className="col-md-2 col-5 px-1">
+      <div className="search" ref={this.props.reference}>
+        <form className="form-inline" onSubmit={this.handleSubmit}>
+          <div className="col-7 col-md-6 col-xl-2">
             <select
-              className="form-control"
+              className="form-control w-100"
               id="type"
               value={type}
               onChange={this.handleChange}
@@ -113,28 +115,9 @@ class Search extends Component {
               })}
             </select>
           </div>
-
-          <div className="col-md-6 col-7 px-1 town">
-            <input
-              type="text"
-              onClick={this.handleTownInputClick}
-              className="form-control"
-              id="location"
-              placeholder="Votre ville"
-              value={location}
-              onChange={this.handleChange}
-              disabled={coordinates}
-            />
-            <span className={coordinates ? 'unlocate' : 'locate d-none'}>
-              <i
-                onClick={this.handleGetLocationClick}
-                className="fas fa-crosshairs"
-              />
-            </span>
-          </div>
-          <div className="col-md-2 col-5 px-1">
+          <div className="col-5 col-md-6 col-xl-2 ">
             <select
-              className="form-control"
+              className="form-control w-100"
               id="radius"
               value={radius}
               onChange={this.handleChange}
@@ -144,7 +127,34 @@ class Search extends Component {
               <option value={5000}>5000m</option>
             </select>
           </div>
-          <div className="col-md-2 col-7 px-1">
+
+          <div className="col-md-8 col-xl-6">
+            <input
+              className="form-control w-100"
+              type="text"
+              onClick={this.handleTownInputClick}
+              id="location"
+              placeholder="Votre ville"
+              value={location}
+              onChange={this.handleChange}
+              disabled={coordinates}
+            />
+          </div>
+          {/*
+          <div className="form-check text-center col-md-4 col-xl-2">
+            <span
+              className={'mx-2' + (coordinates ? ' unlocate' : ' locate')}
+              id="locate"
+            >
+              <i
+                onClick={this.handleGetLocationClick}
+                className="fas fa-crosshairs"
+              />
+            </span>
+            <label htmlFor="locate">Position Actuelle</label>
+          </div>
+*/}
+          <div className="col-xl-2 col-12">
             <button type="submit" className="btn btn-secondary col-12">
               Trouvez !
             </button>

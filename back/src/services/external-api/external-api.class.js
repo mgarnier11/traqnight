@@ -34,7 +34,7 @@ class Service {
         );
       } else {
         let location = query.location;
-        let keyword = query.type.name;
+        let keyword = query.type.googleType;
         let radius = query.radius;
 
         //check if the request has been done before

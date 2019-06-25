@@ -4,6 +4,7 @@ const googleMapsClient = require('@google/maps').createClient({
   key: process.env.REACT_APP_GOOGLE_MAP_API_KEY,
   Promise: Promise
 });
+const axios = require('axios').default;
 
 const googleErrors = {
   invalidTown: 'Ville invalide',
@@ -128,6 +129,18 @@ async function getFirstResults(origin, radius, keyword) {
   }
 }
 
+async function getHereResultsBetter(origin, radius, keyword) {
+  let allResults = await getHereResults(origin, radius, keyword);
+
+  let returnValues = [];
+
+  for (let result of allResults) {
+    if (result.href) returnValues.push(await axios.get(result.href));
+  }
+
+  return returnValues;
+}
+
 async function getHereResults(origin, radius, keyword) {
   //radius = radius / 2;
   let corners = [];
@@ -210,6 +223,6 @@ module.exports = {
   getTown: getTown,
   getPlaceFromGoogle: getPlaceFromGoogle,
   getFirstResults: getFirstResults,
-  getHereResults: getHereResults,
+  getHereResults: getHereResultsBetter,
   getGoogleResults: getGoogleResults
 };
