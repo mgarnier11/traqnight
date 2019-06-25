@@ -1,10 +1,10 @@
-#Traqnight Project
+# Traqnight Project
 
 Work in Progress
 
 available [Here](http://traqnight.herokuapp.com)
 
-##Setup
+## Setup
 
 You will need a `.env` file at the root of the project such as this one :
 
