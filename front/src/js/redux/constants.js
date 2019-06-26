@@ -10,6 +10,11 @@ export const GET_NEXT_PLACES_STARTED = 'GET_NEXT_PLACES_STARTED';
 export const GET_PLACES_SUCCESS = 'GET_PLACES_SUCCESS';
 export const GET_PLACES_ERROR = 'GET_PLACES_ERROR';
 
+export const AUTH_STARTED = 'AUTH_STARTED';
+export const AUTH_SUCCESS = 'AUTH_SUCCESS';
+export const AUTH_FAILURE = 'AUTH_FAILURE';
+export const AUTH_ERROR = 'AUTH_ERROR';
+
 export const INITIAL_STATE = {
   typesRequest: {
     loading: false,
@@ -20,6 +25,10 @@ export const INITIAL_STATE = {
     originLocation: { lat: 47.35885200000001, lng: -1.944482 },
     nextPlacesToken: '',
     places: []
+  },
+  auth: {
+    loading: false,
+    user: undefined
   },
   errors: []
 };

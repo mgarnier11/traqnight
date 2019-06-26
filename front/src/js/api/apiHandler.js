@@ -68,40 +68,35 @@ class Handler {
   }
 
   async login(credentials) {
-    try {
-      let response = undefined;
+    let response = undefined;
 
-      if (credentials) {
-        let options = Object.assign(
-          {
-            strategy: 'local'
-          },
-          credentials
-        );
-        response = await this.feathers.authenticate(options);
-      } else {
-        response = await this.feathers.authenticate();
-      }
-
-      if (response && response.accessToken) {
-        let payload = await this.feathers.passport.verifyJWT(
-          response.accessToken
-        );
-
-        if (payload && payload.userId) {
-          let user = await this.feathers.service('users').get(payload.userId);
-
-          this.feathers.set('user', user);
-          this.feathers.emit('userSet', user);
-
-          return null;
-        }
-      }
-    } catch (error) {
-      console.log(error);
-
-      return error;
+    if (credentials) {
+      let options = Object.assign(
+        {
+          strategy: 'local'
+        },
+        credentials
+      );
+      response = await this.feathers.authenticate(options);
+    } else {
+      response = await this.feathers.authenticate();
     }
+
+    if (response && response.accessToken) {
+      let payload = await this.feathers.passport.verifyJWT(
+        response.accessToken
+      );
+
+      if (payload && payload.userId) {
+        let user = await this.feathers.service('users').get(payload.userId);
+
+        this.feathers.set('user', user);
+
+        return true;
+      }
+    }
+
+    return false;
   }
 
   async register(credentials) {

@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { toast } from 'react-toastify';
 import { Provider } from 'react-redux';
+import Modal from 'react-modal';
 
 import App from './js/componentsv2/App/App';
 import { getTypes } from './js/redux/actions/type-actions';
@@ -19,6 +20,8 @@ import store from './js/redux/store';
 toast.configure();
 
 store.dispatch(getTypes());
+
+Modal.setAppElement('#root');
 
 ReactDOM.render(
   <Provider store={store}>

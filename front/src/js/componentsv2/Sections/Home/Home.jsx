@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Modal from 'react-modal';
 import { connect } from 'react-redux';
 import { getPlaces } from '../../../redux/actions/place-actions';
 
@@ -30,17 +31,60 @@ class Home extends Component {
   constructor(props) {
     super(props);
 
+    this.defaultModal = {
+      isOpen: true,
+      name: '',
+      email: '',
+      password: ''
+    };
+
     this.state = {
       type: '',
-      location: ''
+      location: '',
+      modal: this.defaultModal
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+
+    this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+
+    this.setModal = this.setModal.bind(this);
+
+    this.loginSubmit = this.loginSubmit.bind(this);
+    this.handleLoginChange = this.handleLoginChange.bind(this);
+  }
+
+  setModal(params, cb) {
+    this.setState(
+      {
+        modal: Object.assign({}, this.state.modal, params)
+      },
+      cb
+    );
+  }
+
+  openModal() {
+    document.body.style.overflowY = 'hidden';
+    this.setModal({ isOpen: true });
+  }
+
+  closeModal() {
+    document.body.style.overflowY = 'auto';
+    this.setModal({ isOpen: false });
+  }
+
+  loginSubmit(event) {
+    event.preventDefault();
   }
 
   handleChange(event) {
     this.setState({ [event.target.id]: event.target.value });
+  }
+
+  handleLoginChange(event) {
+    this.setModal({ [event.target.id]: event.target.value });
   }
 
   handleSubmit(event) {
@@ -62,6 +106,18 @@ class Home extends Component {
 
     return (
       <div className="home container-fluid" ref={this.props.reference}>
+        <nav className="navbar navbar-light">
+          <img
+            className="mr-auto"
+            src={window.favicon}
+            width="30"
+            height="30"
+            alt=""
+          />
+          <span className="user" onClick={this.openModal}>
+            <i className="fas fa-user" />
+          </span>
+        </nav>
         <div className="container">
           <div className="title text-center">
             <h1>Explorez votre ville</h1>
@@ -112,6 +168,51 @@ class Home extends Component {
             </div>
           </form>
         </div>
+
+        <Modal
+          isOpen={this.state.modal.isOpen}
+          onRequestClose={this.closeModal}
+          className="user-modal"
+          contentLabel="Example Modal"
+        >
+          <h1 className="text-center">Log In</h1>
+          <form className="form" onSubmit={this.loginSubmit}>
+            <div className="form-label-group my-2">
+              <label htmlFor="email">Email address</label>
+
+              <input
+                type="email"
+                id="email"
+                className="form-control"
+                placeholder="Email address"
+                value={this.state.modal.email}
+                onChange={this.handleLoginChange}
+                required
+                autoFocus
+              />
+            </div>
+
+            <div className="form-label-group my-2">
+              <label htmlFor="password">Password</label>
+
+              <input
+                type="password"
+                id="password"
+                className="form-control"
+                placeholder="Password"
+                value={this.state.modal.password}
+                onChange={this.handleLoginChange}
+                required
+              />
+            </div>
+            <button
+              className="btn btn-lg btn-primary btn-block text-uppercase mt-4"
+              type="submit"
+            >
+              Log in
+            </button>
+          </form>
+        </Modal>
       </div>
     );
   }

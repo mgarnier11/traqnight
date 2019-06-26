@@ -135,7 +135,15 @@ async function getHereResultsBetter(origin, radius, keyword) {
   let returnValues = [];
 
   for (let result of allResults) {
-    if (result.href) returnValues.push(await axios.get(result.href));
+    if (result.href) {
+      let response = await axios.get(result.href, {
+        headers: {
+          'Accept-Language': 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,de;q=0.6'
+        }
+      });
+
+      returnValues.push(response.data);
+    }
   }
 
   return returnValues;

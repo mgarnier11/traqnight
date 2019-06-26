@@ -35,6 +35,25 @@ p {
   font-size: 2.5vh;
 }
 
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
 .loading {
   height: 100%;
 }
@@ -48,13 +67,30 @@ p {
   z-index: 15;
 }
 
+.user-modal {
+  width: 75%;
+  max-width: 450px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  border: 1px solid rgb(204, 204, 204);
+  background: rgb(255, 255, 255);
+  border-radius: 4px;
+  outline: none;
+  padding: 20px;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+}
+
 .home {
   height: 100vh;
   background: url('./images/buildings1-min-compressor.jpg');
   background-position: center center;
   background-size: cover;
   color: white;
-  padding-top: 10vh;
+  /*padding-top: 10vh;*/
 }
 
 .home .form {
@@ -64,6 +100,11 @@ p {
 .home .form-control,
 .home .btn {
   font-size: 2.5vh;
+}
+
+.home .user {
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.05);
 }
 
 .search {

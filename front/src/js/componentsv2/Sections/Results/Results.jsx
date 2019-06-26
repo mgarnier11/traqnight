@@ -38,6 +38,7 @@ class Results extends Component {
 
     this.navBar = React.createRef();
     this.map = React.createRef();
+    this.toTop = React.createRef();
 
     this.state = {
       places: props.places,
@@ -66,10 +67,12 @@ class Results extends Component {
       });
       this.navBar.current.classList.add('nav-fixed');
       this.map.current.classList.add('map-fixed');
+      this.toTop.current.style.display = 'block';
     } else {
       this.setState({ top: 0, paddingTop: 0 });
       this.navBar.current.classList.remove('nav-fixed');
       this.map.current.classList.remove('map-fixed');
+      this.toTop.current.style.display = 'none';
     }
   }
 
@@ -126,9 +129,11 @@ class Results extends Component {
         <i
           onClick={e => this.props.scrollTo('search')}
           className="to-top fas fa-arrow-alt-circle-up"
+          style={{ display: 'none' }}
+          ref={this.toTop}
         />
         <nav
-          className="navbar navbar-expand-lg navbar-light justify-content-between filters"
+          className="navbar navbar-expand-md navbar-light justify-content-between filters"
           ref={this.navBar}
         >
           <button
@@ -156,7 +161,7 @@ class Results extends Component {
             className="collapse navbar-collapse inline"
             id="resultsNavbarToggler"
           >
-            <div className="price mr-1">
+            <div className="price mr-md-1 my-1">
               <span>Prix Max. : </span>
               {[...Array(5)].map((x, i) => {
                 return (
@@ -170,7 +175,7 @@ class Results extends Component {
                 );
               })}
             </div>
-            <div className="rating ml-1">
+            <div className="rating ml-md-1 my-1">
               <span>Note Min. : </span>
               {[...Array(5)].map((x, i) => {
                 return (
