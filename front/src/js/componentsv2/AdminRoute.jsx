@@ -1,37 +1,29 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Route, Redirect } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
-import SecuredRoute from './SecuredRoute';
-import apiHandler from '../api/apiHandler';
-import { isNull } from 'util';
+const mapStateToProps = state => {
+  return {
+    user: state.auth.user
+  };
+};
 
-class AdminRoute extends SecuredRoute {
-  async componentWillMount() {
-    let allowed = await apiHandler.isAuthenticated();
+const AdminRoute = ({ component: Component, path, user }) => (
+  <Route
+    path={path}
+    render={() => (user && user.admin ? <Component /> : <Redirect to="/" />)}
+  />
+);
 
-    if (allowed) allowed = (await apiHandler.feathers.get('user')).admin;
+AdminRoute.propTypes = {
+  component: PropTypes.instanceOf(Component).isRequired,
+  path: PropTypes.string.isRequired
+};
 
-    this.setState({ allowed: allowed });
-  }
+AdminRoute.defaultProps = {
+  path: '/',
+  component: undefined
+};
 
-  render() {
-    const { component: Component, path } = this.props;
-
-    return (
-      <Route
-        path={path}
-        render={() => {
-          if (isNull(this.state.allowed)) {
-            return 'Checking the user...';
-          } else if (!this.state.allowed) {
-            return <Redirect to="/" />;
-          } else {
-            return <Component />;
-          }
-        }}
-      />
-    );
-  }
-}
-
-export default AdminRoute;
+export default connect(mapStateToProps)(AdminRoute);

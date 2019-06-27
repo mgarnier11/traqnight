@@ -81,6 +81,10 @@ class Results extends Component {
     window.addEventListener('scroll', this.handleScroll);
   }
 
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
+  }
+
   componentWillReceiveProps(newProps) {
     if (newProps.places) this.setState({ places: newProps.places });
   }

@@ -29,6 +29,7 @@ class ErrorComponent extends Component {
       const error = this.props.errors[this.props.errors.length - 1];
       if (!error.handled) {
         toast.error('Erreur Code : ' + error.code + ', ' + error.message, {
+          position: 'top-center',
           autoClose: 4000,
           pauseOnHover: false,
           pauseOnFocusLoss: false,

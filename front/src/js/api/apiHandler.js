@@ -68,6 +68,7 @@ class Handler {
   }
 
   async login(credentials) {
+    console.log(credentials);
     let response = undefined;
 
     if (credentials) {
@@ -82,21 +83,25 @@ class Handler {
       response = await this.feathers.authenticate();
     }
 
+    console.log(response);
+
     if (response && response.accessToken) {
       let payload = await this.feathers.passport.verifyJWT(
         response.accessToken
       );
 
+      console.log(payload);
       if (payload && payload.userId) {
         let user = await this.feathers.service('users').get(payload.userId);
 
+        console.log(user);
         this.feathers.set('user', user);
 
-        return true;
+        return user;
       }
     }
 
-    return false;
+    return null;
   }
 
   async register(credentials) {

@@ -1,43 +1,29 @@
 import React, { Component } from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
-import apiHandler from '../../api/apiHandler';
-import { isNull } from 'util';
-
-class SecuredRoute extends Component {
-  static propTypes = {
-    component: PropTypes.instanceOf(Component).isRequired,
-    path: PropTypes.string.isRequired
+const mapStateToProps = state => {
+  return {
+    user: state.auth.user
   };
+};
 
-  static defaultProps = {
-    path: '/',
-    component: undefined
-  };
+const SecuredRoute = ({ component: Component, path, user }) => (
+  <Route
+    path={path}
+    render={() => (user ? <Component /> : <Redirect to="/" />)}
+  />
+);
 
-  async componentWillMount() {
-    this.setState({ allowed: await apiHandler.isAuthenticated() });
-  }
+SecuredRoute.propTypes = {
+  component: PropTypes.instanceOf(Component).isRequired,
+  path: PropTypes.string.isRequired
+};
 
-  render() {
-    const { component: Component, path } = this.props;
+SecuredRoute.defaultProps = {
+  path: '/',
+  component: undefined
+};
 
-    return (
-      <Route
-        path={path}
-        render={() => {
-          if (isNull(this.state.allowed)) {
-            return 'Checking the user...';
-          } else if (!this.state.allowed) {
-            return <Redirect to="/login" />;
-          } else {
-            return <Component />;
-          }
-        }}
-      />
-    );
-  }
-}
-
-export default SecuredRoute;
+export default connect(mapStateToProps)(SecuredRoute);

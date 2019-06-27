@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Provider } from 'react-redux';
 import Modal from 'react-modal';
@@ -25,8 +26,10 @@ Modal.setAppElement('#root');
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
-    <ErrorComponent />
+    <BrowserRouter>
+      <App />
+      <ErrorComponent />
+    </BrowserRouter>
   </Provider>,
   document.getElementById('root')
 );
