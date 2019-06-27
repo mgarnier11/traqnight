@@ -194,9 +194,14 @@ class Menu extends Component {
   renderUser(user) {
     return (
       <ul class="navbar-nav">
-        <li class="nav-item">{user.name}</li>
-        <li class="nav-item">
-          <i className="fas fa-sign-out-alt" onClick={this.logout} />
+        <li class="nav-item m-1 my-lg-0">
+          <span className="btn btn-secondary">{user.name}</span>
+        </li>
+        <li class="nav-item m-1 my-lg-0">
+          <span className="btn btn-secondary" onClick={this.logout}>
+            Se déconnecter
+            <i className="fas fa-sign-out-alt" />
+          </span>
         </li>
       </ul>
     );

@@ -116,11 +116,10 @@ p {
   flex-grow: unset;
 }
 
-/*
 .menu .navbar {
-  background-color: black;
+  background-color: #000000 !important;
 }
-
+/*
 .menu .navbar .nav-item {
   padding: 0.25rem;
   color: #ffffff;
