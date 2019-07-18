@@ -2,11 +2,13 @@ const { BadRequest } = require('@feathersjs/errors');
 const validator = require('validator');
 const googlePlacesTypes = require('../../../front/src/json/googleplaces.json');
 const fontAwesomeIcons = require('../../../front/src/json/fontawesome.json');
+const hereCategories = require('../../../front/src/json/hereCategories.json');
 const Type = require('../../../classes/type-class');
 
 const typeErrors = {
   validName: 'Please enter a valid name',
   validPlaceType: 'Please enter a valid Google API type',
+  validHereCategorie: 'Please enter a valid Here categorie',
   validIcon: 'Please enter a valid icon'
 };
 
@@ -21,17 +23,23 @@ function beforeCreateOrUpdateHook(options = {}) {
       throw new BadRequest(typeErrors.validName);
     newDatas.name = input.name;
 
-    if (validator.isEmpty(input.type))
+    if (validator.isEmpty(input.googleType))
       throw new BadRequest(typeErrors.validPlaceType);
-    if (!googlePlacesTypes.includes(input.type))
+    if (!googlePlacesTypes.includes(input.googleType))
       throw new BadRequest(typeErrors.validPlaceType);
-    newDatas.googleType = input.type;
+    newDatas.googleType = input.googleType;
 
-    if (validator.isEmpty(input.icon))
+    if (validator.isEmpty(input.hereCategorie))
+      throw new BadRequest(typeErrors.validHereCategorie);
+    if (hereCategories.find(c => c.id === input.hereCategorie) === undefined)
+      throw new BadRequest(typeErrors.validHereCategorie);
+    newDatas.hereCategorie = input.hereCategorie;
+
+    if (validator.isEmpty(input.fontAwesomeIcon))
       throw new BadRequest(typeErrors.validIcon);
-    if (!fontAwesomeIcons.includes(input.icon))
+    if (!fontAwesomeIcons.includes(input.fontAwesomeIcon))
       throw new BadRequest(typeErrors.validIcon);
-    newDatas.fontAwesomeIcon = input.icon;
+    newDatas.fontAwesomeIcon = input.fontAwesomeIcon;
 
     if (context.method === 'create') {
       newDatas.creationUserId = context.params.user._id;
@@ -58,20 +66,28 @@ function beforePatchHook(options = {}) {
       newDatas.name = input.name;
     }
 
-    if (input.type !== undefined) {
-      if (validator.isEmpty(input.type))
+    if (input.googleType !== undefined) {
+      if (validator.isEmpty(input.googleType))
         throw new BadRequest(typeErrors.validPlaceType);
-      if (!googlePlacesTypes.includes(input.type))
+      if (!googlePlacesTypes.includes(input.googleType))
         throw new BadRequest(typeErrors.validPlaceType);
-      newDatas.googleType = input.type;
+      newDatas.googleType = input.googleType;
     }
 
-    if (input.icon !== undefined) {
-      if (validator.isEmpty(input.icon))
+    if (input.hereCategorie !== undefined) {
+      if (validator.isEmpty(input.hereCategorie))
+        throw new BadRequest(typeErrors.validHereCategorie);
+      if (hereCategories.find(c => c.id === input.hereCategorie) === undefined)
+        throw new BadRequest(typeErrors.validHereCategorie);
+      newDatas.hereCategorie = input.hereCategorie;
+    }
+
+    if (input.fontAwesomeIcon !== undefined) {
+      if (validator.isEmpty(input.fontAwesomeIcon))
         throw new BadRequest(typeErrors.validIcon);
-      if (!fontAwesomeIcons.includes(input.icon))
+      if (!fontAwesomeIcons.includes(input.fontAwesomeIcon))
         throw new BadRequest(typeErrors.validIcon);
-      newDatas.fontAwesomeIcon = input.icon;
+      newDatas.fontAwesomeIcon = input.fontAwesomeIcon;
     }
 
     newDatas.updateUserId = context.params.user._id;

@@ -62,16 +62,15 @@ class Results extends Component {
     if (window.scrollY >= this.top) {
       this.setState({
         top: this.navBar.current.offsetHeight,
-        paddingTop:
-          this.navBar.current.offsetHeight + this.map.current.offsetHeight
+        paddingTop: this.navBar.current.offsetHeight //this.map.current.offsetHeight
       });
       this.navBar.current.classList.add('nav-fixed');
-      this.map.current.classList.add('map-fixed');
+      //this.map.current.classList.add('map-fixed');
       this.toTop.current.style.display = 'block';
     } else {
       this.setState({ top: 0, paddingTop: 0 });
       this.navBar.current.classList.remove('nav-fixed');
-      this.map.current.classList.remove('map-fixed');
+      //this.map.current.classList.remove('map-fixed');
       this.toTop.current.style.display = 'none';
     }
   }

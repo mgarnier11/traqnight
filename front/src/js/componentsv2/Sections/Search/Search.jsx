@@ -108,7 +108,7 @@ class Search extends Component {
             >
               {this.props.types.map(t => {
                 return (
-                  <option value={t.id} key={t.id}>
+                  <option value={t._id} key={t._id}>
                     {t.name}
                   </option>
                 );

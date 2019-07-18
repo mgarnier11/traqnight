@@ -1,5 +1,6 @@
 const Place = require('../../../classes/place-class');
 const apiUtils = require('../services/apiUtils');
+const utils = require('../services/utils');
 
 function beforeCreateHook(options = {}) {
   return async context => {
@@ -10,19 +11,25 @@ function beforeCreateHook(options = {}) {
     //search an already saved place with hereId
     let oldPlaces = await context.app
       .service('places')
-      .find({ query: { hereId: input.id } });
+      .find({ query: { hereId: input.placeId } });
 
     if (oldPlaces.length === 0) {
       //if no results search an already saved place with an address
-      oldPlaces = await context.app
-        .service('places')
-        .find({ query: { address: input.vicinity } });
+      oldPlaces = await context.app.service('places').find({
+        query: {
+          address: input.location ? input.location.address.text : undefined
+        }
+      });
     }
 
     if (oldPlaces.length === 0) {
       //if no results get google datas for this address
       googleDatas = await apiUtils.getPlaceFromGoogle(
-        input.keyword + ' ' + input.vicinity
+        `${input.keyword} ${input.name} ${
+          input.location
+            ? `${input.location.address.city} ${input.location.address.country}`
+            : ''
+        }`
       );
 
       if (googleDatas && googleDatas.place_id) {
@@ -37,14 +44,23 @@ function beforeCreateHook(options = {}) {
       //if no results check google datas
       if (googleDatas && !googleDatas.permanently_closed) {
         //if we have google datas create a new place to be savd in db
-        newDatas.hereId = input.id;
+        newDatas.hereId = input.placeId;
         newDatas.placeId = googleDatas.place_id;
 
         newDatas.rating = googleDatas.rating;
         newDatas.priceLevel = googleDatas.price_level;
-        newDatas.name = googleDatas.name || input.title;
-        newDatas.address = input.vicinity;
-        newDatas.location = { lat: input.position[0], lng: input.position[1] };
+        newDatas.name =
+          utils.similarity(
+            googleDatas.name,
+            input.location.address.house + ' ' + input.location.address.street
+          ) < 0.75
+            ? googleDatas.name
+            : input.name;
+        newDatas.address = input.location.address.text;
+        newDatas.location = {
+          lat: input.location.position[0],
+          lng: input.location.position[1]
+        };
 
         newDatas.updateDate = new Date();
         newDatas.creationDate = new Date();

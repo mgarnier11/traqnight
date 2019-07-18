@@ -137,8 +137,8 @@ class Menu extends Component {
         <Modal
           isOpen={this.state.modal.isOpen}
           onRequestClose={this.closeModal}
-          className="user-modal"
-          contentLabel="Example Modal"
+          className="my-modals"
+          contentLabel="User Modal"
         >
           <LoadingOverlay
             active={this.props.authLoading}
@@ -210,10 +210,25 @@ class Menu extends Component {
   renderAdmin(user) {
     return (
       <ul class="navbar-nav">
-        <li class="nav-item m-1 my-lg-0 admin">
-          <Link to="/admin" className="btn btn-secondary">
+        <li class="nav-item dropdown m-1 my-lg-0 admin">
+          <button
+            className="dropdown-toggle btn btn-secondary"
+            id="navbarDropdown"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
             Admin
-          </Link>
+          </button>
+
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <Link to="/admin/types" className="dropdown-item">
+              Manage Types
+            </Link>
+            {/*<Link to="/admin" className="dropdown-item">
+              List
+    </Link>*/}
+          </div>
         </li>
         <li class="nav-item m-1 my-lg-0">
           <span className="btn btn-secondary">{user.name}</span>

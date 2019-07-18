@@ -6,7 +6,9 @@ import { login } from '../../redux/actions/auth-actions';
 import Home from '../Sections/Home/Home';
 import Search from '../Sections/Search/Search';
 import Results from '../Sections/Results/Results';
-import ScuredRoute from '../SecuredRoute';
+import Admin from '../Admin/Admin';
+import Types from '../Admin/Types/Types';
+import SecuredRoute from '../SecuredRoute';
 import AdminRoute from '../AdminRoute';
 import Menu from '../Menu/Menu';
 
@@ -45,11 +47,8 @@ class App extends Component {
       <div className="appRoot">
         <Menu />
         <Switch>
-          <AdminRoute
-            exact
-            path="/admin"
-            component={() => <div className="admin" />}
-          />
+          <AdminRoute exact path="/admin" component={Admin} />
+          <AdminRoute exact path="/admin/types" component={Types} />
           <Route
             exact
             path="/"
@@ -61,6 +60,7 @@ class App extends Component {
               </div>
             )}
           />
+          <Route component={() => <Redirect to="/" />} />
         </Switch>
       </div>
     );

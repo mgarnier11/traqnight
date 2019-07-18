@@ -43,15 +43,18 @@ class Service {
           let herePlaces = await apiUtils.getFirstResults(
             location,
             radius,
-            keyword
+            query.type
           );
           let returnPlaces = [];
           console.log('first results are ok');
+
+          console.log(herePlaces);
 
           //give them good datas, save them and check if they are nt permanently closed
           for (let herePlace of herePlaces) {
             herePlace.keyword = keyword;
             herePlace.type = query.type;
+
             let newPlace = await this.app.service('places').create(herePlace);
             if (newPlace.state !== 'permanently_closed')
               if (
@@ -68,7 +71,7 @@ class Service {
           let queueParams = {
             app: this.app,
             requestsQuery: query.requestsQuery,
-            apiParams: { location, radius, keyword }
+            apiParams: { location, radius, keyword, type: query.type }
           };
           //get more results for this request
           //and save the requests for ultra fast resutls next time an user does it

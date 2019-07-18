@@ -12,6 +12,7 @@ You will need a `.env` file at the root of the project such as this one :
 REACT_APP_GOOGLE_MAP_API_KEY=Your_Google_Api_Key
 HERE_APP_ID=Your_Here_App_Id
 HERE_APP_CODE=Your_Here_App_Code
+DB=Your_DB_Connexion_String
 ```
 
 You can get Here credentials [here](https://developer.here.com/)

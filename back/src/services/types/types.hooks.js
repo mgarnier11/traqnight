@@ -26,9 +26,9 @@ module.exports = {
   },
 
   after: {
-    all: [],
-    find: [typeHooksLib.afterAllHook()],
-    get: [typeHooksLib.afterAllHook()],
+    all: [typeHooksLib.afterAllHook()],
+    find: [],
+    get: [],
     create: [],
     update: [],
     patch: [],

@@ -25,10 +25,12 @@ class Queue {
     let herePlaces = await apiUtils.getHereResults(
       apiParams.location,
       apiParams.radius,
-      apiParams.keyword
+      apiParams.type
     );
 
     console.log('processing ' + herePlaces.length + ' places');
+
+    console.log(herePlaces);
     let n = 0;
 
     let places = [];

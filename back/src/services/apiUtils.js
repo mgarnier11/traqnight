@@ -112,27 +112,52 @@ async function getPlaceFromGoogle(input) {
   return resultsResponse.json.candidates[0];
 }
 
-async function getFirstResults(origin, radius, keyword) {
+async function getFirstResults(origin, radius, type) {
   let inParam = origin.lat + ',' + origin.lng + ';r=' + radius;
   //user here api to get the firsts result around a point
   try {
     let results = await myutils.hereSearchRequest({
-      q: keyword,
+      q: type.googleType,
       in: inParam,
       size: 25
     });
     if (results.items.length === 25)
-      return await getFirstResults(origin, radius / 4, keyword);
+      return await getFirstResults(origin, radius / 4, type);
     return results.items;
   } catch (error) {
     console.log(error);
   }
 }
 
-async function getHereResultsBetter(origin, radius, keyword) {
-  let allResults = await getHereResults(origin, radius, keyword);
+async function getFirstResultsBetter(origin, radius, type) {
+  let allResults = await getFirstResults(origin, radius, type);
 
-  let returnValues = [];
+  let returnValues = await Promise.all(
+    allResults.map(r => {
+      if (r.href)
+        return axios.get(r.href, {
+          headers: {
+            'Accept-Language': 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,de;q=0.6'
+          }
+        });
+      else return null;
+    })
+  );
+
+  returnValues = returnValues
+    .map(result => {
+      try {
+        let cat = result.data.categories.find(c => c.id === type.hereCategorie);
+        if (cat) return result.data;
+        else return null;
+      } catch (error) {
+        return null;
+      }
+    })
+    .filter(r => r !== null);
+  /*
+
+  returnValues = [];
 
   for (let result of allResults) {
     if (result.href) {
@@ -142,14 +167,48 @@ async function getHereResultsBetter(origin, radius, keyword) {
         }
       });
 
-      returnValues.push(response.data);
+      try {
+        let cat = response.data.categories.find(
+          c => c.id === type.hereCategorie
+        );
+        if (cat) returnValues.push(response.data);
+      } catch (error) {}
+    }
+  }*/
+
+  return returnValues;
+}
+
+async function getHereResultsBetter(origin, radius, type) {
+  let allResults = await getHereResults(origin, radius, type);
+
+  let returnValues = [];
+
+  for (let result of allResults) {
+    if (
+      result.href /*&&
+      result.category &&
+      result.category.id === type.hereCategorie*/
+    ) {
+      let response = await axios.get(result.href, {
+        headers: {
+          'Accept-Language': 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,de;q=0.6'
+        }
+      });
+
+      try {
+        let cat = response.data.categories.find(
+          c => c.id === type.hereCategorie
+        );
+        if (cat) returnValues.push(response.data);
+      } catch (error) {}
     }
   }
 
   return returnValues;
 }
 
-async function getHereResults(origin, radius, keyword) {
+async function getHereResults(origin, radius, type) {
   //radius = radius / 2;
   let corners = [];
   corners.push(myutils.calcPoint(origin, radius * Math.sqrt(2), 45));
@@ -168,7 +227,7 @@ async function getHereResults(origin, radius, keyword) {
     let inParam = wlng + ',' + slat + ',' + elng + ',' + nlat;
     try {
       let results = await myutils.hereSearchRequest({
-        q: keyword,
+        q: type.googleType,
         in: inParam,
         size: 100
       });
@@ -178,7 +237,7 @@ async function getHereResults(origin, radius, keyword) {
           await getHereResults(
             myutils.middlePoint(origin, corner),
             radius / 2,
-            keyword
+            type
           )
         );
       } else {
@@ -230,7 +289,7 @@ async function getTown(townName) {
 module.exports = {
   getTown: getTown,
   getPlaceFromGoogle: getPlaceFromGoogle,
-  getFirstResults: getFirstResults,
+  getFirstResults: getFirstResultsBetter,
   getHereResults: getHereResultsBetter,
   getGoogleResults: getGoogleResults
 };

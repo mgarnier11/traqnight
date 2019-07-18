@@ -6,6 +6,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   scroll-behavior: smooth;
+  /*overflow-y: overlay;*/
 }
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
@@ -35,24 +36,22 @@ p {
   font-size: 2.5vh;
 }
 
+/*
 ::-webkit-scrollbar {
   width: 10px;
 }
 
-/* Track */
 ::-webkit-scrollbar-track {
   background: #f1f1f1;
 }
 
-/* Handle */
 ::-webkit-scrollbar-thumb {
   background: #888;
 }
 
-/* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
-}
+}*/
 
 .loading {
   height: 100%;
@@ -75,7 +74,7 @@ p {
   padding: 20px;
 }
 
-.user-modal {
+.my-modals {
   width: 75%;
   max-width: 450px;
   position: absolute;
@@ -114,6 +113,10 @@ p {
 
 .menu .navbar .navbar-collapse {
   flex-grow: unset;
+}
+
+.menu .navbar .dropdown-menu {
+  width: initial;
 }
 
 .menu .navbar {
@@ -256,7 +259,7 @@ p {
 }
 
 .results .map {
-  height: 45vh;
+  height: 100vh;
   border-top: 1px solid #dddddd;
   background-color: black;
 }

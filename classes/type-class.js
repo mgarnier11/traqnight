@@ -7,6 +7,7 @@ class Type {
     this._id = new ObjectId();
     this.name = '';
     this.googleType = '';
+    this.hereCategorie = '';
     this.fontAwesomeIcon = '';
     this.creationUser = new User();
     this.creationDate = new Date();
@@ -19,6 +20,7 @@ class Type {
     this._id = dbDatas._id;
     this.name = dbDatas.name;
     this.googleType = dbDatas.googleType;
+    this.hereCategorie = dbDatas.hereCategorie;
     this.fontAwesomeIcon = dbDatas.fontAwesomeIcon;
     this.creationUser = dbDatas.creationUser;
     this.creationDate = dbDatas.creationDate;
