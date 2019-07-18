@@ -48,8 +48,6 @@ class Service {
           let returnPlaces = [];
           console.log('first results are ok');
 
-          console.log(herePlaces);
-
           //give them good datas, save them and check if they are nt permanently closed
           for (let herePlace of herePlaces) {
             herePlace.keyword = keyword;

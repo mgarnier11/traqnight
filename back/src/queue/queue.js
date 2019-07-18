@@ -30,7 +30,6 @@ class Queue {
 
     console.log('processing ' + herePlaces.length + ' places');
 
-    console.log(herePlaces);
     let n = 0;
 
     let places = [];
