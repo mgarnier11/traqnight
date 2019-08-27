@@ -42,6 +42,8 @@ class Results extends Component {
 
     this.state = {
       places: props.places,
+      mapCenter: props.placesRequest.originLocation,
+      mapZoom: 13,
       maxPrice: 4,
       minRating: 1,
       paddingTop: 0
@@ -56,6 +58,7 @@ class Results extends Component {
     this.loadMoreResults = this.loadMoreResults.bind(this);
 
     this.handleScroll = this.handleScroll.bind(this);
+    this.handleZoomClick = this.handleZoomClick.bind(this);
   }
 
   handleScroll() {
@@ -86,6 +89,8 @@ class Results extends Component {
 
   componentWillReceiveProps(newProps) {
     if (newProps.places) this.setState({ places: newProps.places });
+    if (newProps.placesRequest)
+      this.setState({ mapCenter: newProps.placesRequest.originLocation });
   }
 
   handleChange(event) {
@@ -102,9 +107,9 @@ class Results extends Component {
 
   isPlaceDisplayed(place) {
     if (place.priceLevel !== null)
-      if (place.priceLevel > this.state.maxPrice) return false;
+      if (place.priceLevel > this.state.maxPrice + 1) return false;
     if (place.rating !== null)
-      if (place.rating < this.state.minRating) return false;
+      if (place.rating <= this.state.minRating) return false;
     return true;
   }
 
@@ -116,8 +121,15 @@ class Results extends Component {
     }
   }
 
+  handleZoomClick(place) {
+    this.setState({
+      mapCenter: place.location,
+      mapZoom: 3
+    });
+  }
+
   render() {
-    const { maxPrice, minRating } = this.state;
+    const { maxPrice, minRating, mapCenter, mapZoom } = this.state;
     const loading = this.props.placesLoading;
     const places = this.state.places.filter(place =>
       this.isPlaceDisplayed(place)
@@ -166,11 +178,11 @@ class Results extends Component {
           >
             <div className="price mr-md-1 my-1">
               <span>Prix Max. : </span>
-              {[...Array(5)].map((x, i) => {
+              {[...Array(4)].map((x, i) => {
                 return (
                   <i
                     className={
-                      'fas fa-euro-sign' + (maxPrice + 1 > i ? '' : ' out')
+                      'fas fa-euro-sign' + (maxPrice > i - 1 ? '' : ' out')
                     }
                     onClick={e => this.setMaxPrice(i)}
                     key={i}
@@ -195,8 +207,9 @@ class Results extends Component {
         <div className="map" ref={this.map} style={{ top: this.state.top }}>
           <Map
             loading={loading}
-            center={this.props.placesRequest.originLocation}
+            center={mapCenter}
             places={places}
+            zoom={mapZoom}
           />
         </div>
         <div className="container">
@@ -207,7 +220,13 @@ class Results extends Component {
               </div>
             ) : (
               places.map(place => {
-                return <PlaceCard place={place} key={place._id} />;
+                return (
+                  <PlaceCard
+                    place={place}
+                    key={place._id}
+                    handleZoomClick={this.handleZoomClick}
+                  />
+                );
               })
             )}
             {loading ? <Loading /> : ''}

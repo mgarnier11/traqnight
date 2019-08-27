@@ -32,7 +32,7 @@ class Home extends Component {
 
     this.state = {
       type: '',
-      location: ''
+      location: 'Savenay'
     };
 
     this.handleChange = this.handleChange.bind(this);

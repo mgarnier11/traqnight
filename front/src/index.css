@@ -299,9 +299,61 @@ p {
   background-color: rgba(0, 0, 0, 0.03);
 }
 
+.results hr {
+  width: 100%;
+}
+
 .results .card-header,
 .results .card-footer {
   background-color: rgba(0, 0, 0, 0.1);
+}
+
+.results .card-header {
+  font-size: 3vh;
+}
+
+.results .rating,
+.results .price-level {
+  display: flex;
+  font-size: 2vh;
+}
+.results .rating-head,
+.results .price-level-head {
+  display: flex;
+
+  padding-right: 5px;
+}
+.results .back-stars,
+.results .back-euro {
+  display: flex;
+
+  color: #b3c6db;
+  position: relative;
+  text-shadow: 1px 1px 5px #adb5bd;
+  height: 100%;
+  top: 3px;
+}
+.results .front-stars,
+.results .front-euro {
+  display: flex;
+
+  color: #ffbc0b;
+  overflow: hidden;
+  position: absolute;
+  height: 100%;
+  top: 0;
+}
+.results .back-euro i,
+.results .front-euro i {
+  padding-left: 4px;
+}
+
+.results .address {
+  font-size: 2.25vh;
+}
+
+.results .town {
+  font-size: 1.5vh;
 }
 
 .results .filters * {

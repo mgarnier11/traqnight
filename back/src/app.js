@@ -6,6 +6,17 @@ const cors = require('cors');
 const logger = require('./logger');
 require('dotenv').config();
 
+if (!process.env.DB) {
+  console.log('External DB not found => using local DB');
+  process.env.DB = 'mongodb://localhost:27017/traqnight';
+}
+
+if (!process.env.HERE_APP_ID) throw Error('HERE_APP_ID not found in .env file');
+if (!process.env.HERE_APP_CODE)
+  throw Error('HERE_APP_CODE not found in .env file');
+if (!process.env.REACT_APP_GOOGLE_MAP_API_KEY)
+  throw Error('REACT_APP_GOOGLE_MAP_API_KEY not found in .env file');
+
 const feathers = require('@feathersjs/feathers');
 const configuration = require('@feathersjs/configuration');
 const express = require('@feathersjs/express');

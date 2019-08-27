@@ -22,15 +22,16 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    this.homeRef = React.createRef();
-    this.resultsRef = React.createRef();
-    this.searchRef = React.createRef();
+    this.homeDivRef = React.createRef();
+    this.resultsDivRef = React.createRef();
+    this.searchDivRef = React.createRef();
 
     this.refs = {
-      home: this.homeRef,
-      results: this.resultsRef,
-      search: this.searchRef
+      home: this.homeDivRef,
+      results: this.resultsDivRef,
+      search: this.searchDivRef
     };
+
     this.scrollTo = this.scrollTo.bind(this);
   }
 
@@ -39,7 +40,7 @@ class App extends Component {
   }
 
   scrollTo = refId => {
-    window.scrollTo(0, this[refId + 'Ref'].current.offsetTop);
+    window.scrollTo(0, this[refId + 'DivRef'].current.offsetTop);
   };
 
   render() {
@@ -54,9 +55,15 @@ class App extends Component {
             path="/"
             component={() => (
               <div className="app">
-                <Home reference={this.homeRef} scrollTo={this.scrollTo} />
-                <Search reference={this.searchRef} scrollTo={this.scrollTo} />
-                <Results reference={this.resultsRef} scrollTo={this.scrollTo} />
+                <Home reference={this.homeDivRef} scrollTo={this.scrollTo} />
+                <Search
+                  reference={this.searchDivRef}
+                  scrollTo={this.scrollTo}
+                />
+                <Results
+                  reference={this.resultsDivRef}
+                  scrollTo={this.scrollTo}
+                />
               </div>
             )}
           />
