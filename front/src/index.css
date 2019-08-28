@@ -289,7 +289,8 @@ p {
 }
 
 .results .results-cards {
-  padding-top: 10px;
+  padding-top: 100px;
+  padding-bottom: 50px;
 }
 
 .results .card {
