@@ -44,7 +44,7 @@ class Results extends Component {
       places: props.places,
       mapCenter: props.placesRequest.originLocation,
       mapZoom: 13,
-      maxPrice: 4,
+      maxPrice: 3,
       minRating: 1,
       paddingTop: 0
     };
@@ -106,9 +106,13 @@ class Results extends Component {
   }
 
   isPlaceDisplayed(place) {
-    if (place.priceLevel !== null)
-      if (place.priceLevel > this.state.maxPrice + 1) return false;
-    if (place.rating !== null)
+    let { maxPrice, minRating } = this.state;
+
+    if (place.priceLevel == null && maxPrice !== 3) return false;
+    else if (place.priceLevel !== null)
+      if (place.priceLevel > maxPrice + 1) return false;
+    if (place.rating == null && minRating !== 1) return false;
+    else if (place.rating !== null)
       if (place.rating <= this.state.minRating) return false;
     return true;
   }

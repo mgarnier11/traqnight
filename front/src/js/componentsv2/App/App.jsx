@@ -11,6 +11,7 @@ import Types from '../Admin/Types/Types';
 import SecuredRoute from '../SecuredRoute';
 import AdminRoute from '../AdminRoute';
 import Menu from '../Menu/Menu';
+import Footer from '../Footer/Footer';
 
 function mapDispatchToProps(dispatch) {
   return {
@@ -69,6 +70,7 @@ class App extends Component {
           />
           <Route component={() => <Redirect to="/" />} />
         </Switch>
+        <Footer />
       </div>
     );
   }
