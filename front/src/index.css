@@ -289,7 +289,7 @@ p {
 }
 
 .results .results-cards {
-  padding-top: 100px;
+  padding-top: 20px;
   padding-bottom: 50px;
 }
 
@@ -390,34 +390,48 @@ p {
   color: #adb5bd;
 }
 
-.place-of-interest {
+.place-of-interest,
+.place-of-interest-s {
   position: 'absolute';
   width: 20px;
   height: 20px;
-  background-color: #007bff;
+
   border-radius: 50%;
   transform: translate(-50%, -200%);
   text-align: center;
   font-size: 12px;
   cursor: pointer;
 }
-.place-of-interest i {
+.place-of-interest {
+  background-color: #007bff;
+}
+.place-of-interest-s {
+  background-color: #ffbc0b;
+}
+
+.place-of-interest i,
+.place-of-interest-s i {
   position: relative;
   top: 3px;
 }
 
-.place-of-interest::after {
+.place-of-interest::after,
+.place-of-interest-s::after {
   z-index: -1;
   position: absolute;
   content: '';
   left: 0;
   bottom: -17px;
-
   width: 0;
   height: 0;
   border-style: solid;
   border-width: 25px 10px 0 10px;
+}
+.place-of-interest::after {
   border-color: #007bff transparent transparent transparent;
+}
+.place-of-interest-s::after {
+  border-color: #ffbc0b transparent transparent transparent;
 }
 
 .footer {

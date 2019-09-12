@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, withRouter, Switch, Redirect } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { login } from '../../redux/actions/auth-actions';
 
@@ -8,7 +8,6 @@ import Search from '../Sections/Search/Search';
 import Results from '../Sections/Results/Results';
 import Admin from '../Admin/Admin';
 import Types from '../Admin/Types/Types';
-import SecuredRoute from '../SecuredRoute';
 import AdminRoute from '../AdminRoute';
 import Menu from '../Menu/Menu';
 import Footer from '../Footer/Footer';

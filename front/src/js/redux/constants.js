@@ -26,7 +26,7 @@ export const INITIAL_STATE = {
   },
   placesRequest: {
     loading: false,
-    originLocation: { lat: 47.35885200000001, lng: -1.944482 },
+    originLocation: { lat: 47.218371, lng: -1.553621 },
     nextPlacesToken: '',
     places: []
   },

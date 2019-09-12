@@ -43,7 +43,8 @@ class Results extends Component {
     this.state = {
       places: props.places,
       mapCenter: props.placesRequest.originLocation,
-      mapZoom: 13,
+      selectedPlace: null,
+      mapZoom: 11,
       maxPrice: 3,
       minRating: 1,
       paddingTop: 0
@@ -55,11 +56,26 @@ class Results extends Component {
     this.setMaxPrice = this.setMaxPrice.bind(this);
     this.setMinRating = this.setMinRating.bind(this);
 
+    this.selectPlace = this.selectPlace.bind(this);
+
     this.loadMoreResults = this.loadMoreResults.bind(this);
 
     this.handleScroll = this.handleScroll.bind(this);
     this.handleZoomClick = this.handleZoomClick.bind(this);
+
+    this.onMapPointClick = this.onMapPointClick.bind(this);
+
+    this.placeDivRefs = [];
   }
+
+  scrollTo = refId => {
+    setTimeout(() => {
+      window.scrollTo(
+        0,
+        this.placeDivRefs[refId].current.offsetTop - this.state.paddingTop - 10
+      );
+    }, 50);
+  };
 
   handleScroll() {
     if (window.scrollY >= this.top) {
@@ -88,9 +104,19 @@ class Results extends Component {
   }
 
   componentWillReceiveProps(newProps) {
-    if (newProps.places) this.setState({ places: newProps.places });
+    if (newProps.places)
+      this.setState({ places: newProps.places }, () => {
+        this.placeDivRefs = {};
+        this.state.places.forEach(place => {
+          this.placeDivRefs[place._id + 'Ref'] = React.createRef();
+        });
+      });
     if (newProps.placesRequest)
-      this.setState({ mapCenter: newProps.placesRequest.originLocation });
+      this.setState({
+        mapCenter: newProps.placesRequest.originLocation,
+        mapZoom: 13,
+        zoomedPlace: null
+      });
   }
 
   handleChange(event) {
@@ -126,14 +152,31 @@ class Results extends Component {
   }
 
   handleZoomClick(place) {
+    this.selectPlace(place);
+    this.props.scrollTo('results');
+  }
+
+  onMapPointClick(place) {
+    this.selectPlace(place);
+    this.scrollTo(place._id + 'Ref');
+  }
+
+  selectPlace(place) {
     this.setState({
       mapCenter: place.location,
-      mapZoom: 3
+      mapZoom: 17,
+      selectedPlace: place
     });
   }
 
   render() {
-    const { maxPrice, minRating, mapCenter, mapZoom } = this.state;
+    const {
+      maxPrice,
+      minRating,
+      mapCenter,
+      mapZoom,
+      selectedPlace
+    } = this.state;
     const loading = this.props.placesLoading;
     const places = this.state.places.filter(place =>
       this.isPlaceDisplayed(place)
@@ -214,6 +257,8 @@ class Results extends Component {
             center={mapCenter}
             places={places}
             zoom={mapZoom}
+            zoomedPlace={selectedPlace}
+            onPointClick={this.onMapPointClick}
           />
         </div>
         <div className="container">
@@ -226,8 +271,10 @@ class Results extends Component {
               places.map(place => {
                 return (
                   <PlaceCard
+                    reference={this.placeDivRefs[place._id + 'Ref']}
                     place={place}
                     key={place._id}
+                    selected={selectedPlace === place}
                     handleZoomClick={this.handleZoomClick}
                   />
                 );

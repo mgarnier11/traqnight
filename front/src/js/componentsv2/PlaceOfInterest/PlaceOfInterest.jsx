@@ -3,8 +3,11 @@ import PropTypes from 'prop-types';
 import { Tooltip } from 'react-tippy';
 import Place from '../../../../../classes/place-class';
 
-const PlaceOfInterest = ({ place }) => (
-  <div className="place-of-interest">
+const PlaceOfInterest = ({ place, selected, onClick }) => (
+  <div
+    className={'place-of-interest' + (selected ? '-s' : '')}
+    onClick={() => onClick(place)}
+  >
     <Tooltip title={place.name} position="bottom" trigger="mouseenter">
       <i className={'fas fa-' + place.types[0].fontAwesomeIcon} />
     </Tooltip>
@@ -12,7 +15,9 @@ const PlaceOfInterest = ({ place }) => (
 );
 
 PlaceOfInterest.propTypes = {
-  place: PropTypes.instanceOf(Place).isRequired
+  place: PropTypes.instanceOf(Place).isRequired,
+  selected: PropTypes.bool,
+  onClick: PropTypes.func.isRequired
 };
 
 export default PlaceOfInterest;

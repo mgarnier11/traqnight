@@ -123,8 +123,8 @@ class Menu extends Component {
               </div>
             </>
           ) : (
-            <ul class="navbar-nav">
-              <li class="nav-item">
+            <ul className="navbar-nav">
+              <li className="nav-item">
                 <i
                   className="login-icon fas fa-user"
                   onClick={this.openModal}

@@ -3,11 +3,15 @@ import PropTypes from 'prop-types';
 import { Tooltip } from 'react-tippy';
 import Place from '../../../../../classes/place-class';
 
-const PlaceCard = ({ handleZoomClick, place }) => {
+const PlaceCard = ({ handleZoomClick, place, selected, reference }) => {
   const address = place.address.split('<br/>');
 
   return (
-    <div className="card">
+    <div
+      ref={reference}
+      className="card"
+      style={{ borderColor: selected ? '#ffbc0b' : 'rgba(0,0,0,.125)' }}
+    >
       <div className="card-header">{place.name}</div>
       <div className="card-body">
         <div className="address">{address[0]}</div>
@@ -95,7 +99,8 @@ const PlaceCard = ({ handleZoomClick, place }) => {
 
 PlaceCard.propTypes = {
   handleZoomClick: PropTypes.func.isRequired,
-  place: PropTypes.instanceOf(Place).isRequired
+  place: PropTypes.instanceOf(Place).isRequired,
+  selected: PropTypes.bool
 };
 
 export default PlaceCard;

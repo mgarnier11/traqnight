@@ -6,7 +6,7 @@ import LoadingOverlay from 'react-loading-overlay';
 import PlaceOfInterest from '../PlaceOfInterest/PlaceOfInterest';
 import Place from '../../../../../classes/place-class';
 
-const Map = ({ loading, center, places, zoom }) => (
+const Map = ({ loading, center, places, zoom, zoomedPlace, onPointClick }) => (
   <LoadingOverlay
     active={loading}
     spinner
@@ -18,11 +18,17 @@ const Map = ({ loading, center, places, zoom }) => (
         key: process.env.REACT_APP_GOOGLE_MAP_API_KEY
       }}
       center={center}
-      defaultZoom={zoom}
+      zoom={zoom}
     >
       {places.map(place => {
         return (
-          <PlaceOfInterest {...place.location} place={place} key={place._id} />
+          <PlaceOfInterest
+            {...place.location}
+            selected={place === zoomedPlace}
+            place={place}
+            key={place._id}
+            onClick={onPointClick}
+          />
         );
       })}
     </GoogleMapReact>
@@ -34,7 +40,9 @@ Map.propTypes = {
   center: PropTypes.objectOf(PropTypes.number).isRequired,
   zoom: PropTypes.number.isRequired,
   //handleButtonClick: PropTypes.func.isRequired,
-  places: PropTypes.arrayOf(PropTypes.instanceOf(Place)).isRequired
+  places: PropTypes.arrayOf(PropTypes.instanceOf(Place)).isRequired,
+  zoomedPlace: PropTypes.instanceOf(Place),
+  onPointClick: PropTypes.func.isRequired
 };
 
 export default Map;

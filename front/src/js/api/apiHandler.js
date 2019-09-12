@@ -68,7 +68,7 @@ class Handler {
   }
 
   async login(credentials) {
-    console.log(credentials);
+    //console.log(credentials);
     let response = undefined;
 
     if (credentials) {
