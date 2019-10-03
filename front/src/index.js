@@ -5,10 +5,10 @@ import { toast } from 'react-toastify';
 import { Provider } from 'react-redux';
 import Modal from 'react-modal';
 
-import App from './js/componentsv2/App/App';
+import App from './js/components/App/App';
 import { getTypes } from './js/redux/actions/type-actions';
 import * as serviceWorker from './serviceWorker';
-import ErrorComponent from './js/componentsv2/ErrorHandler';
+import ErrorComponent from './js/components/ErrorHandler';
 
 import './index.css';
 import './index.scss';

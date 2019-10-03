@@ -1,68 +1,81 @@
 import React, { Component } from 'react';
-import { Route, withRouter, Switch, Redirect } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { login } from '../../redux/actions/auth-actions';
 
-import Home from './Home/Home.jsx';
-import Results from './Results/Results.jsx';
-import Search from './Search/Search.jsx';
-import Loading from './Loading/Loading.jsx';
+import Home from '../Sections/Home/Home';
+import Search from '../Sections/Search/Search';
+import Results from '../Sections/Results/Results';
+import Admin from '../Admin/Admin';
+import Types from '../Admin/Types/Types';
+import AdminRoute from '../AdminRoute';
+import Menu from '../Menu/Menu';
+import Footer from '../Footer/Footer';
 
-import apiHandler from '../../api/apiHandler';
+function mapDispatchToProps(dispatch) {
+  return {
+    login: () => dispatch(login())
+  };
+}
 
 class App extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      types: undefined
+    this.homeDivRef = React.createRef();
+    this.resultsDivRef = React.createRef();
+    this.searchDivRef = React.createRef();
+
+    this.refs = {
+      home: this.homeDivRef,
+      results: this.resultsDivRef,
+      search: this.searchDivRef
     };
 
-    this.handleHomeSearchClick = this.handleHomeSearchClick.bind(this);
+    this.scrollTo = this.scrollTo.bind(this);
   }
 
-  async componentWillMount() {
-    this.setState({
-      types: await apiHandler.typeService.find({
-        query: {
-          $sort: {
-            name: -1
-          }
-        }
-      })
-    });
+  componentWillMount() {
+    this.props.login();
   }
 
-  async componentDidMount() {}
-
-  handleHomeSearchClick(datas) {
-    //this.searchRef.current.updateFromHome(datas);
-    //this.scrollTo('searchDivRef');
-  }
+  scrollTo = refId => {
+    window.scrollTo(0, this[refId + 'DivRef'].current.offsetTop);
+  };
 
   render() {
-    if (this.state.types === undefined) {
-      return <Loading />;
-    } else {
-      return (
+    return (
+      <div className="appRoot">
+        <Menu />
         <Switch>
+          <AdminRoute exact path="/admin" component={Admin} />
+          <AdminRoute exact path="/admin/types" component={Types} />
           <Route
             exact
             path="/"
-            component={() => {
-              return (
-                <div className="app">
-                  <Home
-                    handleHomeSearchClick={this.handleHomeSearchClick}
-                    types={this.state.types}
-                  />
-                  <Search types={this.state.types} />
-                </div>
-              );
-            }}
+            component={() => (
+              <div className="app">
+                <Home reference={this.homeDivRef} scrollTo={this.scrollTo} />
+                <Search
+                  reference={this.searchDivRef}
+                  scrollTo={this.scrollTo}
+                />
+                <Results
+                  reference={this.resultsDivRef}
+                  scrollTo={this.scrollTo}
+                />
+              </div>
+            )}
           />
+          <Route component={() => <Redirect to="/" />} />
         </Switch>
-      );
-    }
+        <Footer />
+      </div>
+    );
   }
 }
 
-export default withRouter(App);
+export default connect(
+  null,
+  mapDispatchToProps
+)(App);
