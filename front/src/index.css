@@ -61,6 +61,11 @@ p {
   height: 100%;
 }
 
+.appRoot {
+  position: relative;
+  min-height: 100vh;
+}
+
 .to-top {
   position: fixed;
   bottom: 5%;
@@ -98,7 +103,15 @@ p {
   width: 100%;
   font-size: 2.5vh;
   cursor: pointer;
+  padding: 0;
 }
+
+@media screen and (min-width: 992px) {
+  .menu .navbar .nav-item > * {
+    padding: 8px 0;
+  }
+}
+
 .menu .navbar .btn {
   padding: 0.125rem 0.75rem;
 }
@@ -441,4 +454,12 @@ p {
 
 .footer p {
   font-size: 1.75vh;
+}
+
+@media screen and (min-width: 768px) {
+  .footer {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+  }
 }

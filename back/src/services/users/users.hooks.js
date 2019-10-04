@@ -11,15 +11,15 @@ module.exports = {
     all: [],
     find: [authenticate('jwt')],
     get: [authenticate('jwt')],
-    create: [hashPassword(), userHooksLib.beforeCreateOrUpdateHook()],
+    create: [userHooksLib.beforeCreateOrUpdateHook(), hashPassword()],
     update: [
-      hashPassword(),
       userHooksLib.beforeCreateOrUpdateHook(),
+      hashPassword(),
       authenticate('jwt')
     ],
     patch: [
-      hashPassword(),
       userHooksLib.beforePatchHook(),
+      hashPassword(),
       authenticate('jwt')
     ],
     remove: [authenticate('jwt')]

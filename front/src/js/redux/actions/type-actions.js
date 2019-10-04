@@ -51,7 +51,6 @@ export function updateType(id, typeDatas) {
     return apiHandler.typeService
       .patch(id, typeDatas)
       .then(updatedType => {
-        console.log(updatedType);
         dispatch({ type: TYPE_UPDATE, updatedType });
       })
       .catch(error => {

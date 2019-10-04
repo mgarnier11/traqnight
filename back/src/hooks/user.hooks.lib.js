@@ -6,6 +6,7 @@ const userErrors = {
   validEmail: 'Please enter a valid email',
   inUseEmail: 'This email is already in use',
   validPassword: 'Please enter a valid password',
+  confirmPassword: 'Passwords does not match',
   validName: 'Please enter a valid name',
   inUseName: 'This name is already in use'
 };
@@ -24,19 +25,21 @@ function beforeCreateOrUpdateHook(options = {}) {
       query: { email: input.email }
     });
     if (userDatas.data.length)
-      if (userDatas.data[0]._id !== context.id)
+      if (userDatas.data[0]._id.toString() !== context.id)
         throw new BadRequest(userErrors.inUseEmail);
     newDatas.email = input.email;
 
     if (validator.isEmpty(input.name)) throw new BadRequest(userErrors.name);
     userDatas = await context.service.find({ query: { name: input.name } });
     if (userDatas.data.length)
-      if (userDatas.data[0]._id !== context.id)
+      if (userDatas.data[0]._id.toString() !== context.id)
         throw new BadRequest(userErrors.inUseName);
     newDatas.name = input.name;
 
     if (validator.isEmpty(input.password))
       throw new BadRequest(userErrors.validPassword);
+    if (input.password !== input.confirmPassword)
+      throw new BadRequest(userErrors.confirmPassword);
     newDatas.password = input.password;
 
     newDatas.admin = input.admin ? true : false;
@@ -61,7 +64,7 @@ function beforePatchHook(options = {}) {
         query: { email: input.email }
       });
       if (userDatas.data.length)
-        if (userDatas.data[0]._id !== context.id)
+        if (userDatas.data[0]._id.toString() !== context.id)
           throw new BadRequest(userErrors.inUseEmail);
       newDatas.email = input.email;
     }
@@ -72,14 +75,16 @@ function beforePatchHook(options = {}) {
         query: { name: input.name }
       });
       if (userDatas.data.length)
-        if (userDatas.data[0]._id !== context.id)
+        if (userDatas.data[0]._id.toString() !== context.id)
           throw new BadRequest(userErrors.inUseName);
       newDatas.name = input.name;
     }
 
-    if (input.password !== undefined) {
+    if (input.password !== undefined && input.confirmPassword !== undefined) {
       if (validator.isEmpty(input.password))
         throw new BadRequest(userErrors.validPassword);
+      if (input.password !== input.confirmPassword)
+        throw new BadRequest(userErrors.confirmPassword);
       newDatas.password = input.password;
     }
 

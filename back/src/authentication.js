@@ -2,8 +2,7 @@ const authentication = require('@feathersjs/authentication');
 const jwt = require('@feathersjs/authentication-jwt');
 const local = require('@feathersjs/authentication-local');
 
-
-module.exports = function (app) {
+module.exports = function(app) {
   const config = app.get('authentication');
 
   // Set up authentication with the secret
@@ -16,12 +15,8 @@ module.exports = function (app) {
   // to create a new valid JWT (e.g. local or oauth2)
   app.service('authentication').hooks({
     before: {
-      create: [
-        authentication.hooks.authenticate(config.strategies)
-      ],
-      remove: [
-        authentication.hooks.authenticate('jwt')
-      ]
+      create: [authentication.hooks.authenticate(config.strategies)],
+      remove: [authentication.hooks.authenticate('jwt')]
     }
   });
 };

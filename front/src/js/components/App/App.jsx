@@ -9,8 +9,10 @@ import Results from '../Sections/Results/Results';
 import Admin from '../Admin/Admin';
 import Types from '../Admin/Types/Types';
 import AdminRoute from '../AdminRoute';
+import SecuredRoute from '../SecuredRoute';
 import Menu from '../Menu/Menu';
 import Footer from '../Footer/Footer';
+import MyUser from '../MyUser/MyUser';
 
 function mapDispatchToProps(dispatch) {
   return {
@@ -50,6 +52,7 @@ class App extends Component {
         <Switch>
           <AdminRoute exact path="/admin" component={Admin} />
           <AdminRoute exact path="/admin/types" component={Types} />
+          <SecuredRoute exact path="/my-user" component={MyUser} />
           <Route
             exact
             path="/"

@@ -43,6 +43,7 @@ export function types(typesRequest = INITIAL_STATE.typesRequest, action) {
       return Object.assign({}, typesRequest, {
         loading: false
       });
+
     default:
       return typesRequest;
   }

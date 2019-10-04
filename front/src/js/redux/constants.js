@@ -13,11 +13,14 @@ export const GET_NEXT_PLACES_STARTED = 'GET_NEXT_PLACES_STARTED';
 export const GET_PLACES_SUCCESS = 'GET_PLACES_SUCCESS';
 export const GET_PLACES_ERROR = 'GET_PLACES_ERROR';
 
-export const AUTH_STARTED = 'AUTH_STARTED';
-export const AUTH_SUCCESS = 'AUTH_SUCCESS';
-export const AUTH_FAILURE = 'AUTH_FAILURE';
+export const AUTH_ACTION_STARTED = 'AUTH_ACTION_STARTED';
+export const AUTH_ACTION_SUCCESS = 'AUTH_ACTION_SUCCESS';
+export const AUTH_ACTION_FAILURE = 'AUTH_ACTION_FAILURE';
 export const AUTH_LOGOUT = 'AUTH_LOGOUT';
 export const AUTH_ERROR = 'AUTH_ERROR';
+export const AUTH_CREATE = 'AUTH_CREATE';
+export const AUTH_UPDATE = 'AUTH_UPDATE';
+export const AUTH_REMOVE = 'AUTH_REMOVE';
 
 export const INITIAL_STATE = {
   typesRequest: {

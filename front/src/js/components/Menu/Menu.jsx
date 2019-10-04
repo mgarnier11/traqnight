@@ -193,11 +193,13 @@ class Menu extends Component {
 
   renderUser(user) {
     return (
-      <ul class="navbar-nav">
-        <li class="nav-item m-1 my-lg-0">
-          <span className="btn btn-secondary">{user.name}</span>
+      <ul className="navbar-nav">
+        <li className="nav-item m-1 my-lg-0">
+          <Link to="/my-user" className="btn btn-secondary">
+            {user.name}
+          </Link>
         </li>
-        <li class="nav-item m-1 my-lg-0">
+        <li className="nav-item m-1 my-lg-0">
           <span className="btn btn-secondary" onClick={this.logout}>
             Se déconnecter
             <i className="fas fa-sign-out-alt" />
@@ -209,8 +211,8 @@ class Menu extends Component {
 
   renderAdmin(user) {
     return (
-      <ul class="navbar-nav">
-        <li class="nav-item dropdown m-1 my-lg-0 admin">
+      <ul className="navbar-nav">
+        <li className="nav-item dropdown m-1 my-lg-0 admin">
           <button
             className="dropdown-toggle btn btn-secondary"
             id="navbarDropdown"
@@ -221,7 +223,7 @@ class Menu extends Component {
             Admin
           </button>
 
-          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <div className="dropdown-menu" aria-labelledby="navbarDropdown">
             <Link to="/admin/types" className="dropdown-item">
               Manage Types
             </Link>
@@ -230,10 +232,12 @@ class Menu extends Component {
     </Link>*/}
           </div>
         </li>
-        <li class="nav-item m-1 my-lg-0">
-          <span className="btn btn-secondary">{user.name}</span>
+        <li className="nav-item m-1 my-lg-0">
+          <Link to="/my-user" className="btn btn-secondary">
+            {user.name}
+          </Link>
         </li>
-        <li class="nav-item m-1 my-lg-0">
+        <li className="nav-item m-1 my-lg-0">
           <span className="btn btn-secondary" onClick={this.logout}>
             Se déconnecter
             <i className="fas fa-sign-out-alt" />
